@@ -1,15 +1,13 @@
-package com.example.facetime
+package com.example.facetime.conference
 
 
 import android.Manifest
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
-import android.icu.text.SearchIterator.DONE
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
-import android.view.inputmethod.EditorInfo.IME_ACTION_DONE
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 
@@ -18,7 +16,6 @@ import org.jetbrains.anko.*
 import java.net.MalformedURLException
 import java.net.URL
 
-import com.facebook.react.modules.core.PermissionListener
 import org.jitsi.meet.sdk.*
 import android.content.Intent
 import android.content.SharedPreferences
@@ -31,11 +28,11 @@ import android.view.inputmethod.EditorInfo.IME_ACTION_GO
 import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentTransaction
+import com.example.facetime.R
 import com.twitter.sdk.android.tweetcomposer.TweetComposer
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.socialize.ShareAction
 import com.umeng.socialize.bean.SHARE_MEDIA
-import org.jetbrains.anko.sdk25.coroutines.onEditorAction
 
 
 open class BaseActivity : AppCompatActivity(),
@@ -115,7 +112,8 @@ open class BaseActivity : AppCompatActivity(),
     private var backgroundFragment: BackgroundFragment? = null
     private var shareFragment: ShareFragment? = null
     private lateinit var vertical: FrameLayout
-    var videoChatControllerListener: VideoChatControllerListener = JitsiMeetActivitySon()
+    var videoChatControllerListener: VideoChatControllerListener =
+        JitsiMeetActivitySon()
     private lateinit var toolbar1: Toolbar
     var jitsiMeetActivitySon = JitsiMeetActivitySon()
     var cont = this
@@ -240,7 +238,10 @@ open class BaseActivity : AppCompatActivity(),
 
                             var intent = Intent(cont, SettingsActivity::class.java)
                             startActivityForResult(intent, 2)
-                            overridePendingTransition(R.anim.right_in, R.anim.left_out)
+                            overridePendingTransition(
+                                R.anim.right_in,
+                                R.anim.left_out
+                            )
 
                         }
 
@@ -540,7 +541,7 @@ open class BaseActivity : AppCompatActivity(),
             .build()
 
 //
-        JitsiMeetActivitySon.launch(this, options, "xxx")
+            JitsiMeetActivitySon.launch(this, options, "xxx")
         }catch (e: Exception) {
             System.out.println("错了")
 
@@ -553,7 +554,8 @@ open class BaseActivity : AppCompatActivity(),
         val mTransaction = supportFragmentManager.beginTransaction()
         mTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
         if (backgroundFragment == null) {
-            backgroundFragment = BackgroundFragment.newInstance()
+            backgroundFragment =
+                BackgroundFragment.newInstance()
             mTransaction.add(vertical.id, backgroundFragment!!)
         }
 

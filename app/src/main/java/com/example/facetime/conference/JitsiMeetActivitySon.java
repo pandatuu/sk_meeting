@@ -1,4 +1,4 @@
-package com.example.facetime;
+package com.example.facetime.conference;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +8,7 @@ import android.util.Log;
 
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.facetime.R;
 import com.facebook.react.modules.core.PermissionListener;
 
 import org.jitsi.meet.sdk.JitsiMeetActivityDelegate;

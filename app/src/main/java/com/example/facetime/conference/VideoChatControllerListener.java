@@ -1,4 +1,4 @@
-package com.example.facetime;
+package com.example.facetime.conference;
 
 public interface VideoChatControllerListener {
     void closeVideo();
