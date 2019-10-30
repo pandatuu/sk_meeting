@@ -1,0 +1,37 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- This is the main color -->
+    <item android:top="49dp">
+        <shape
+            android:shape="rectangle"
+            android:useLevel="true"
+            >
+            <solid android:color="#aaaaaa" />
+        </shape>
+    </item>
+
+</layer-list>
+
+
+    <!--圆角，白底背景-->
+<!--<layer-list xmlns:android="http://schemas.android.com/apk/res/android">-->
+<!--    &lt;!&ndash; This is the main color &ndash;&gt;-->
+<!--    <item>-->
+<!--        <shape-->
+<!--            android:shape="rectangle"-->
+<!--            android:useLevel="true"-->
+<!--            >-->
+<!--            <solid android:color="#979797" />-->
+<!--        </shape>-->
+<!--    </item>-->
+<!--    &lt;!&ndash; This is the line &ndash;&gt;-->
+<!--    <item android:bottom="1dp" >-->
+<!--        <shape-->
+<!--            android:shape="rectangle"-->
+<!--            android:useLevel="true"-->
+<!--            >-->
+<!--            <solid android:color="#00FFFFFF" />-->
+<!--        </shape>-->
+<!--    </item>-->
+<!--</layer-list>-->
+
+

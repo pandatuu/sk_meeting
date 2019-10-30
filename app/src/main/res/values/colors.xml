@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--<color name="colorPrimary">#008577</color>-->
+    <color name="colorPrimary">#000</color>
+
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="typeColor">#a1a1a1</color>
+    <color name="white">#FFFFFF</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="themeColor">#FFB706</color>
+    <color name="themeBule">#ff02b8f7</color>
+    <color name="originColor">#F6F6F6</color>
+    <!--一般字体通用的颜色-->
+    <color name="normalTextColor">#ff202020</color>
+    <color name="gray5c">#5C5C5C</color>
+    <color name="graycc">#CCCCCC</color>
+    <color name="grayf2">#F2F2F2</color>
+    <color name="gray66">#666666</color>
+    <color name="gray63">#636363</color>
+    <color name="gray7f">#7f7f7f</color>
+    <color name="gray99">#999999</color>
+    <color name="gray89">#898989</color>
+    <color name="gray9B">#9B9B9B</color>
+    <color name="grayb3">#B3B3B3</color>
+    <color name="grayb8">#b8b8b8</color>
+    <color name="grayba">#bababa</color>
+    <color name="gray97">#979797</color>
+    <color name="grayEBEAEB">#EBEAEB</color>
+    <color name="black33">#333333</color>
+    <color name="yellowFFB706">#FFB706</color>
+    <color name="yellowFED95A">#FED95A</color>
+    <color name="whiteFF">#FFFFFF</color>
+    <color name="grayB3">#B3B3B3</color>
+    <color name="grayCD">#CDCDCD</color>
+    <color name="grayd5">#d5d5d5</color>
+    <color name="grayF6">#FFF6F6F6</color>
+    <color name="grayE6">#E6E6E6</color>
+    <color name="blue007AFF">#007AFF</color>
+    <color name="blue0097D6">#0097D6</color>
+    <color name="blue02B8F7">#02B8F7</color>
+
+    <color name="black66000000">#66000000</color>
+    <color name="black20">#202020</color>
+    <color name="brownFF6406">#FF6406</color>
+    <color name="translucentBlue">#0D02B8F7</color>
+    <color name="trans">#00000000</color>
+
+
+
+
+
+    <!--JobWantedEditActivity-->
+    <color name="toolBarBg">#FFB706</color>
+    <color name="titleGrey">#FFB3B3B3</color>
+    <color name="titleSon">#FF202020</color>
+    <color name="buttonColor">#E0E0E0FF</color>
+    <color name="buttonTextColor">#FF5C5C5C</color>
+    <!--JobWantedManageActivity-->
+    <color name="underToolBar">#F6F6F6</color>
+    <color name="underToolBarTextColorLeft">#ff999999</color>
+    <color name="underToolBarTextColorRight">#ff5c5c5c</color>
+    <color name="jobNameTitle">#ff02b8f7</color>
+    <color name="jobNameLabel">#ff898989</color>
+    <color name="deleteThisButton">#ff02b8f7</color>
+    <!--IndustrySelectActivity-->
+    <color name="toolBarTextColor">#333333</color>
+    <color name="saveButtonTextColor">#FFB706</color>
+    <color name="lebelTextColor">#999999</color>
+    <color name="selectButtomTextColor">#ff202020</color>
+    <!--CitySelectActivity-->
+    <color name="tinyLabelColor">#ff5c5c5c</color>
+
+    <!--JobSelectActivity-->
+    <color name="shadowColor">#77000000</color>
+    <color name="describeTextColor">#B3B3B3</color>
+
+    <!--RecruitInfoActionBarFragment-->
+    <color name="transparentWhite">#99FFFFFF</color>
+    <color name="companyNameGray">#999999</color>
+    <color name="ActionBarBottomBorder">#979797</color>
+    <color name="recruitInfoActionBarFragmentTinyLabelColor">#0097D6</color>
+    <color name="loginBackground">#FFFFFF</color>
+    <color name="splitLineColor">#F6F6F6</color>
+    <color name="titleColor">#333333</color>
+    
+    <!--pvMainBodyFragment-->
+    <color name="SmsNotification">#898989</color>
+    <color name="codeMessageColor">#FF6406</color>
+
+    <!--MrMainBodyFragment-->
+    <color name="mrBackground">#FFFFFF</color>
+    <color name="mrIntroductionColor">#333333</color>
+    <color name="splitColor">#DFDFDF</color>
+    <color name="askColor">#B3B3B3</color>
+    <color name="loginColor">#5C5C5C</color>
+    <color name="mrMessage">#FF6406</color>
+    <color name="mrButton">#FFB706</color>
+    <color name="mrButtonText">#FFFFFF</color>
+
+    <!--SpMainBodyFragment-->
+    <color name="spIntroductionColor">#333333</color>
+    <color name="spHint">#B3B3B3</color>
+    <color name="spSplit">#DFDFDF</color>
+    <color name="spButton">#FFB706</color>
+    <color name="spButtonText">#FFFFFF</color>
+    <color name="spRemindColor">#ff5c5c5c</color>
+
+
+
+    <color name="chat_title_bg">#427BED</color>
+    <color name="google_red">#FFC93437</color>
+    <color name="google_blue">#FF375BF1</color>
+    <color name="google_yellow">#FFF7D23E</color>
+    <color name="google_green">#FF34A350</color>
+
+</resources>
