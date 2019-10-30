@@ -1,11 +1,9 @@
-package com.example.facetime
+package com.example.facetime.conference
 
 
 import android.app.Activity
 import android.content.Context
 import android.graphics.Color
-import android.graphics.Typeface
-import android.icu.text.SearchIterator.DONE
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -14,27 +12,16 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import com.jaeger.library.StatusBarUtil
 import org.jetbrains.anko.*
-import java.net.MalformedURLException
-import java.net.URL
 
 import com.facebook.react.modules.core.PermissionListener
 import org.jitsi.meet.sdk.*
-import org.jitsi.meet.sdk.JitsiMeetActivityDelegate
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.PorterDuff
-import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
-import com.dropbox.core.v2.teamlog.ActorLogInfo.app
-import androidx.core.app.ComponentActivity
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.*
-import org.json.JSONArray
-import org.json.JSONObject
+import com.example.facetime.R
 
 
 open class SettingsActivity : AppCompatActivity(), JitsiMeetActivityInterface {
@@ -291,7 +278,10 @@ open class SettingsActivity : AppCompatActivity(), JitsiMeetActivityInterface {
                     }
                     setResult(Activity.RESULT_OK, mIntent)
                     finish()
-                    overridePendingTransition(R.anim.left_in, R.anim.right_out)
+                    overridePendingTransition(
+                        R.anim.left_in,
+                        R.anim.right_out
+                    )
                 }
             }.lparams() {
 
@@ -350,7 +340,10 @@ open class SettingsActivity : AppCompatActivity(), JitsiMeetActivityInterface {
         StatusBarUtil.setTranslucentForImageView(this@SettingsActivity, 0, toolbar1)
         toolbar1.setNavigationOnClickListener {
             finish()//返回
-            overridePendingTransition(R.anim.left_in, R.anim.right_out)
+            overridePendingTransition(
+                R.anim.left_in,
+                R.anim.right_out
+            )
         }
 
 

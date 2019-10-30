@@ -1,4 +1,4 @@
-package com.example.facetime
+package com.example.facetime.conference
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import com.example.facetime.R
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 
@@ -89,7 +90,7 @@ class ShareFragment : androidx.fragment.app.Fragment() {
                             textView {
                                 text="Line"
                                 textSize=14f
-                                textColorResource=R.color.black20
+                                textColorResource= R.color.black20
                             }.lparams {
                                 topMargin=dip(10)
 
@@ -117,7 +118,7 @@ class ShareFragment : androidx.fragment.app.Fragment() {
                             textView {
                                 text="Twitter"
                                 textSize=14f
-                                textColorResource=R.color.black20
+                                textColorResource= R.color.black20
                             }.lparams {
                                 topMargin=dip(10)
 
@@ -137,7 +138,7 @@ class ShareFragment : androidx.fragment.app.Fragment() {
 
 
                     textView {
-                        backgroundColorResource=R.color.grayE6
+                        backgroundColorResource= R.color.grayE6
                     }.lparams {
                         height=dip(1)
                         width= matchParent

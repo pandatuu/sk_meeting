@@ -1,4 +1,4 @@
-package com.example.facetime
+package com.example.facetime.conference
 
 import android.content.Context
 import android.os.Bundle
@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.facetime.R
 import org.jetbrains.anko.backgroundColorResource
 import org.jetbrains.anko.verticalLayout
 

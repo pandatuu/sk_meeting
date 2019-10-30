@@ -34,7 +34,7 @@
         android:resizeableActivity="false"
         >
         <activity
-            android:name=".BaseActivity"
+            android:name=".conference.BaseActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.mainActionBar"
             >
@@ -63,7 +63,7 @@
 
 
         <!--聊天视频-->
-        <activity android:name="com.example.facetime.JitsiMeetActivitySon"
+        <activity android:name="com.example.facetime.conference.JitsiMeetActivitySon"
             android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme.Black"
             >
@@ -71,7 +71,7 @@
 
 
         <!--设置-->
-        <activity android:name="com.example.facetime.SettingsActivity"
+        <activity android:name="com.example.facetime.conference.SettingsActivity"
             android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme.Black"
             >
