@@ -18,7 +18,6 @@ open class MenuActivity : AppCompatActivity() {
     private lateinit var toolbar1: Toolbar
 
 
-
     override fun onActivityResult(
         requestCode: Int,
         resultCode: Int,
@@ -37,112 +36,120 @@ open class MenuActivity : AppCompatActivity() {
 
         val mainId = 1
         verticalLayout {
-                backgroundColor=Color.parseColor("#f2f2f2")
-                //toolbar
-                relativeLayout() {
+            backgroundColor = Color.parseColor("#f2f2f2")
+            //toolbar
+            relativeLayout() {
+                backgroundResource = R.color.transparent
+                toolbar1 = toolbar {
                     backgroundResource = R.color.transparent
-                    toolbar1 = toolbar {
-                        backgroundResource = R.color.transparent
-                        isEnabled = true
-                        title = ""
-                    }.lparams() {
-                        width = matchParent
-                        height = dip(0)
-                        alignParentBottom()
-
-                    }
+                    isEnabled = true
+                    title = ""
                 }.lparams() {
                     width = matchParent
                     height = dip(0)
+                    alignParentBottom()
+
                 }
+            }.lparams() {
+                width = matchParent
+                height = dip(0)
+            }
 
 
 
-                linearLayout(){
-                    gravity=Gravity.RIGHT or Gravity.CENTER_VERTICAL
+            linearLayout() {
+                gravity = Gravity.RIGHT or Gravity.CENTER_VERTICAL
 
-                    imageView(){
-                            imageResource=R.mipmap.settings
-                    }.lparams(){
-                        height=dip(20)
-                        width=dip(20)
-                        topMargin=dip(5)
-                        rightMargin=dip(20)
+                imageView() {
+                    imageResource = R.mipmap.settings
+                    setOnClickListener {
+
+                        var intent = Intent(this@MenuActivity, SystemSettingsActivity::class.java)
+                        startActivityForResult(intent, 2)
+                        overridePendingTransition(
+                            R.anim.right_in,
+                            R.anim.left_out
+                        )
+
                     }
 
-                }.lparams(){
-                    width = matchParent
-                    height = dip(100)
+                }.lparams() {
+                    height = dip(20)
+                    width = dip(20)
+                    topMargin = dip(5)
+                    rightMargin = dip(20)
                 }
 
-            linearLayout(){
-                gravity=Gravity.CENTER
-                textView{
-                    text="欢迎使用SK-Meeting在线视频会议系统"
-                    textSize=20f
-                    textColor=Color.BLACK
-                    gravity=Gravity.CENTER
-                    typeface= Typeface.DEFAULT_BOLD
-                }.lparams(){
-                    height=dip(40)
-                    width=wrapContent
+            }.lparams() {
+                width = matchParent
+                height = dip(100)
+            }
+
+            linearLayout() {
+                gravity = Gravity.CENTER
+                textView {
+                    text = "欢迎使用SK-Meeting在线视频会议系统"
+                    textSize = 20f
+                    textColor = Color.BLACK
+                    gravity = Gravity.CENTER
+                    typeface = Typeface.DEFAULT_BOLD
+                }.lparams() {
+                    height = dip(40)
+                    width = wrapContent
                 }
 
-            }.lparams(){
+            }.lparams() {
                 width = matchParent
                 height = wrapContent
-                topMargin=dip(20)
+                topMargin = dip(20)
             }
 
 
             verticalLayout {
-                gravity=Gravity.CENTER_HORIZONTAL
+                gravity = Gravity.CENTER_HORIZONTAL
 
-                textView{
-                    text="创建我的会议室"
-                    textSize=14f
-                    textColor=Color.WHITE
-                    backgroundResource=R.drawable.bottonbg
-                    gravity=Gravity.CENTER
-                }.lparams(){
-                    height=dip(40)
-                    width=dip(240)
-                    topMargin=dip(20)
+                textView {
+                    text = "创建我的会议室"
+                    textSize = 14f
+                    textColor = Color.WHITE
+                    backgroundResource = R.drawable.bottonbg
+                    gravity = Gravity.CENTER
+                }.lparams() {
+                    height = dip(40)
+                    width = dip(240)
+                    topMargin = dip(20)
                 }
 
-                textView{
-                    text="创建我的会议室"
-                    textSize=14f
-                    textColor=Color.WHITE
-                    backgroundResource=R.drawable.bottonbg
-                    gravity=Gravity.CENTER
-                }.lparams(){
-                    height=dip(40)
-                    width=dip(240)
-                    topMargin=dip(20)
+                textView {
+                    text = "创建我的会议室"
+                    textSize = 14f
+                    textColor = Color.WHITE
+                    backgroundResource = R.drawable.bottonbg
+                    gravity = Gravity.CENTER
+                }.lparams() {
+                    height = dip(40)
+                    width = dip(240)
+                    topMargin = dip(20)
                 }
 
-                textView{
-                    text="创建我的会议室"
-                    textSize=14f
-                    textColor=Color.WHITE
-                    backgroundResource=R.drawable.bottonbg
-                    gravity=Gravity.CENTER
-                }.lparams(){
-                    height=dip(40)
-                    width=dip(240)
-                    topMargin=dip(20)
+                textView {
+                    text = "创建我的会议室"
+                    textSize = 14f
+                    textColor = Color.WHITE
+                    backgroundResource = R.drawable.bottonbg
+                    gravity = Gravity.CENTER
+                }.lparams() {
+                    height = dip(40)
+                    width = dip(240)
+                    topMargin = dip(20)
 
                 }
 
-            }.lparams(){
+            }.lparams() {
                 width = matchParent
                 height = wrapContent
-                topMargin=dip(40)
+                topMargin = dip(40)
             }
-
-
-
 
 
         }
@@ -157,9 +164,7 @@ open class MenuActivity : AppCompatActivity() {
             .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
 
 
-
     }
-
 
 
 }

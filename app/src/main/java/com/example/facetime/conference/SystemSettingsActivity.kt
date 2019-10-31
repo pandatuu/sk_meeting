@@ -24,83 +24,47 @@ import android.widget.*
 import com.example.facetime.R
 
 
-open class SystemSettingsActivity : AppCompatActivity(), JitsiMeetActivityInterface {
+open class SystemSettingsActivity : AppCompatActivity() {
 
-
-    override fun requestPermissions(p0: Array<out String>?, p1: Int, p2: PermissionListener?) {
-
-    }
-
-    var useNew=false
-
-    var defaultValue = "https://meet.skjob.jp/"
 
     private lateinit var toolbar1: Toolbar
-    lateinit var verticalLayout: LinearLayout
-    lateinit var ms: SharedPreferences
-
-    lateinit var editText: EditText
-    var selectedAdd = ""
-
-    var listImage = mutableListOf<ImageView>()
-    var listText = mutableListOf<TextView>()
-    var changeHappen = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ms = PreferenceManager.getDefaultSharedPreferences(this@SystemSettingsActivity)
-
-
-
 
         verticalLayout {
-            backgroundResource = R.mipmap.company_bg
+            backgroundColor = Color.parseColor("#f2f2f2")
 
-            setOnTouchListener { v, event ->
-
-                closeSoftKeyboard(editText)
-                editText.clearFocus()
-                 false
-            }
-
-            relativeLayout() {
-
-
-                //                imageView() {
-//
-//                    imageResource = R.mipmap.company_bg
-//                    scaleType=(ImageView.ScaleType.CENTER_CROP)
-//                    }.lparams() {
-//                    width = matchParent
-//                    height = dip(65)
-//
-//                }
-
-                relativeLayout() {
-                    setOnTouchListener { v, event ->
-
-                        closeSoftKeyboard(editText)
-                        editText.clearFocus()
-                        false
-                    }
-                    toolbar1 = toolbar {
-                        backgroundResource = R.color.transparent
-                        isEnabled = true
-                        title = ""
-                        navigationIconResource = R.mipmap.icon_back_white
-
-                    }.lparams() {
-                        width = wrapContent
-                        height = dip(65)
-                        alignParentBottom()
-
-                    }
-
-
-
+            linearLayout {
+                toolbar1 = toolbar {
+                    isEnabled = true
+                    title = ""
+                    navigationIconResource = R.mipmap.icon_back
                 }.lparams() {
-                    width = matchParent
-                    height = dip(65)
+                    width = dip(45)
+                }
+
+                linearLayout {
+                    textView {
+                        setOnClickListener {
+                            finish()//返回
+                            overridePendingTransition(
+                                R.anim.left_in,
+                                R.anim.right_out
+                            )
+                        }
+                        text="返回"
+                        gravity=Gravity.CENTER
+
+                    }.lparams(){
+                        height= matchParent
+                        width= wrapContent
+                    }
+                }.lparams() {
+                    weight = 1f
+                    width = dip(0)
+                    height = dip(65 - getStatusBarHeight(this@SystemSettingsActivity))
+                    topMargin=dip(getStatusBarHeight(this@SystemSettingsActivity))
                 }
             }.lparams() {
                 width = matchParent
@@ -111,226 +75,65 @@ open class SystemSettingsActivity : AppCompatActivity(), JitsiMeetActivityInterf
 
 
 
-            linearLayout() {
+            verticalLayout {
+                gravity = Gravity.CENTER_HORIZONTAL
 
-                setOnClickListener {
-                    editText.requestFocus()
-                    showSoftKeyboard(editText)
-
-                }
-
-                gravity = Gravity.CENTER
-                backgroundResource = R.drawable.edittext_bg
-
-
-                editText = editText() {
+                textView {
+                    text = "昵称设置"
+                    textSize = 14f
                     textColor = Color.WHITE
-                    hint = "新的服务器地址"
-                    setHintTextColor(Color.GRAY)
-                    backgroundResource = R.drawable.edittext_bg
-                    singleLine = true
-                    imeOptions = IME_ACTION_DONE
-
-                    addTextChangedListener(object : TextWatcher {
-                        override fun beforeTextChanged(
-                            s: CharSequence?,
-                            start: Int,
-                            count: Int,
-                            after: Int
-                        ) {
-
-
-                        }
-
-                        override fun onTextChanged(
-                            s: CharSequence?,
-                            start: Int,
-                            before: Int,
-                            count: Int
-                        ) {
-                        }
-
-                        override fun afterTextChanged(s: Editable?) {
-                            if (text.toString() == "") {
-                                hint = "新的服务器地址"
-                            } else {
-                                hint = ""
-                            }
-                        }
-
-                    })
-
-                    setOnFocusChangeListener { view, b ->
-
-                        if (b) {
-                            useNew=true
-
-                            for (i in 0 until listImage.size) {
-
-                                listImage.get(i).visibility = View.INVISIBLE
-                                listText.get(i).textColor = Color.GRAY
-
-                            }
-                            setHintTextColor(Color.WHITE)
-                            textColor = Color.WHITE
-                        } else {
-                            setHintTextColor(Color.GRAY)
-                            textColor = Color.GRAY
-                        }
-
-                    }
-
+                    backgroundResource = R.drawable.bottonbg
+                    gravity = Gravity.CENTER
                 }.lparams() {
-
-                    width = wrapContent
-                    height = matchParent
-
-                }
-
-
-            }.lparams() {
-                topMargin = dip(0)
-                rightMargin = dip(15)
-                leftMargin = dip(15)
-                height = dip(50)
-                width = matchParent
-            }
-
-
-
-
-            scrollView {
-
-                backgroundColor=Color.TRANSPARENT
-                setOnTouchListener { v, event ->
-
-                    closeSoftKeyboard(editText)
-                    editText.clearFocus()
-                     false;
-                }
-
-
-//                setOnClickListener {
-//                    editText.requestFocus()
-//                    showSoftKeyboard(editText)
-//
-//                }
-                verticalLayout = verticalLayout {
-
-
-                }.lparams() {
-
-
-
+                    height = dip(60)
                     width = matchParent
-                    height = wrapContent
+                }
+
+                textView {
+                   backgroundColor= Color.parseColor("#cccccc")
+                }.lparams() {
+                    height = dip(px2sp(1))
+                    width = matchParent
+                }
+
+                textView {
+                    text = "修改密码"
+                    textSize = 14f
+                    textColor = Color.WHITE
+                    backgroundResource = R.drawable.bottonbg
+                    gravity = Gravity.CENTER
+                }.lparams() {
+                    height = dip(60)
+                    width = matchParent
+                }
+
+                textView {
+                    backgroundColor= Color.parseColor("#cccccc")
+
+                }.lparams() {
+                    height = dip(px2sp(1))
+                    width = matchParent
+                }
+
+                textView {
+                    text = "退出登录"
+                    textSize = 14f
+                    textColor = Color.WHITE
+                    backgroundResource = R.drawable.bottonbg
+                    gravity = Gravity.CENTER
+                }.lparams() {
+                    height = dip(60)
+                    width = matchParent
                 }
 
 
             }.lparams() {
                 topMargin = dip(20)
-                bottomMargin= dip(10)
 
-                height = 0
-                weight = 1f
+                height = wrapContent
                 width = matchParent
             }
-
-
-            textView {
-                text = "确认"
-                textColor = Color.WHITE
-                backgroundResource = R.drawable.bottonbg
-                gravity = Gravity.CENTER
-                textSize = 20F
-
-                setOnClickListener {
-
-                    if(useNew){
-                        selectedAdd=editText.text.toString()
-                    }
-
-
-                    var selected =
-                        PreferenceManager.getDefaultSharedPreferences(this@SystemSettingsActivity)
-                            .getString("selected", defaultValue).toString()
-
-                    if (selected != selectedAdd) {
-                        changeHappen = true
-                        var mEditor: SharedPreferences.Editor = ms.edit()
-                        mEditor.putString("selected", selectedAdd)
-
-                        var selected =
-                            PreferenceManager.getDefaultSharedPreferences(this@SystemSettingsActivity)
-                                .getStringSet("selectedSet",mutableSetOf(defaultValue) )
-                        selected?.add(selectedAdd)
-                        mEditor.putStringSet("selectedSet", selected)
-
-
-                        mEditor.commit()
-                    }
-
-
-                    var mIntent = Intent()
-                    if (changeHappen) {
-
-                        mIntent.putExtra("ip", selectedAdd)
-                    }
-                    setResult(Activity.RESULT_OK, mIntent)
-                    finish()
-                    overridePendingTransition(
-                        R.anim.left_in,
-                        R.anim.right_out
-                    )
-                }
-            }.lparams() {
-
-                width = matchParent
-                height = dip(50)
-                bottomMargin = dip(10)
-                rightMargin = dip(15)
-                leftMargin = dip(15)
-            }
-
-
         }
-
-
-        initSelect()
-    }
-
-
-    fun initSelect() {
-
-        var add =
-            PreferenceManager.getDefaultSharedPreferences(this).getString("selected", defaultValue)
-                .toString()
-        if (add != selectedAdd) {
-            var mEditor: SharedPreferences.Editor = ms.edit()
-            mEditor.putString("selected", add)
-
-
-            mEditor.commit()
-        }
-
-        selectedAdd = add
-
-
-        var selected =
-            PreferenceManager.getDefaultSharedPreferences(this@SystemSettingsActivity)
-                .getStringSet("selectedSet",mutableSetOf(defaultValue) )
-
-        println("xxxxxx"+selected?.size)
-
-
-        var it=selected?.iterator()
-
-
-        while(it!!.hasNext()){
-            addSon(it?.next())
-        }
-
-
     }
 
 
@@ -338,6 +141,8 @@ open class SystemSettingsActivity : AppCompatActivity(), JitsiMeetActivityInterf
         super.onStart()
         setActionBar(toolbar1)
         StatusBarUtil.setTranslucentForImageView(this@SystemSettingsActivity, 0, toolbar1)
+        getWindow().getDecorView()
+            .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
         toolbar1.setNavigationOnClickListener {
             finish()//返回
             overridePendingTransition(
@@ -345,145 +150,19 @@ open class SystemSettingsActivity : AppCompatActivity(), JitsiMeetActivityInterf
                 R.anim.right_out
             )
         }
-
-
     }
 
 
-    fun addSon(t: String) {
-
-        lateinit var imageView: ImageView
-        lateinit var textView: TextView
-
-
-        var b = false
-
-
-        if (t == selectedAdd)
-            b = true
-
-        var view = UI {
-
-            linearLayout {
-
-                setOnClickListener {
-
-
-                    closeSoftKeyboard(editText)
-                    editText.clearFocus()
-
-
-                    for (i in 0 until listImage.size) {
-
-                        listImage.get(i).visibility = View.INVISIBLE
-                        listText.get(i).textColor = Color.GRAY
-
-                    }
-
-                    imageView.visibility = View.VISIBLE
-                    textView.textColor = Color.WHITE
-                    selectedAdd = textView.text.toString()
-
-
-                }
-
-
-                linearLayout() {
-                    gravity = Gravity.CENTER_VERTICAL
-
-                    imageView = imageView() {
-                        imageResource = R.mipmap.icon_select_home
-                        if (!b) {
-                            visibility = View.INVISIBLE
-                        }
-                    }.lparams() {
-                        height = dip(20)
-                        width = dip(20)
-
-                    }
-
-                    textView = textView {
-                        gravity = Gravity.CENTER
-                        text = t
-                        textSize = 20f
-                        textColor = Color.WHITE
-                        if (!b) {
-                            textColor = Color.GRAY
-                        }
-
-
-                    }.lparams() {
-                        leftMargin = dip(10)
-                    }
-
-
-                }.lparams() {
-                    width = matchParent
-                    leftMargin = dip(50)
-                    rightMargin = dip(15)
-                    height = dip(50)
-                }
-
-            }
-
+    fun getStatusBarHeight(context: Context): Int {
+        var result = 0
+        val resourceId =
+            context.getResources().getIdentifier("status_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            result = context.getResources().getDimensionPixelSize(resourceId)
+            var scale = context.getResources().getDisplayMetrics().density;
+            result = ((result / scale + 0.5f).toInt());
         }
-        listImage.add(imageView)
-        listText.add(textView)
-
-
-        verticalLayout.addView(view.view)
-
-
+        return result
     }
-
-    fun closeSoftKeyboard(view: View?) {
-
-        useNew=false
-
-        if (view == null || view.windowToken == null) {
-            return
-        }
-        val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
-
-
-        var add =
-            PreferenceManager.getDefaultSharedPreferences(this).getString("selected", defaultValue)
-                .toString()
-        for (i in 0 until listImage.size) {
-            if(add==listText.get(i).text.toString()){
-                listImage.get(i).visibility = View.VISIBLE
-                listText.get(i).textColor = Color.WHITE
-            }else{
-                listImage.get(i).visibility = View.INVISIBLE
-                listText.get(i).textColor = Color.GRAY
-            }
-        }
-
-
-    }
-
-    fun showSoftKeyboard(view: View?) {
-
-
-        useNew=true
-
-        for (i in 0 until listImage.size) {
-
-            listImage.get(i).visibility = View.INVISIBLE
-            listText.get(i).textColor = Color.GRAY
-
-        }
-
-
-        if (view == null || view.windowToken == null) {
-            return
-        }
-        val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-
-        imm.showSoftInput(view, 0)
-    }
-
 
 }
