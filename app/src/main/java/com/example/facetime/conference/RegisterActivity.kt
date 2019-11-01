@@ -21,14 +21,13 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.sahooz.library.Country
 import com.sahooz.library.PickActivity
 import org.jetbrains.anko.*
-import org.jetbrains.anko.sdk25.coroutines.onClick
 
 class RegisterActivity : AppCompatActivity() {
 
-    lateinit var isChoose: CheckBox
-    lateinit var countryCode: TextView
-    lateinit var phoneNum: EditText
-    lateinit var vcodeNum: EditText
+    private lateinit var isChoose: CheckBox
+    private lateinit var countryCode: TextView
+    private lateinit var phoneNum: EditText
+    private lateinit var vcodeNum: EditText
     lateinit var codeText: TextView
     private var runningDownTimer: Boolean = false
 
@@ -38,7 +37,7 @@ class RegisterActivity : AppCompatActivity() {
 
         frameLayout {
             backgroundColor = Color.TRANSPARENT
-            onClick {
+            setOnClickListener {
                 closeFocusjianpan()
             }
             linearLayout {
@@ -47,7 +46,7 @@ class RegisterActivity : AppCompatActivity() {
                     gravity = Gravity.CENTER
                     text = "登录"
                     textSize = 14f
-                    onClick {
+                    setOnClickListener {
                         val intent = Intent(this@RegisterActivity, StartActivity::class.java)
                         startActivity(intent)
                         finish()
@@ -75,7 +74,7 @@ class RegisterActivity : AppCompatActivity() {
                         gravity = Gravity.CENTER
                         text = "+86"
                         textSize = 14f
-                        onClick {
+                        setOnClickListener {
                             startActivityForResult(
                                 Intent(
                                     applicationContext,
@@ -110,7 +109,7 @@ class RegisterActivity : AppCompatActivity() {
                         gravity = Gravity.CENTER
                         text = "获取"
                         textSize = 14f
-                        onClick {
+                        setOnClickListener {
                             closeFocusjianpan()
                             if (phoneNum.text.toString() != "") {
                                 val phone = countryCode.text.toString() + phoneNum.text.toString()
@@ -138,7 +137,7 @@ class RegisterActivity : AppCompatActivity() {
                     isChoose = checkBox {}.lparams(wrapContent, wrapContent)
                     linearLayout {
                         orientation = LinearLayout.HORIZONTAL
-                        onClick {
+                        setOnClickListener {
                             isChoose.isChecked = !isChoose.isChecked
                         }
                         textView {
@@ -147,7 +146,7 @@ class RegisterActivity : AppCompatActivity() {
                         textView {
                             text = "隐私协议"
                             textColor = Color.BLUE
-                            onClick {
+                            setOnClickListener {
                                 toast("隐私协议")
                             }
                         }
@@ -157,7 +156,7 @@ class RegisterActivity : AppCompatActivity() {
                         textView {
                             text = "服务声明"
                             textColor = Color.BLUE
-                            onClick {
+                            setOnClickListener {
                                 toast("服务声明")
                             }
                         }
@@ -169,7 +168,7 @@ class RegisterActivity : AppCompatActivity() {
                     text = "下一步"
                     textColor = Color.WHITE
                     backgroundColor = Color.parseColor("#00BFFF")
-                    onClick {
+                    setOnClickListener {
                         if (phoneNum.text.toString() == "") {
                             toast("手机号为空")
                         } else {
@@ -200,9 +199,9 @@ class RegisterActivity : AppCompatActivity() {
         vcodeNum.clearFocus()
         //关闭键盘事件
         val phone = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        phone.hideSoftInputFromWindow(phoneNum!!.windowToken, 0)
+        phone.hideSoftInputFromWindow(phoneNum.windowToken, 0)
         val code = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        code.hideSoftInputFromWindow(vcodeNum!!.windowToken, 0)
+        code.hideSoftInputFromWindow(vcodeNum.windowToken, 0)
     }
 
     //发送验证码按钮
@@ -228,7 +227,7 @@ class RegisterActivity : AppCompatActivity() {
         override fun onFinish() {
             runningDownTimer = false
             codeText.text = "获取"
-            codeText.onClick {
+            codeText.setOnClickListener {
                 onPcode()
             }
         }

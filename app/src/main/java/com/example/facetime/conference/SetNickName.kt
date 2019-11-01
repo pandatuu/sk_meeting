@@ -10,18 +10,17 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
 import org.jetbrains.anko.*
-import org.jetbrains.anko.sdk25.coroutines.onClick
 
 class SetNickName : AppCompatActivity() {
 
-    lateinit var nickName: EditText
+    private lateinit var nickName: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         frameLayout {
             backgroundColor = Color.TRANSPARENT
-            onClick {
+            setOnClickListener {
                 closeFocusjianpan()
             }
             linearLayout {
@@ -35,7 +34,7 @@ class SetNickName : AppCompatActivity() {
                 }.lparams(wrapContent, wrapContent) {
                     leftMargin = dip(10)
                 }
-                onClick {
+                setOnClickListener {
                     finish()
                     overridePendingTransition(R.anim.left_in, R.anim.right_out)
                 }
@@ -63,7 +62,7 @@ class SetNickName : AppCompatActivity() {
                     text = "完成注册"
                     textColor = Color.WHITE
                     backgroundColor = Color.parseColor("#00BFFF")
-                    onClick {
+                    setOnClickListener {
                         closeFocusjianpan()
                         if(nickName.text.toString() != ""){
                             if(nickName.text.length < 10){
