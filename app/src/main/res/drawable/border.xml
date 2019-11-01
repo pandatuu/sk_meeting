@@ -1,0 +1,22 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- This is the main color -->
+    <item>
+        <shape
+                android:shape="rectangle"
+                android:useLevel="true"
+        >
+            <solid android:color="#979797" />
+        </shape>
+    </item>
+    <!-- This is the line -->
+    <item android:top="1dp" >
+        <shape
+                android:shape="rectangle"
+                android:useLevel="true"
+        >
+            <solid android:color="#FFFFFF" />
+        </shape>
+    </item>
+</layer-list>
+
+
