@@ -14,6 +14,8 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.facetime.R
+import com.example.facetime.login.StartActivity
 import com.google.i18n.phonenumbers.NumberParseException
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.sahooz.library.Country
@@ -46,6 +48,10 @@ class RegisterActivity : AppCompatActivity() {
                     text = "登录"
                     textSize = 14f
                     onClick {
+                        val intent = Intent(this@RegisterActivity, StartActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                        overridePendingTransition(R.anim.left_in, R.anim.right_out)
                         toast("登录")
                     }
                 }.lparams(dip(30), matchParent) {
@@ -106,16 +112,19 @@ class RegisterActivity : AppCompatActivity() {
                         textSize = 14f
                         onClick {
                             closeFocusjianpan()
-                            if(phoneNum.text.toString()!=""){
+                            if (phoneNum.text.toString() != "") {
                                 val phone = countryCode.text.toString() + phoneNum.text.toString()
                                 val bool =
-                                    isPhoneNumberValid(phone, countryCode.text.toString().substring(1))
+                                    isPhoneNumberValid(
+                                        phone,
+                                        countryCode.text.toString().substring(1)
+                                    )
                                 if (bool) {
                                     onPcode()
                                 } else {
                                     toast("手机号格式错误")
                                 }
-                            }else{
+                            } else {
                                 toast("请输入手机号")
                             }
                         }
@@ -126,9 +135,7 @@ class RegisterActivity : AppCompatActivity() {
                 linearLayout {
                     orientation = LinearLayout.HORIZONTAL
                     gravity = Gravity.CENTER_VERTICAL
-                    isChoose = checkBox {
-
-                    }.lparams(wrapContent, wrapContent)
+                    isChoose = checkBox {}.lparams(wrapContent, wrapContent)
                     linearLayout {
                         orientation = LinearLayout.HORIZONTAL
                         onClick {
