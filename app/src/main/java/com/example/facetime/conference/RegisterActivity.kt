@@ -21,7 +21,7 @@ import com.sahooz.library.PickActivity
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 
-class RegisterActivity: AppCompatActivity() {
+class RegisterActivity : AppCompatActivity() {
 
     lateinit var isChoose: CheckBox
     lateinit var countryCode: TextView
@@ -48,10 +48,10 @@ class RegisterActivity: AppCompatActivity() {
                     onClick {
                         toast("登录")
                     }
-                }.lparams(dip(30), matchParent){
+                }.lparams(dip(30), matchParent) {
                     rightMargin = dip(15)
                 }
-            }.lparams(matchParent, dip(45)){
+            }.lparams(matchParent, dip(45)) {
                 topMargin = dip(15)
             }
             linearLayout {
@@ -59,7 +59,7 @@ class RegisterActivity: AppCompatActivity() {
                 textView {
                     text = "注册"
                     textSize = 23f
-                }.lparams(wrapContent, wrapContent){
+                }.lparams(wrapContent, wrapContent) {
                     gravity = Gravity.CENTER_HORIZONTAL
                 }
                 linearLayout {
@@ -70,18 +70,23 @@ class RegisterActivity: AppCompatActivity() {
                         text = "+86"
                         textSize = 14f
                         onClick {
-                            startActivityForResult(Intent(applicationContext, PickActivity::class.java), 111)
+                            startActivityForResult(
+                                Intent(
+                                    applicationContext,
+                                    PickActivity::class.java
+                                ), 111
+                            )
                         }
                     }.lparams(dip(50), matchParent)
                     phoneNum = editText {
                         hint = "请输入手机号码"
                         background = null
                         maxLines = 1
-                    }.lparams(wrapContent, matchParent){
+                    }.lparams(wrapContent, matchParent) {
                         weight = 1f
                         rightMargin = dip(10)
                     }
-                }.lparams(matchParent,dip(45)){
+                }.lparams(matchParent, dip(45)) {
                     topMargin = dip(15)
                 }
                 linearLayout {
@@ -91,7 +96,7 @@ class RegisterActivity: AppCompatActivity() {
                         hint = "请输入验证码"
                         background = null
                         maxLines = 1
-                    }.lparams(wrapContent, matchParent){
+                    }.lparams(wrapContent, matchParent) {
                         weight = 1f
                         leftMargin = dip(10)
                     }
@@ -101,15 +106,21 @@ class RegisterActivity: AppCompatActivity() {
                         textSize = 14f
                         onClick {
                             closeFocusjianpan()
-                            if(!runningDownTimer){
-                                isPhoneNumberValid(phoneNum.text.toString(),countryCode.text.toString())
-                                onPcode()
+                            if(phoneNum.text.toString()!=""){
+                                val phone = countryCode.text.toString() + phoneNum.text.toString()
+                                val bool =
+                                    isPhoneNumberValid(phone, countryCode.text.toString().substring(1))
+                                if (bool) {
+                                    onPcode()
+                                } else {
+                                    toast("手机号格式错误")
+                                }
                             }else{
-                                toast("请不要重复点击")
+                                toast("请输入手机号")
                             }
                         }
                     }.lparams(dip(60), matchParent)
-                }.lparams(matchParent,dip(45)){
+                }.lparams(matchParent, dip(45)) {
                     topMargin = dip(15)
                 }
                 linearLayout {
@@ -128,7 +139,7 @@ class RegisterActivity: AppCompatActivity() {
                         }
                         textView {
                             text = "隐私协议"
-                            textColor= Color.BLUE
+                            textColor = Color.BLUE
                             onClick {
                                 toast("隐私协议")
                             }
@@ -138,13 +149,13 @@ class RegisterActivity: AppCompatActivity() {
                         }
                         textView {
                             text = "服务声明"
-                            textColor= Color.BLUE
+                            textColor = Color.BLUE
                             onClick {
                                 toast("服务声明")
                             }
                         }
                     }
-                }.lparams(matchParent, wrapContent){
+                }.lparams(matchParent, wrapContent) {
                     topMargin = dip(20)
                 }
                 button {
@@ -152,28 +163,30 @@ class RegisterActivity: AppCompatActivity() {
                     textColor = Color.WHITE
                     backgroundColor = Color.parseColor("#00BFFF")
                     onClick {
-                        if(phoneNum.text.toString() == ""){
+                        if (phoneNum.text.toString() == "") {
                             toast("手机号为空")
-                        }else{
-                            if(vcodeNum.text.toString() == ""){
+                        } else {
+                            if (vcodeNum.text.toString() == "") {
                                 toast("验证码为空")
-                            }else{
-                                if (isChoose.isChecked){
+                            } else {
+                                if (isChoose.isChecked) {
                                     toast("下一步")
-                                    val intent = Intent(this@RegisterActivity,SetPassword::class.java)
+                                    val intent =
+                                        Intent(this@RegisterActivity, SetPassword::class.java)
                                     startActivity(intent)
-                                }else{
+                                } else {
                                     toast("请勾选协议")
                                 }
                             }
                         }
                     }
-                }.lparams(matchParent,dip(50))
-            }.lparams(matchParent,dip(500)){
-                setMargins(dip(15),dip(150),dip(15),0)
+                }.lparams(matchParent, dip(50))
+            }.lparams(matchParent, dip(500)) {
+                setMargins(dip(15), dip(150), dip(15), 0)
             }
         }
     }
+
     private fun closeFocusjianpan() {
         //关闭ｅｄｉｔ光标
         phoneNum.clearFocus()
@@ -202,8 +215,9 @@ class RegisterActivity: AppCompatActivity() {
         override fun onTick(l: Long) {
             runningDownTimer = true
             codeText.text = (l / 1000).toString() + "s"
-            codeText.setOnClickListener { null }
+            codeText.setOnClickListener { toast("冷却中...") }
         }
+
         override fun onFinish() {
             runningDownTimer = false
             codeText.text = "获取"
