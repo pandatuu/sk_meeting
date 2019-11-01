@@ -98,8 +98,27 @@ android:windowSoftInputMode="adjustPan"
             >
         </activity>
 
+        <!--登录页面-->
+        <activity android:name="com.example.facetime.login.StartActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme.Black"
+            >
+        </activity>
 
+        <!--准备更改密码-->
+        <activity android:name="com.example.facetime.login.ReadSetPasswordActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme.Black"
+            >
+        </activity>
 
+        <!--更改密码-->
+        <activity android:name="com.example.facetime.login.RsetPasswordActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme.Black"
+            >
+        </activity>
+        
 
         <!--聊天视频-->
         <activity android:name="com.example.facetime.conference.JitsiMeetActivitySon"
