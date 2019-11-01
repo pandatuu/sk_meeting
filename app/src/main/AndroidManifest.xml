@@ -159,12 +159,18 @@ android:windowSoftInputMode="adjustPan"
         </activity>
 
         <!--通过房间号进入-->
-        <activity android:name="com.example.facetime.conference.EnteroomByIdActivity"
+        <activity android:name="com.example.facetime.conference.EnteRoomByIdActivity"
             android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme.Black"
             >
         </activity>
 
+        <!--通过密码进入房间-->
+        <activity android:name="com.example.facetime.conference.EnteRoomByPasswordActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme.Black"
+            >
+        </activity>
 
 
 

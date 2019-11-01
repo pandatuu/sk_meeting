@@ -161,7 +161,7 @@ open class MenuActivity : AppCompatActivity() {
 
                     setOnClickListener {
 
-                        var intent = Intent(this@MenuActivity, EnteroomByIdActivity::class.java)
+                        var intent = Intent(this@MenuActivity, EnteRoomByIdActivity::class.java)
                         startActivityForResult(intent, 12)
                         overridePendingTransition(
                             R.anim.right_in,
