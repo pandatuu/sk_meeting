@@ -2,12 +2,15 @@ package com.example.facetime.login
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.Gravity
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
 import org.jetbrains.anko.*
@@ -17,6 +20,8 @@ import org.jetbrains.anko.sdk25.coroutines.onClick
 class ReadSetPasswordActivity : AppCompatActivity(){
     private var runningDownTimer: Boolean = false
     lateinit var timeButton:Button
+    lateinit var telephone:EditText
+    lateinit var myCode:EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +30,10 @@ class ReadSetPasswordActivity : AppCompatActivity(){
             backgroundColor = Color.parseColor("#F2F2F2")
             verticalLayout {
                 backgroundColor = Color.parseColor("#F2F2F2")
+
+                onClick {
+                    closeFocusjianpan()
+                }
 
                 linearLayout {
                     imageView {
@@ -72,7 +81,7 @@ class ReadSetPasswordActivity : AppCompatActivity(){
                         rightMargin = dip(10)
                     }
 
-                    editText {
+                    telephone = editText {
                         hint = "请输入手机号码"
                         backgroundColor = Color.WHITE
                     }.lparams(width = matchParent,height = wrapContent){
@@ -90,7 +99,7 @@ class ReadSetPasswordActivity : AppCompatActivity(){
                         topMargin = dip(10)
                     }
 
-                    editText {
+                    myCode = editText {
                         hint = "请输入验证码"
                         backgroundColor = Color.WHITE
                     }.lparams(width = matchParent,height = wrapContent){
@@ -159,5 +168,16 @@ class ReadSetPasswordActivity : AppCompatActivity(){
             timeButton.text = "发送"
         }
 
+    }
+
+    private fun closeFocusjianpan() {
+        //关闭ｅｄｉｔ光标
+        telephone.clearFocus()
+        myCode.clearFocus()
+        //关闭键盘事件
+        val phone = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        phone.hideSoftInputFromWindow(telephone.windowToken, 0)
+        val code = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        code.hideSoftInputFromWindow(myCode!!.windowToken, 0)
     }
 }

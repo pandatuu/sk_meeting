@@ -1,14 +1,19 @@
 package com.example.facetime.login
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 
 class StartActivity : AppCompatActivity(){
+    lateinit var telePhone:EditText
+    lateinit var password:EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -19,6 +24,9 @@ class StartActivity : AppCompatActivity(){
             backgroundColor = Color.parseColor("#F2F2F2")
            verticalLayout{
                backgroundColor = Color.parseColor("#F2F2F2")
+               onClick {
+                   closeFocusjianpan()
+               }
                 textView {
                     text = "注册"
                     gravity = Gravity.RIGHT
@@ -50,7 +58,7 @@ class StartActivity : AppCompatActivity(){
                        rightMargin = dip(10)
                    }
 
-                   editText {
+                   telePhone = editText {
                        hint = "请输入手机号码"
                        backgroundColor = Color.WHITE
                    }.lparams(width = matchParent,height = wrapContent){
@@ -68,7 +76,7 @@ class StartActivity : AppCompatActivity(){
                         topMargin = dip(10)
                    }
 
-                   editText {
+                   password = editText {
                        hint = "请输入密码"
                        backgroundColor = Color.WHITE
                    }.lparams(width = matchParent,height = wrapContent){
@@ -131,4 +139,14 @@ class StartActivity : AppCompatActivity(){
         }
     }
 
+    private fun closeFocusjianpan() {
+        //关闭ｅｄｉｔ光标
+        telePhone.clearFocus()
+        password.clearFocus()
+        //关闭键盘事件
+        val phone = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        phone.hideSoftInputFromWindow(telePhone.windowToken, 0)
+        val code = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        code.hideSoftInputFromWindow(password!!.windowToken, 0)
+    }
 }
