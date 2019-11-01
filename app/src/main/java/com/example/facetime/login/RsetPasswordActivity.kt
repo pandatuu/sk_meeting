@@ -101,6 +101,10 @@ class RsetPasswordActivity : AppCompatActivity(){
                     text = "完成"
                     textColor = Color.WHITE
                     textSize = 21f
+
+                    onClick {
+                        fulfill()
+                    }
                 }.lparams(width = matchParent,height = wrapContent){
                     topMargin = dip(50)
                 }
@@ -120,5 +124,27 @@ class RsetPasswordActivity : AppCompatActivity(){
         phone.hideSoftInputFromWindow(password.windowToken, 0)
         val code = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         code.hideSoftInputFromWindow(confirmPassword!!.windowToken, 0)
+    }
+
+    fun fulfill(){
+        val myPassword = password.text.toString().trim()
+        val myConfirmPassword = confirmPassword.text.toString().trim()
+
+        if(myPassword.isNullOrEmpty()){
+            toast("密码不可为空！！")
+            return
+        }
+
+        if(myConfirmPassword.isNullOrEmpty()){
+            toast("确认密码不可为空")
+            return
+        }
+
+        if(myPassword != myConfirmPassword){
+            toast("密码前后不一致")
+            return
+        }
+
+        toast("完成")
     }
 }
