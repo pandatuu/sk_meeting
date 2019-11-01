@@ -36,7 +36,7 @@
         <activity
             android:name=".conference.MenuActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.mainActionBar"
+            android:theme="@style/AppTheme.Black"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -54,10 +54,33 @@
         </activity>
 
 
+        <!-- 国家区号 -->
+        <activity android:name="com.sahooz.library.PickActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme.Black"
+            >
+        </activity>
 
+        <!-- 注册 -->
+        <activity android:name="com.example.facetime.conference.RegisterActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme.Black"
+            >
+        </activity>
 
+        <!-- 注册-设置密码 -->
+        <activity android:name="com.example.facetime.conference.SetPassword"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme.Black"
+            >
+        </activity>
 
-
+        <!-- 设置昵称 -->
+        <activity android:name="com.example.facetime.conference.SetNickName"
+android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme.Black"
+            >
+        </activity>
 
 
         <!--选择页-->
@@ -75,8 +98,27 @@
             >
         </activity>
 
+        <!--登录页面-->
+        <activity android:name="com.example.facetime.login.StartActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme.Black"
+            >
+        </activity>
 
+        <!--准备更改密码-->
+        <activity android:name="com.example.facetime.login.ReadSetPasswordActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme.Black"
+            >
+        </activity>
 
+        <!--更改密码-->
+        <activity android:name="com.example.facetime.login.RsetPasswordActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme.Black"
+            >
+        </activity>
+        
 
         <!--聊天视频-->
         <activity android:name="com.example.facetime.conference.JitsiMeetActivitySon"
