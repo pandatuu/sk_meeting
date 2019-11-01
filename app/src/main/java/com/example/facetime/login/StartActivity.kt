@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
+import com.example.facetime.conference.RegisterActivity
 import com.google.i18n.phonenumbers.NumberParseException
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.sahooz.library.Country
@@ -43,6 +44,9 @@ class StartActivity : AppCompatActivity(){
                     gravity = Gravity.RIGHT
                     textSize = 16f
                     textColor = Color.parseColor("#7F7F7F")
+                    onClick {
+                        startActivity<RegisterActivity>()
+                    }
                 }.lparams(height = wrapContent,width = matchParent){
                     topPadding = dip(20)
                 }
