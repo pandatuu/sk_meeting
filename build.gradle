@@ -19,9 +19,10 @@ allprojects {
     repositories {
         maven {
             //url "https://github.com/jitsi/jitsi-maven-repository/raw/master/releases"
-            url "file:/home/zjh/jitsi_repository_copy/releases/"
+            url "file:/home/zjh/jitsi_repository_copy/"
 
         }
+
         maven {
             url 'https://dl.bintray.com/umsdk/release'
         }

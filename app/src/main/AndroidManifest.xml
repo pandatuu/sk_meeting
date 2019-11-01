@@ -94,6 +94,39 @@
         </activity>
 
 
+        <!--设置密码-->
+        <activity android:name="com.example.facetime.conference.CreatePasswordActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme.Black"
+            >
+        </activity>
+
+
+        <!--设置房间名-->
+        <activity android:name="com.example.facetime.conference.CreateRoomNameActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme.Black"
+            >
+        </activity>
+
+        <!--创建房间成功-->
+        <activity android:name="com.example.facetime.conference.SuccessActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme.Black"
+            >
+        </activity>
+
+        <!--通过房间号进入-->
+        <activity android:name="com.example.facetime.conference.EnteroomByIdActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme.Black"
+            >
+        </activity>
+
+
+
+
+
     </application>
 
 </manifest>

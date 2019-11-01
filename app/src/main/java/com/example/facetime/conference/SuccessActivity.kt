@@ -29,7 +29,9 @@ open class SuccessActivity : AppCompatActivity() {
 
 
     private lateinit var toolbar1: Toolbar
-    private lateinit var editText:EditText
+    private lateinit var textView1:TextView
+    private lateinit var textView2:TextView
+    private lateinit var textView3:TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,7 +83,7 @@ open class SuccessActivity : AppCompatActivity() {
                 gravity = Gravity.CENTER_HORIZONTAL
                 textView {
                     text =
-                            "需要为您的会议室设置一个密码吗？这样您在会议时可以防止别人的打扰！如不需要，可直接点击创建"
+                        "恭喜您的专属会议室创建成功啦！"
                     textSize = 20f
                     textColor = Color.BLACK
                     typeface = Typeface.DEFAULT_BOLD
@@ -91,64 +93,37 @@ open class SuccessActivity : AppCompatActivity() {
                 }
 
 
+                textView{
+                    text="会议室ID"
+                }.lparams() {
+                    topMargin = dip(35)
+                    rightMargin = dip(15)
+                    leftMargin = dip(15)
+                    height = wrapContent
+                    width = matchParent
+                }
 
 
                 linearLayout() {
 
-                    setOnClickListener {
-                        editText.requestFocus()
-                        showSoftKeyboard(editText)
 
-                    }
 
                     gravity = Gravity.CENTER
-                    backgroundResource=R.drawable.border
+                    backgroundResource=R.drawable.border_transparent
 
 
-                    editText = editText() {
+                    textView1 = textView() {
 
                         textColor = Color.BLACK
                         setHintTextColor(Color.BLACK)
-                        hint = "请输入会议密码"
+                        text = "303006"
                         imeOptions = IME_ACTION_DONE
                         backgroundColor=Color.TRANSPARENT
                         singleLine = true
-
-                        addTextChangedListener(object : TextWatcher {
-                            override fun beforeTextChanged(
-                                s: CharSequence?,
-                                start: Int,
-                                count: Int,
-                                after: Int
-                            ) {
+                        gravity=Gravity.CENTER
 
 
-                            }
 
-                            override fun onTextChanged(
-                                s: CharSequence?,
-                                start: Int,
-                                before: Int,
-                                count: Int
-                            ) {
-                            }
-
-                            override fun afterTextChanged(s: Editable?) {
-                                if (text.toString() == "") {
-                                    hint = "请输入会议密码"
-                                } else {
-                                    hint = ""
-                                }
-                            }
-                        })
-
-                        setOnFocusChangeListener { view, b ->
-                            if (b) {
-                                setHintTextColor(Color.BLACK)
-                            } else {
-                                setHintTextColor(Color.GRAY)
-                            }
-                        }
                     }.lparams() {
 
                         width = wrapContent
@@ -157,7 +132,7 @@ open class SuccessActivity : AppCompatActivity() {
                     }
 
                 }.lparams() {
-                    topMargin = dip(40)
+                    topMargin = dip(5)
                     rightMargin = dip(15)
                     leftMargin = dip(15)
                     height = dip(50)
@@ -166,8 +141,106 @@ open class SuccessActivity : AppCompatActivity() {
 
 
 
+
+
+                textView{
+                    text="会议室名称"
+                }.lparams() {
+                    topMargin = dip(35)
+                    rightMargin = dip(15)
+                    leftMargin = dip(15)
+                    height = wrapContent
+                    width = matchParent
+                }
+
+                linearLayout() {
+
+
+
+                    gravity = Gravity.CENTER
+                    backgroundResource=R.drawable.border_transparent
+
+
+                    textView1 = textView() {
+
+                        textColor = Color.BLACK
+                        setHintTextColor(Color.BLACK)
+                        text = "动画谷世界第一"
+                        imeOptions = IME_ACTION_DONE
+                        backgroundColor=Color.TRANSPARENT
+                        singleLine = true
+                        gravity=Gravity.CENTER
+
+
+
+                    }.lparams() {
+
+                        width = wrapContent
+                        height = matchParent
+
+                    }
+
+                }.lparams() {
+                    topMargin = dip(5)
+                    rightMargin = dip(15)
+                    leftMargin = dip(15)
+                    height = dip(50)
+                    width = matchParent
+                }
+
+
+
+
+                textView{
+                    text="会议室密码"
+                }.lparams() {
+                    topMargin = dip(35)
+                    rightMargin = dip(15)
+                    leftMargin = dip(15)
+                    height = wrapContent
+                    width = matchParent
+                }
+
+                linearLayout() {
+
+
+
+                    gravity = Gravity.CENTER
+                    backgroundResource=R.drawable.border_transparent
+
+
+                    textView1 = textView() {
+
+                        textColor = Color.BLACK
+                        setHintTextColor(Color.BLACK)
+                        text = "cgland666"
+                        imeOptions = IME_ACTION_DONE
+                        backgroundColor=Color.TRANSPARENT
+                        singleLine = true
+                        gravity=Gravity.CENTER
+
+
+                    }.lparams() {
+
+                        width = wrapContent
+                        height = matchParent
+
+                    }
+
+                }.lparams() {
+                    topMargin = dip(5)
+                    rightMargin = dip(15)
+                    leftMargin = dip(15)
+                    height = dip(50)
+                    width = matchParent
+                }
+
+
+
+
+
                 textView {
-                    text = "创建"
+                    text = "进入会议室"
                     textSize = 16f
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg

@@ -83,7 +83,7 @@ open class EnteroomByIdActivity : AppCompatActivity() {
                 gravity = Gravity.CENTER_HORIZONTAL
                 textView {
                     text =
-                            "恭喜您的专属会议室创建成功啦！"
+                            "请输入要加入的会议室ID或名称"
                     textSize = 20f
                     textColor = Color.BLACK
                     typeface = Typeface.DEFAULT_BOLD
@@ -111,7 +111,7 @@ open class EnteroomByIdActivity : AppCompatActivity() {
 
                         textColor = Color.BLACK
                         setHintTextColor(Color.BLACK)
-                        hint = "请输入会议密码"
+                        hint = "进入会议室时开启视频"
                         imeOptions = IME_ACTION_DONE
                         backgroundColor=Color.TRANSPARENT
                         singleLine = true
@@ -137,7 +137,7 @@ open class EnteroomByIdActivity : AppCompatActivity() {
 
                             override fun afterTextChanged(s: Editable?) {
                                 if (text.toString() == "") {
-                                    hint = "请输入会议密码"
+                                    hint = "进入会议室时开启视频"
                                 } else {
                                     hint = ""
                                 }
@@ -169,6 +169,78 @@ open class EnteroomByIdActivity : AppCompatActivity() {
 
 
 
+                linearLayout() {
+
+                    gravity=Gravity.CENTER_VERTICAL
+
+                    textView{
+
+                        text="进入会议室时开启语音"
+                        gravity=Gravity.LEFT or Gravity.CENTER_VERTICAL
+
+                    }.lparams(){
+                        width=dip(0)
+                        height= matchParent
+                        weight=1f
+                    }
+
+
+                    switch {
+
+                        setThumbResource(R.drawable.thumb)
+                        setTrackResource(R.drawable.track)
+
+                    }.lparams(){
+                        width=dip(50)
+                        height=dip(30)
+                    }
+
+
+                }.lparams() {
+                    topMargin = dip(30)
+                    rightMargin = dip(15)
+                    leftMargin = dip(15)
+                    height = dip(50)
+                    width = matchParent
+                }
+
+
+
+                linearLayout() {
+
+                    gravity=Gravity.CENTER_VERTICAL
+
+                    textView{
+
+                        text="进入会议室时开启视频"
+                        gravity=Gravity.LEFT or Gravity.CENTER_VERTICAL
+
+                    }.lparams(){
+                        width=dip(0)
+                        height= matchParent
+                        weight=1f
+                    }
+
+
+                    switch {
+
+                        setThumbResource(R.drawable.thumb)
+                        setTrackResource(R.drawable.track)
+
+
+                    }.lparams(){
+                        width=dip(50)
+                        height=dip(30)
+                    }
+
+
+                }.lparams() {
+                    topMargin = dip(0)
+                    rightMargin = dip(15)
+                    leftMargin = dip(15)
+                    height = dip(50)
+                    width = matchParent
+                }
 
 
 
@@ -176,7 +248,7 @@ open class EnteroomByIdActivity : AppCompatActivity() {
 
 
                 textView {
-                    text = "创建"
+                    text = "加入"
                     textSize = 16f
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg

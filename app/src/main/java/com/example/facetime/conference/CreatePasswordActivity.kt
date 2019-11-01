@@ -25,11 +25,13 @@ import android.widget.*
 import com.example.facetime.R
 
 
-open class CreateRoomNameActivity : AppCompatActivity() {
+open class CreatePasswordActivity : AppCompatActivity() {
 
 
     private lateinit var toolbar1: Toolbar
-    private lateinit var editText:EditText
+
+    private lateinit var editText1:EditText
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,8 +67,8 @@ open class CreateRoomNameActivity : AppCompatActivity() {
                 }.lparams() {
                     weight = 1f
                     width = dip(0)
-                    height = dip(65 - getStatusBarHeight(this@CreateRoomNameActivity))
-                    topMargin=dip(getStatusBarHeight(this@CreateRoomNameActivity))
+                    height = dip(65 - getStatusBarHeight(this@CreatePasswordActivity))
+                    topMargin=dip(getStatusBarHeight(this@CreatePasswordActivity))
                 }
             }.lparams() {
                 width = matchParent
@@ -80,7 +82,8 @@ open class CreateRoomNameActivity : AppCompatActivity() {
             verticalLayout {
                 gravity = Gravity.CENTER_HORIZONTAL
                 textView {
-                    text = "为您的会议室取一个别致的名称吧，同事们可以通过查找会议室名称来加入哦~"
+                    text =
+                            "恭喜您的专属会议室创建成功啦！"
                     textSize = 20f
                     textColor = Color.BLACK
                     typeface = Typeface.DEFAULT_BOLD
@@ -95,8 +98,8 @@ open class CreateRoomNameActivity : AppCompatActivity() {
                 linearLayout() {
 
                     setOnClickListener {
-                        editText.requestFocus()
-                        showSoftKeyboard(editText)
+                        editText1.requestFocus()
+                        showSoftKeyboard(editText1)
 
                     }
 
@@ -104,11 +107,11 @@ open class CreateRoomNameActivity : AppCompatActivity() {
                     backgroundResource=R.drawable.border
 
 
-                    editText = editText() {
+                    editText1 = editText() {
 
                         textColor = Color.BLACK
                         setHintTextColor(Color.BLACK)
-                        hint = "请输入会议名称"
+                        hint = "请输入会议密码"
                         imeOptions = IME_ACTION_DONE
                         backgroundColor=Color.TRANSPARENT
                         singleLine = true
@@ -134,7 +137,7 @@ open class CreateRoomNameActivity : AppCompatActivity() {
 
                             override fun afterTextChanged(s: Editable?) {
                                 if (text.toString() == "") {
-                                    hint = "请输入会议名称"
+                                    hint = "请输入会议密码"
                                 } else {
                                     hint = ""
                                 }
@@ -165,12 +168,34 @@ open class CreateRoomNameActivity : AppCompatActivity() {
 
 
 
+
+
+
+
+
+
+
                 textView {
-                    text = "下一步"
+                    text = "创建"
                     textSize = 16f
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
                     gravity = Gravity.CENTER
+
+                    setOnClickListener {
+
+                        var intent =
+                            Intent(this@CreatePasswordActivity, SuccessActivity::class.java)
+                        startActivityForResult(intent, 5)
+                        overridePendingTransition(
+                            R.anim.right_in,
+                            R.anim.left_out
+                        )
+                    }
+
+
+
+
                 }.lparams() {
                     height = dip(50)
                     width = matchParent
@@ -198,7 +223,7 @@ open class CreateRoomNameActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         setActionBar(toolbar1)
-        StatusBarUtil.setTranslucentForImageView(this@CreateRoomNameActivity, 0, toolbar1)
+        StatusBarUtil.setTranslucentForImageView(this@CreatePasswordActivity, 0, toolbar1)
         getWindow().getDecorView()
             .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
         toolbar1.setNavigationOnClickListener {

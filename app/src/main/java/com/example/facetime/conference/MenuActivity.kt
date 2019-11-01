@@ -39,9 +39,9 @@ open class MenuActivity : AppCompatActivity() {
             backgroundColor = Color.parseColor("#f2f2f2")
             //toolbar
             relativeLayout() {
-                backgroundResource = R.color.transparent
+                backgroundColor=Color.TRANSPARENT
                 toolbar1 = toolbar {
-                    backgroundResource = R.color.transparent
+                    backgroundColor=Color.TRANSPARENT
                     isEnabled = true
                     title = ""
                 }.lparams() {
@@ -114,6 +114,19 @@ open class MenuActivity : AppCompatActivity() {
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
                     gravity = Gravity.CENTER
+
+                    setOnClickListener {
+
+                        var intent = Intent(this@MenuActivity, CreateRoomNameActivity::class.java)
+                        startActivityForResult(intent, 3)
+                        overridePendingTransition(
+                            R.anim.right_in,
+                            R.anim.left_out
+                        )
+
+                    }
+
+
                 }.lparams() {
                     height = dip(40)
                     width = dip(240)
@@ -121,11 +134,16 @@ open class MenuActivity : AppCompatActivity() {
                 }
 
                 textView {
-                    text = "创建我的会议室"
+                    text = "进入我的会议室"
                     textSize = 14f
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
                     gravity = Gravity.CENTER
+
+
+
+
+
                 }.lparams() {
                     height = dip(40)
                     width = dip(240)
@@ -133,11 +151,26 @@ open class MenuActivity : AppCompatActivity() {
                 }
 
                 textView {
-                    text = "创建我的会议室"
+                    text = "加入一个会议室"
                     textSize = 14f
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
                     gravity = Gravity.CENTER
+
+
+
+                    setOnClickListener {
+
+                        var intent = Intent(this@MenuActivity, EnteroomByIdActivity::class.java)
+                        startActivityForResult(intent, 12)
+                        overridePendingTransition(
+                            R.anim.right_in,
+                            R.anim.left_out
+                        )
+
+                    }
+
+
                 }.lparams() {
                     height = dip(40)
                     width = dip(240)
