@@ -1,6 +1,7 @@
 package com.example.facetime.conference
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -13,12 +14,17 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.i18n.phonenumbers.NumberParseException
+import com.google.i18n.phonenumbers.PhoneNumberUtil
+import com.sahooz.library.Country
+import com.sahooz.library.PickActivity
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 
 class RegisterActivity: AppCompatActivity() {
 
     lateinit var isChoose: CheckBox
+    lateinit var countryCode: TextView
     lateinit var phoneNum: EditText
     lateinit var vcodeNum: EditText
     lateinit var codeText: TextView
@@ -59,10 +65,13 @@ class RegisterActivity: AppCompatActivity() {
                 linearLayout {
                     backgroundColor = Color.WHITE
                     orientation = LinearLayout.HORIZONTAL
-                    textView {
+                    countryCode = textView {
                         gravity = Gravity.CENTER
                         text = "+86"
                         textSize = 14f
+                        onClick {
+                            startActivityForResult(Intent(applicationContext, PickActivity::class.java), 111)
+                        }
                     }.lparams(dip(50), matchParent)
                     phoneNum = editText {
                         hint = "请输入手机号码"
@@ -93,6 +102,7 @@ class RegisterActivity: AppCompatActivity() {
                         onClick {
                             closeFocusjianpan()
                             if(!runningDownTimer){
+                                isPhoneNumberValid(phoneNum.text.toString(),countryCode.text.toString())
                                 onPcode()
                             }else{
                                 toast("请不要重复点击")
@@ -201,5 +211,35 @@ class RegisterActivity: AppCompatActivity() {
                 onPcode()
             }
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 111 && resultCode == Activity.RESULT_OK) {
+            val country = Country.fromJson(data!!.getStringExtra("country"))
+            val areeaCode = "+" + country.code
+            countryCode.text = areeaCode
+        }
+    }
+
+
+    /**
+     * 根据区号判断是否是正确的电话号码
+     * @param phoneNumber :带国家码的电话号码
+     * @param countryCode :默认国家码
+     * return ：true 合法  false：不合法
+     */
+    private fun isPhoneNumberValid(phoneNumber: String, countryCode: String): Boolean {
+
+        println("isPhoneNumberValid: $phoneNumber/$countryCode")
+        val phoneUtil = PhoneNumberUtil.getInstance()
+        try {
+            val numberProto = phoneUtil.parse(phoneNumber, countryCode)
+            return phoneUtil.isValidNumber(numberProto)
+        } catch (e: NumberParseException) {
+            System.err.println("isPhoneNumberValid NumberParseException was thrown: $e")
+        }
+
+        return false
     }
 }

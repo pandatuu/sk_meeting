@@ -54,7 +54,12 @@
         </activity>
 
 
-
+        <!-- 国家区号 -->
+        <activity android:name="com.sahooz.library.PickActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme.Black"
+            >
+        </activity>
 
         <!-- 注册 -->
 <!--        <activity android:name="com.example.facetime.conference.RegisterActivity"-->
