@@ -541,7 +541,7 @@ open class BaseActivity : AppCompatActivity(),
             .build()
 
 //
-            JitsiMeetActivitySon.launch(this, options, "xxx")
+            JitsiMeetActivitySon().launch(this, options, "xxx")
         }catch (e: Exception) {
             System.out.println("错了")
 

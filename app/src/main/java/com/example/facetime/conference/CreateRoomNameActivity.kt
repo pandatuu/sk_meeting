@@ -35,6 +35,12 @@ open class CreateRoomNameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         verticalLayout {
+
+            setOnClickListener {
+                closeSoftKeyboard(editText)
+            }
+
+
             backgroundColor = Color.parseColor("#f2f2f2")
 
             linearLayout {
@@ -107,7 +113,7 @@ open class CreateRoomNameActivity : AppCompatActivity() {
                     editText = editText() {
 
                         textColor = Color.BLACK
-                        setHintTextColor(Color.BLACK)
+                        setHintTextColor(Color.GRAY)
                         hint = "请输入会议名称"
                         imeOptions = IME_ACTION_DONE
                         backgroundColor=Color.TRANSPARENT
@@ -245,6 +251,20 @@ open class CreateRoomNameActivity : AppCompatActivity() {
         val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         imm.showSoftInput(view, 0)
+    }
+
+
+    fun closeSoftKeyboard(view: View?) {
+
+        (view as EditText).clearFocus()
+
+
+        if (view == null || view.windowToken == null) {
+            return
+        }
+        val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
 

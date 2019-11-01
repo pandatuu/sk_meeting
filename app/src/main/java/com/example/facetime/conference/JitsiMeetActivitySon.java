@@ -31,24 +31,23 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
     public static final String ACTION_JITSI_MEET_CONFERENCE = "org.jitsi.meet.CONFERENCE";
     public static final String JITSI_MEET_CONFERENCE_OPTIONS = "JitsiMeetConferenceOptions";
 
-    private static  BaseActivity thiscontext;
-    private static String thisInterviewId;
 
     private static int leaveType=2 ;
 
     public JitsiMeetActivitySon() {
     }
 
-    public static void launch(Context context, JitsiMeetConferenceOptions options, String interviewId) {
-
-        thiscontext=(BaseActivity)context;
-        thisInterviewId=interviewId;
-
+    public  void launch(Context context, JitsiMeetConferenceOptions options, String interviewId) {
 
         Intent intent = new Intent(context,JitsiMeetActivitySon.class);
         intent.setAction("org.jitsi.meet.CONFERENCE");
         intent.putExtra("JitsiMeetConferenceOptions", options);
         context.startActivity(intent);
+
+        overridePendingTransition(
+                R.anim.right_in,
+                R.anim.left_out
+        );
     }
 
 //    public static void launch(Context context, String url) {
@@ -62,7 +61,6 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
         if (!this.extraInitialize()) {
             this.initialize();
         }
-        thiscontext.setVideoChatControllerListener(this);
     }
 
     public void finishVideo(int  type) {
@@ -144,6 +142,7 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
     }
 
     public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
         JitsiMeetConferenceOptions options;
         if ((options = this.getConferenceOptions(intent)) != null) {
             this.join(options);

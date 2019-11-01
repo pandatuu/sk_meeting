@@ -37,6 +37,14 @@ open class CreatePasswordActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         verticalLayout {
+
+
+            setOnClickListener {
+                closeSoftKeyboard(editText1)
+            }
+
+
+
             backgroundColor = Color.parseColor("#f2f2f2")
 
             linearLayout {
@@ -110,7 +118,7 @@ open class CreatePasswordActivity : AppCompatActivity() {
                     editText1 = editText() {
 
                         textColor = Color.BLACK
-                        setHintTextColor(Color.BLACK)
+                        setHintTextColor(Color.GRAY)
                         hint = "请输入会议密码"
                         imeOptions = IME_ACTION_DONE
                         backgroundColor=Color.TRANSPARENT
@@ -257,6 +265,20 @@ open class CreatePasswordActivity : AppCompatActivity() {
         val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         imm.showSoftInput(view, 0)
+    }
+
+
+    fun closeSoftKeyboard(view: View?) {
+
+        (view as EditText).clearFocus()
+
+
+        if (view == null || view.windowToken == null) {
+            return
+        }
+        val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
 
