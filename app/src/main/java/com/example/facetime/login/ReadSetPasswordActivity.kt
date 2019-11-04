@@ -10,7 +10,6 @@ import android.os.CountDownTimer
 import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -21,7 +20,6 @@ import com.sahooz.library.Country
 import com.sahooz.library.PickActivity
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
-
 
 class ReadSetPasswordActivity : AppCompatActivity(){
     private var runningDownTimer: Boolean = false
@@ -211,15 +209,15 @@ class ReadSetPasswordActivity : AppCompatActivity(){
         val phone = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         phone.hideSoftInputFromWindow(telephone.windowToken, 0)
         val code = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        code.hideSoftInputFromWindow(myCode!!.windowToken, 0)
+        code.hideSoftInputFromWindow(myCode.windowToken, 0)
     }
 
     fun determinePhone(): Boolean {
         val countryCode = phoneNumber.text.toString().trim()
         val phone = telephone.text.toString().trim()
         val country = countryCode.substring(1, 3)
-        var myPhone = countryCode+phone
-        var result = isPhoneNumberValid(myPhone,country)
+        val myPhone = countryCode+phone
+        val result = isPhoneNumberValid(myPhone,country)
 
         if(result){
             return true
@@ -248,7 +246,7 @@ class ReadSetPasswordActivity : AppCompatActivity(){
     }
 
     fun next(){
-        var res = determinePhone()
+        val res = determinePhone()
         val phone = telephone.text.toString().trim()
         val code = myCode.text.toString().trim()
 

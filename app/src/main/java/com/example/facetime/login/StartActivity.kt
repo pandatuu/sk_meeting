@@ -6,7 +6,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
-import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.CheckBox
 import android.widget.EditText
@@ -22,10 +21,10 @@ import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 
 class StartActivity : AppCompatActivity(){
-    lateinit var telePhone:EditText
+    private lateinit var telePhone:EditText
     lateinit var password:EditText
-    lateinit var phoneNumber:TextView
-    lateinit var isChoose: CheckBox
+    private lateinit var phoneNumber:TextView
+    private lateinit var isChoose: CheckBox
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -135,7 +134,7 @@ class StartActivity : AppCompatActivity(){
                            toast("服务声明")
                        }
                    }
-               }.lparams(){
+               }.lparams {
                    topMargin = dip(15)
                }
 
@@ -179,7 +178,7 @@ class StartActivity : AppCompatActivity(){
         val phone = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         phone.hideSoftInputFromWindow(telePhone.windowToken, 0)
         val code = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        code.hideSoftInputFromWindow(password!!.windowToken, 0)
+        code.hideSoftInputFromWindow(password.windowToken, 0)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -211,7 +210,7 @@ class StartActivity : AppCompatActivity(){
         return false
     }
 
-    fun submit(){
+    private fun submit(){
         val countryCode = phoneNumber.text.toString().trim()
         val phone = telePhone.text.toString().trim()
         val myPassword = password.text.toString().trim()
@@ -225,12 +224,12 @@ class StartActivity : AppCompatActivity(){
             return
         }
 
-        if(phone.isNullOrEmpty()){
+        if(phone.isEmpty()){
             toast("请输入手机号")
             return
         }
 
-        if(myPassword.isNullOrEmpty()){
+        if(myPassword.isEmpty()){
             toast("请输入密码")
             return
         }

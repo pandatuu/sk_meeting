@@ -1,18 +1,15 @@
 package com.example.facetime.login
 
-import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
-import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
-
 
 class RsetPasswordActivity : AppCompatActivity(){
     lateinit var password:EditText
@@ -45,10 +42,10 @@ class RsetPasswordActivity : AppCompatActivity(){
                         gravity = Gravity.CENTER
                     }
 
-                    this.setOnClickListener(View.OnClickListener {
+                    this.setOnClickListener {
                         // TODO Auto-generated method stub
                         finish()
-                    })
+                    }
                 }.lparams(width = matchParent,height = wrapContent){
                     topMargin = dip(20)
                     gravity = Gravity.LEFT
@@ -123,10 +120,10 @@ class RsetPasswordActivity : AppCompatActivity(){
         val phone = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         phone.hideSoftInputFromWindow(password.windowToken, 0)
         val code = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        code.hideSoftInputFromWindow(confirmPassword!!.windowToken, 0)
+        code.hideSoftInputFromWindow(confirmPassword.windowToken, 0)
     }
 
-    fun fulfill(){
+    private fun fulfill(){
         val myPassword = password.text.toString().trim()
         val myConfirmPassword = confirmPassword.text.toString().trim()
 
