@@ -28,6 +28,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var countryCode: TextView
     private lateinit var phoneNum: EditText
     private lateinit var vcodeNum: EditText
+    var isPhoneFormat = false
     lateinit var codeText: TextView
     private var runningDownTimer: Boolean = false
 
@@ -51,7 +52,6 @@ class RegisterActivity : AppCompatActivity() {
                         startActivity(intent)
                         finish()
                         overridePendingTransition(R.anim.left_in, R.anim.right_out)
-                        toast("登录")
                     }
                 }.lparams(dip(30), matchParent) {
                     rightMargin = dip(15)
@@ -113,12 +113,12 @@ class RegisterActivity : AppCompatActivity() {
                             closeFocusjianpan()
                             if (phoneNum.text.toString() != "") {
                                 val phone = countryCode.text.toString() + phoneNum.text.toString()
-                                val bool =
+                                isPhoneFormat =
                                     isPhoneNumberValid(
                                         phone,
                                         countryCode.text.toString().substring(1)
                                     )
-                                if (bool) {
+                                if (isPhoneFormat) {
                                     onPcode()
                                 } else {
                                     toast("手机号格式错误")
@@ -169,17 +169,20 @@ class RegisterActivity : AppCompatActivity() {
                     textColor = Color.WHITE
                     backgroundColor = Color.parseColor("#00BFFF")
                     setOnClickListener {
-                        if (phoneNum.text.toString() == "") {
-                            toast("手机号为空")
+                        val phone = countryCode.text.toString() + phoneNum.text.toString()
+                        isPhoneFormat =
+                            isPhoneNumberValid(
+                                phone,
+                                countryCode.text.toString().substring(1)
+                            )
+                        if (phoneNum.text.toString() == "" || !isPhoneFormat) {
+                            toast("手机号为空或格式不对")
                         } else {
                             if (vcodeNum.text.toString() == "") {
                                 toast("验证码为空")
                             } else {
                                 if (isChoose.isChecked) {
-                                    toast("下一步")
-                                    val intent =
-                                        Intent(this@RegisterActivity, SetPassword::class.java)
-                                    startActivity(intent)
+                                    startActivity<RegisterSetPassword>()
                                 } else {
                                     toast("请勾选协议")
                                 }
