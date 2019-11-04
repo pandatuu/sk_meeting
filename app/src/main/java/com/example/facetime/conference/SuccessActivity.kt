@@ -23,6 +23,8 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.*
 import com.example.facetime.R
+import java.net.MalformedURLException
+import java.net.URL
 
 
 open class SuccessActivity : AppCompatActivity() {
@@ -32,6 +34,9 @@ open class SuccessActivity : AppCompatActivity() {
     private lateinit var textView1:TextView
     private lateinit var textView2:TextView
     private lateinit var textView3:TextView
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -165,7 +170,7 @@ open class SuccessActivity : AppCompatActivity() {
 
                         textColor = Color.BLACK
                         setHintTextColor(Color.BLACK)
-                        text = "动画谷世界第一"
+                        text = intent.getStringExtra("RoomName")
                         imeOptions = IME_ACTION_DONE
                         backgroundColor=Color.TRANSPARENT
                         singleLine = true
@@ -190,52 +195,52 @@ open class SuccessActivity : AppCompatActivity() {
 
 
 
-
-                textView{
-                    text="会议室密码"
-                }.lparams() {
-                    topMargin = dip(35)
-                    rightMargin = dip(15)
-                    leftMargin = dip(15)
-                    height = wrapContent
-                    width = matchParent
-                }
-
-                linearLayout() {
-
-
-
-                    gravity = Gravity.CENTER
-                    backgroundResource=R.drawable.border_transparent
-
-
-                    textView1 = textView() {
-
-                        textColor = Color.BLACK
-                        setHintTextColor(Color.BLACK)
-                        text = "cgland666"
-                        imeOptions = IME_ACTION_DONE
-                        backgroundColor=Color.TRANSPARENT
-                        singleLine = true
-                        gravity=Gravity.CENTER
-
-
-                    }.lparams() {
-
-                        width = wrapContent
-                        height = matchParent
-
-                    }
-
-                }.lparams() {
-                    topMargin = dip(5)
-                    rightMargin = dip(15)
-                    leftMargin = dip(15)
-                    height = dip(50)
-                    width = matchParent
-                }
-
-
+//
+//                textView{
+//                    text="会议室密码"
+//                }.lparams() {
+//                    topMargin = dip(35)
+//                    rightMargin = dip(15)
+//                    leftMargin = dip(15)
+//                    height = wrapContent
+//                    width = matchParent
+//                }
+//
+//                linearLayout() {
+//
+//
+//
+//                    gravity = Gravity.CENTER
+//                    backgroundResource=R.drawable.border_transparent
+//
+//
+//                    textView1 = textView() {
+//
+//                        textColor = Color.BLACK
+//                        setHintTextColor(Color.BLACK)
+//                        text = intent.getStringExtra("Password")
+//                        imeOptions = IME_ACTION_DONE
+//                        backgroundColor=Color.TRANSPARENT
+//                        singleLine = true
+//                        gravity=Gravity.CENTER
+//
+//
+//                    }.lparams() {
+//
+//                        width = wrapContent
+//                        height = matchParent
+//
+//                    }
+//
+//                }.lparams() {
+//                    topMargin = dip(5)
+//                    rightMargin = dip(15)
+//                    leftMargin = dip(15)
+//                    height = dip(50)
+//                    width = matchParent
+//                }
+//
+//
 
 
 
@@ -245,6 +250,16 @@ open class SuccessActivity : AppCompatActivity() {
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
                     gravity = Gravity.CENTER
+
+
+
+                    setOnClickListener {
+
+                        val num=intent.getStringExtra("MyRoomNum")
+                        gotoVideoInterview("xxxx")
+
+                    }
+
                 }.lparams() {
                     height = dip(50)
                     width = matchParent
@@ -266,6 +281,9 @@ open class SuccessActivity : AppCompatActivity() {
                 width = matchParent
             }
         }
+
+        initVideoInterview()
+
     }
 
 
@@ -283,6 +301,9 @@ open class SuccessActivity : AppCompatActivity() {
             )
         }
     }
+
+
+
 
 
     fun getStatusBarHeight(context: Context): Int {
@@ -306,6 +327,58 @@ open class SuccessActivity : AppCompatActivity() {
         val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         imm.showSoftInput(view, 0)
+    }
+
+
+    //转向视频界面
+    private fun gotoVideoInterview(roomNum: String) {
+        try {
+            //链接视频
+            val options = JitsiMeetConferenceOptions.Builder()
+                .setRoom(roomNum)
+                .setUserInfo(JitsiMeetUserInfo())
+                .build()
+
+            val intent = Intent(this, JitsiMeetActivitySon::class.java)
+            intent.action = "org.jitsi.meet.CONFERENCE"
+            intent.putExtra("JitsiMeetConferenceOptions", options)
+            startActivity(intent)
+
+            overridePendingTransition(
+                R.anim.right_in,
+                R.anim.left_out
+            )
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            System.out.println("错了")
+        }
+    }
+
+    //初始化视频面试
+    private fun initVideoInterview() {
+        var add = ""
+        add =
+            PreferenceManager.getDefaultSharedPreferences(this)
+                .getString("selected", "https://meet.skjob.jp/").toString()
+        lateinit var serverURL: URL
+        try {
+            serverURL = URL(add)
+        } catch (e: MalformedURLException) {
+            e.printStackTrace()
+        }
+        try {
+            val defaultOptions = JitsiMeetConferenceOptions.Builder()
+                .setServerURL(serverURL)
+                .setAudioMuted(false)
+                .setVideoMuted(false)
+                .setAudioOnly(false)
+                .setWelcomePageEnabled(false)
+                .build()
+            JitsiMeet.setDefaultConferenceOptions(defaultOptions)
+        } catch (e: Exception) {
+            System.out.println("错了")
+        }
     }
 
 

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.jaeger.library.StatusBarUtil
 import org.jetbrains.anko.*
 import android.content.Intent
+import android.preference.PreferenceManager
 import android.view.View
 import android.widget.*
 import com.example.facetime.R
@@ -108,47 +109,83 @@ open class MenuActivity : AppCompatActivity() {
             verticalLayout {
                 gravity = Gravity.CENTER_HORIZONTAL
 
-                textView {
-                    text = "创建我的会议室"
-                    textSize = 14f
-                    textColor = Color.WHITE
-                    backgroundResource = R.drawable.bottonbg
-                    gravity = Gravity.CENTER
 
-                    setOnClickListener {
 
-                        var intent = Intent(this@MenuActivity, CreateRoomNameActivity::class.java)
-                        startActivityForResult(intent, 3)
-                        overridePendingTransition(
-                            R.anim.right_in,
-                            R.anim.left_out
-                        )
+                var RoomNum =
+                    PreferenceManager.getDefaultSharedPreferences(this@MenuActivity)
+                        .getString("MyRoomName", "").toString()
 
+
+
+                println("-------------")
+                println(RoomNum.toString())
+                println("-------------")
+                if(RoomNum==""){
+                    textView {
+                        text = "创建我的会议室"
+                        textSize = 14f
+                        textColor = Color.WHITE
+                        backgroundResource = R.drawable.bottonbg
+                        gravity = Gravity.CENTER
+
+                        setOnClickListener {
+
+                            var intent = Intent(this@MenuActivity, CreateRoomNameActivity::class.java)
+                            startActivityForResult(intent, 3)
+                            overridePendingTransition(
+                                R.anim.right_in,
+                                R.anim.left_out
+                            )
+
+                        }
+
+
+                    }.lparams() {
+                        height = dip(40)
+                        width = dip(240)
+                        topMargin = dip(20)
                     }
+                }else{
+                    textView {
+                        text = "进入我的会议室"
+                        textSize = 14f
+                        textColor = Color.WHITE
+                        backgroundResource = R.drawable.bottonbg
+                        gravity = Gravity.CENTER
 
 
-                }.lparams() {
-                    height = dip(40)
-                    width = dip(240)
-                    topMargin = dip(20)
+
+                        setOnClickListener {
+
+                            var intentNow =
+                                Intent(this@MenuActivity, SuccessActivity::class.java)
+
+
+
+                            var MyRoomName =
+                                PreferenceManager.getDefaultSharedPreferences(this@MenuActivity)
+                                    .getString("MyRoomName", "").toString()
+
+
+                            intentNow.putExtra("RoomName",MyRoomName)
+                            startActivityForResult(intentNow, 50)
+                            overridePendingTransition(
+                                R.anim.right_in,
+                                R.anim.left_out
+                            )
+                        }
+
+
+
+                    }.lparams() {
+                        height = dip(40)
+                        width = dip(240)
+                        topMargin = dip(20)
+                    }
                 }
 
-                textView {
-                    text = "进入我的会议室"
-                    textSize = 14f
-                    textColor = Color.WHITE
-                    backgroundResource = R.drawable.bottonbg
-                    gravity = Gravity.CENTER
 
 
-
-
-
-                }.lparams() {
-                    height = dip(40)
-                    width = dip(240)
-                    topMargin = dip(20)
-                }
 
                 textView {
                     text = "加入一个会议室"

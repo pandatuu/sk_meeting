@@ -13,10 +13,16 @@ import com.jaeger.library.StatusBarUtil
 import org.jetbrains.anko.*
 import android.content.Intent
 import android.graphics.Typeface
+import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.*
 import com.example.facetime.R
+import org.jitsi.meet.sdk.JitsiMeet
+import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
+import org.jitsi.meet.sdk.JitsiMeetUserInfo
+import java.net.MalformedURLException
+import java.net.URL
 
 
 open class EnteRoomByIdActivity : AppCompatActivity() {
@@ -26,9 +32,14 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
 
     private lateinit var editText1: EditText
     private lateinit var frameLayout: FrameLayout
-    private lateinit var triangle:LinearLayout
+    private lateinit var triangle: LinearLayout
 
-    private  var chooseRoomIdFragment : ChooseRoomIdFragment? = null
+
+    private lateinit var switch_video: Switch
+    private lateinit var switch_audio: Switch
+
+
+    private var chooseRoomIdFragment: ChooseRoomIdFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,7 +98,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                 gravity = Gravity.CENTER_HORIZONTAL
                 textView {
                     text =
-                        "请输入要加入的会议室ID或名称"
+                        "请输入要加入的会议室ID"
                     textSize = 20f
                     textColor = Color.BLACK
                     typeface = Typeface.DEFAULT_BOLD
@@ -115,7 +126,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                         editText1 = editText() {
                             textColor = Color.BLACK
                             setHintTextColor(Color.GRAY)
-                            hint = "进入会议室时开启视频"
+                            hint = "请输入会议室ID"
                             imeOptions = IME_ACTION_DONE
                             backgroundColor = Color.TRANSPARENT
                             singleLine = true
@@ -166,17 +177,16 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                     }
 
 
-                 triangle=   linearLayout {
+                    triangle = linearLayout {
                         backgroundColor = Color.WHITE
                         gravity = Gravity.CENTER
 
                         setOnClickListener {
 
 
-
-                            if(chooseRoomIdFragment==null){
+                            if (chooseRoomIdFragment == null) {
                                 showSelectort()
-                            }else{
+                            } else {
                                 closeSelector()
                             }
 
@@ -233,11 +243,13 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                             }
 
 
-                            switch {
+                            switch_audio = switch {
 
                                 setThumbResource(R.drawable.thumb)
                                 setTrackResource(R.drawable.track)
 
+
+                                setChecked(true)
                             }.lparams() {
                                 width = dip(50)
                                 height = dip(30)
@@ -268,10 +280,12 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                             }
 
 
-                            switch {
+                            switch_video = switch {
 
                                 setThumbResource(R.drawable.thumb)
                                 setTrackResource(R.drawable.track)
+
+                                setChecked(true)
 
 
                             }.lparams() {
@@ -301,16 +315,28 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
 
                             setOnClickListener {
 
-                                var intent =
-                                    Intent(this@EnteRoomByIdActivity, EnteRoomByPasswordActivity::class.java)
-                                startActivityForResult(intent, 9)
-                                overridePendingTransition(
-                                    R.anim.right_in,
-                                    R.anim.left_out
-                                )
+                                //                                var intent =
+//                                    Intent(this@EnteRoomByIdActivity, EnteRoomByPasswordActivity::class.java)
+//                                startActivityForResult(intent, 9)
+//                                overridePendingTransition(
+//                                    R.anim.right_in,
+//                                    R.anim.left_out
+//                                )
+                                if (editText1.text.toString() == "") {
+
+                                    val toast = Toast.makeText(
+                                        applicationContext,
+                                        "请输入会议室ID",
+                                        Toast.LENGTH_SHORT
+                                    )
+
+                                    toast.setGravity(Gravity.CENTER, 0, 0)
+                                    toast.show()
+
+                                } else {
+                                    gotoVideoInterview(editText1.text.toString())
+                                }
                             }
-
-
                         }.lparams() {
                             height = dip(50)
                             width = matchParent
@@ -339,6 +365,8 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                 width = matchParent
             }
         }
+
+        initVideoInterview()
     }
 
 
@@ -413,7 +441,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
     }
 
 
-    fun closeSelector(){
+    fun closeSelector() {
         //triangle.visibility=View.VISIBLE
 
         var mTransaction = supportFragmentManager.beginTransaction()
@@ -422,20 +450,19 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
 //            R.anim.top_out, R.anim.top_out
 //        )
 
-        if(chooseRoomIdFragment!=null){
-            mTransaction.remove( chooseRoomIdFragment!!)
-            chooseRoomIdFragment=null
+        if (chooseRoomIdFragment != null) {
+            mTransaction.remove(chooseRoomIdFragment!!)
+            chooseRoomIdFragment = null
 
         }
 
         mTransaction.commit()
 
 
-
     }
 
 
-    fun selectRoomToEditText(text:String){
+    fun selectRoomToEditText(text: String) {
 
 
         editText1.setText(text)
@@ -444,5 +471,57 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
     }
 
 
+    //转向视频界面
+    private fun gotoVideoInterview(roomNum: String) {
+        try {
+            //链接视频
+            val options = JitsiMeetConferenceOptions.Builder()
+                .setAudioMuted(!switch_audio.isChecked)
+                .setVideoMuted(!switch_video.isChecked)
+                .setRoom(roomNum)
+                .setUserInfo(JitsiMeetUserInfo())
+                .build()
+
+            val intent = Intent(this, JitsiMeetActivitySon::class.java)
+            intent.action = "org.jitsi.meet.CONFERENCE"
+            intent.putExtra("JitsiMeetConferenceOptions", options)
+            startActivity(intent)
+
+            overridePendingTransition(
+                R.anim.right_in,
+                R.anim.left_out
+            )
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            System.out.println("错了")
+        }
+    }
+
+    //初始化视频面试
+    private fun initVideoInterview() {
+        var add = ""
+        add =
+            PreferenceManager.getDefaultSharedPreferences(this)
+                .getString("selected", "https://meet.skjob.jp/").toString()
+        lateinit var serverURL: URL
+        try {
+            serverURL = URL(add)
+        } catch (e: MalformedURLException) {
+            e.printStackTrace()
+        }
+        try {
+            val defaultOptions = JitsiMeetConferenceOptions.Builder()
+                .setServerURL(serverURL)
+                .setAudioMuted(false)
+                .setVideoMuted(false)
+                .setAudioOnly(false)
+                .setWelcomePageEnabled(false)
+                .build()
+            JitsiMeet.setDefaultConferenceOptions(defaultOptions)
+        } catch (e: Exception) {
+            System.out.println("错了")
+        }
+    }
 
 }

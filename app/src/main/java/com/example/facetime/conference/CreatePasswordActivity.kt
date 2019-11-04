@@ -91,7 +91,7 @@ open class CreatePasswordActivity : AppCompatActivity() {
                 gravity = Gravity.CENTER_HORIZONTAL
                 textView {
                     text =
-                            "恭喜您的专属会议室创建成功啦！"
+                           "需要为您的会议室设置一个密码吗？这样您在会议时可以防止别人的打扰！如不需要，可直接点击创建"
                     textSize = 20f
                     textColor = Color.BLACK
                     typeface = Typeface.DEFAULT_BOLD
@@ -192,9 +192,13 @@ open class CreatePasswordActivity : AppCompatActivity() {
 
                     setOnClickListener {
 
-                        var intent =
+                        var intentNow =
                             Intent(this@CreatePasswordActivity, SuccessActivity::class.java)
-                        startActivityForResult(intent, 5)
+
+
+                        intentNow.putExtra("RoomName",intent.getStringExtra("RoomName"))
+                        intentNow.putExtra("Password",editText1.text.toString())
+                        startActivityForResult(intentNow, 5)
                         overridePendingTransition(
                             R.anim.right_in,
                             R.anim.left_out

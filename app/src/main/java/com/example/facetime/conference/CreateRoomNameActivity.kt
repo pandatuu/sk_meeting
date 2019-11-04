@@ -29,10 +29,15 @@ open class CreateRoomNameActivity : AppCompatActivity() {
 
 
     private lateinit var toolbar1: Toolbar
-    private lateinit var editText:EditText
+    private lateinit var editText: EditText
+
+    lateinit var ms: SharedPreferences
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        ms = PreferenceManager.getDefaultSharedPreferences(this)
 
         verticalLayout {
 
@@ -61,18 +66,18 @@ open class CreateRoomNameActivity : AppCompatActivity() {
                                 R.anim.right_out
                             )
                         }
-                        text="返回"
-                        gravity=Gravity.CENTER
+                        text = "返回"
+                        gravity = Gravity.CENTER
 
-                    }.lparams(){
-                        height= matchParent
-                        width= wrapContent
+                    }.lparams() {
+                        height = matchParent
+                        width = wrapContent
                     }
                 }.lparams() {
                     weight = 1f
                     width = dip(0)
                     height = dip(65 - getStatusBarHeight(this@CreateRoomNameActivity))
-                    topMargin=dip(getStatusBarHeight(this@CreateRoomNameActivity))
+                    topMargin = dip(getStatusBarHeight(this@CreateRoomNameActivity))
                 }
             }.lparams() {
                 width = matchParent
@@ -107,7 +112,7 @@ open class CreateRoomNameActivity : AppCompatActivity() {
                     }
 
                     gravity = Gravity.CENTER
-                    backgroundResource=R.drawable.border
+                    backgroundResource = R.drawable.border
 
 
                     editText = editText() {
@@ -116,7 +121,7 @@ open class CreateRoomNameActivity : AppCompatActivity() {
                         setHintTextColor(Color.GRAY)
                         hint = "请输入会议名称"
                         imeOptions = IME_ACTION_DONE
-                        backgroundColor=Color.TRANSPARENT
+                        backgroundColor = Color.TRANSPARENT
                         singleLine = true
 
                         addTextChangedListener(object : TextWatcher {
@@ -181,13 +186,34 @@ open class CreateRoomNameActivity : AppCompatActivity() {
 
                     setOnClickListener {
 
-                        var intent =
-                            Intent(this@CreateRoomNameActivity, CreatePasswordActivity::class.java)
-                        startActivityForResult(intent, 4)
-                        overridePendingTransition(
-                            R.anim.right_in,
-                            R.anim.left_out
-                        )
+                        if(editText.text.toString()==""){
+
+                            val toast = Toast.makeText(
+                                applicationContext,
+                                "请输入会议名称",
+                                Toast.LENGTH_SHORT
+                            )
+
+                            toast.setGravity(Gravity.CENTER, 0, 0)
+                            toast.show()
+
+                        }else{
+
+//                          var intent =
+//                                Intent(this@CreateRoomNameActivity, CreatePasswordActivity::class.java)
+                            createRoom()
+
+                            var intent =
+                                Intent(this@CreateRoomNameActivity, SuccessActivity::class.java)
+
+
+                            intent.putExtra("RoomName",editText.text.toString())
+                            startActivityForResult(intent, 4)
+                            overridePendingTransition(
+                                R.anim.right_in,
+                                R.anim.left_out
+                            )
+                        }
                     }
 
                 }.lparams() {
@@ -200,13 +226,10 @@ open class CreateRoomNameActivity : AppCompatActivity() {
                 }
 
 
-
-
-
             }.lparams() {
                 topMargin = dip(20)
-                rightMargin=dip(15)
-                leftMargin=dip(15)
+                rightMargin = dip(15)
+                leftMargin = dip(15)
                 height = wrapContent
                 width = matchParent
             }
@@ -227,6 +250,20 @@ open class CreateRoomNameActivity : AppCompatActivity() {
                 R.anim.right_out
             )
         }
+    }
+
+
+    fun createRoom(){
+
+        val RoomName = editText.text.toString()
+
+        println("RoomName")
+        println(RoomName)
+        var mEditor: SharedPreferences.Editor = ms.edit()
+        mEditor.putString("MyRoomName", RoomName)
+        mEditor.commit()
+
+        toast("xxxxxxxxxxxxxxxxxxxxx")
     }
 
 
