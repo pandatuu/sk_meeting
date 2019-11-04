@@ -2,21 +2,31 @@ package com.example.facetime.login
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.Gravity
 import android.view.View
-import android.widget.Button
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
+import com.google.i18n.phonenumbers.NumberParseException
+import com.google.i18n.phonenumbers.PhoneNumberUtil
+import com.sahooz.library.Country
+import com.sahooz.library.PickActivity
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 
-
 class ReadSetPasswordActivity : AppCompatActivity(){
     private var runningDownTimer: Boolean = false
-    lateinit var timeButton:Button
+    lateinit var timeButton:TextView
+    lateinit var telephone:EditText
+    lateinit var myCode:EditText
+    lateinit var phoneNumber:TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +35,10 @@ class ReadSetPasswordActivity : AppCompatActivity(){
             backgroundColor = Color.parseColor("#F2F2F2")
             verticalLayout {
                 backgroundColor = Color.parseColor("#F2F2F2")
+
+                onClick {
+                    closeFocusjianpan()
+                }
 
                 linearLayout {
                     imageView {
@@ -61,18 +75,22 @@ class ReadSetPasswordActivity : AppCompatActivity(){
 
                 linearLayout {
                     backgroundResource = R.drawable.input_border
-                    textView {
-                        text = "+81"
+                    phoneNumber = textView {
+                        text = "+86"
                         gravity = Gravity.CENTER
                         backgroundColor = Color.WHITE
                         textSize = 15f
                         textColor = Color.parseColor("#333333")
+
+                        onClick {
+                            startActivityForResult(Intent(applicationContext, PickActivity::class.java), 111)
+                        }
                     }.lparams(height = matchParent,width = wrapContent){
                         leftMargin = dip(5)
                         rightMargin = dip(10)
                     }
 
-                    editText {
+                    telephone = editText {
                         hint = "请输入手机号码"
                         backgroundColor = Color.WHITE
                     }.lparams(width = matchParent,height = wrapContent){
@@ -90,20 +108,26 @@ class ReadSetPasswordActivity : AppCompatActivity(){
                         topMargin = dip(10)
                     }
 
-                    editText {
+                    myCode = editText {
                         hint = "请输入验证码"
                         backgroundColor = Color.WHITE
                     }.lparams(width = matchParent,height = wrapContent){
-                        weight = 4f
+                        weight = 1f
                     }
 
-                    timeButton = button {
-                        backgroundResource = R.drawable.get_button
+                    timeButton = textView {
+                        gravity = Gravity.CENTER
                         text = "获取"
-                    }.lparams(width = wrapContent,height = matchParent){
-                        weight = 1f
+                        textSize = 14f
+                    }.lparams(width = dip(60),height = matchParent){
+
                         setOnClickListener {
-                            onPcode()
+                            val result = determinePhone()
+                            if(result){
+                                onPcode()
+                            } else {
+                                toast("请输入正确的手机号")
+                            }
                         }
                     }
 
@@ -119,7 +143,7 @@ class ReadSetPasswordActivity : AppCompatActivity(){
                     textSize = 21f
 
                     onClick {
-                        startActivity<RsetPasswordActivity>()
+                        next()
                     }
                 }.lparams(width = matchParent,height = wrapContent){
                     topMargin = dip(50)
@@ -149,9 +173,16 @@ class ReadSetPasswordActivity : AppCompatActivity(){
     private val downTimer = object : CountDownTimer((60 * 1000).toLong(), 1000) {
         @SuppressLint("SetTextI18n")
         override fun onTick(l: Long) {
-            runningDownTimer = true
-            timeButton.text = (l / 1000).toString() + "s"
-            timeButton.setOnClickListener { null }
+            val result = determinePhone()
+            if(result){
+                runningDownTimer = true
+                timeButton.text = (l / 1000).toString() + "s"
+                timeButton.setOnClickListener { null }
+            } else {
+                toast("请输入正确的手机号")
+                return
+            }
+
         }
 
         override fun onFinish() {
@@ -159,5 +190,81 @@ class ReadSetPasswordActivity : AppCompatActivity(){
             timeButton.text = "发送"
         }
 
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 111 && resultCode == Activity.RESULT_OK) {
+            val country = Country.fromJson(data!!.getStringExtra("country"))
+            val areeaCode = "+" + country.code
+            phoneNumber.text = areeaCode
+        }
+    }
+
+    private fun closeFocusjianpan() {
+        //关闭ｅｄｉｔ光标
+        telephone.clearFocus()
+        myCode.clearFocus()
+        //关闭键盘事件
+        val phone = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        phone.hideSoftInputFromWindow(telephone.windowToken, 0)
+        val code = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        code.hideSoftInputFromWindow(myCode.windowToken, 0)
+    }
+
+    fun determinePhone(): Boolean {
+        val countryCode = phoneNumber.text.toString().trim()
+        val phone = telephone.text.toString().trim()
+        val country = countryCode.substring(1, 3)
+        val myPhone = countryCode+phone
+        val result = isPhoneNumberValid(myPhone,country)
+
+        if(result){
+            return true
+        }
+        return false
+    }
+
+    /**
+     * 根据区号判断是否是正确的电话号码
+     * @param phoneNumber :带国家码的电话号码
+     * @param countryCode :默认国家码
+     * return ：true 合法  false：不合法
+     */
+    private fun isPhoneNumberValid(phoneNumber: String, countryCode: String): Boolean {
+
+        println("isPhoneNumberValid: $phoneNumber/$countryCode")
+        val phoneUtil = PhoneNumberUtil.getInstance()
+        try {
+            val numberProto = phoneUtil.parse(phoneNumber, countryCode)
+            return phoneUtil.isValidNumber(numberProto)
+        } catch (e: NumberParseException) {
+            System.err.println("isPhoneNumberValid NumberParseException was thrown: $e")
+        }
+
+        return false
+    }
+
+    fun next(){
+        val res = determinePhone()
+        val phone = telephone.text.toString().trim()
+        val code = myCode.text.toString().trim()
+
+        if(phone.isNullOrEmpty()){
+            toast("请输入手机号码")
+            return
+        }
+
+        if(code.isNullOrEmpty()){
+            toast("请输入验证码")
+            return
+        }
+
+        if(!res){
+            toast("请输入正确的手机号码")
+            return
+        }
+
+        startActivity<RsetPasswordActivity>()
     }
 }

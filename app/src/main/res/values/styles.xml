@@ -41,4 +41,10 @@
         <item name="android:textColorPrimary">#ffffff</item>
         <item name="colorControlNormal">#ffffff</item>
     </style>
+
+    <style name="AppTheme.mainPageActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@drawable/layer_splash</item>
+    </style>
 </resources>
