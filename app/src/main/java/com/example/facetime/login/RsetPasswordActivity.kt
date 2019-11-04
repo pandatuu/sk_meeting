@@ -1,18 +1,19 @@
 package com.example.facetime.login
 
-import android.app.Activity
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
-import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
 import org.jetbrains.anko.*
-
-
-
+import org.jetbrains.anko.sdk25.coroutines.onClick
 
 class RsetPasswordActivity : AppCompatActivity(){
+    lateinit var password:EditText
+    lateinit var confirmPassword:EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +22,10 @@ class RsetPasswordActivity : AppCompatActivity(){
             backgroundColor = Color.parseColor("#F2F2F2")
             verticalLayout {
                 backgroundColor = Color.parseColor("#F2F2F2")
+
+                onClick {
+                    closeFocusjianpan()
+                }
 
                 linearLayout {
                     imageView {
@@ -37,10 +42,10 @@ class RsetPasswordActivity : AppCompatActivity(){
                         gravity = Gravity.CENTER
                     }
 
-                    this.setOnClickListener(View.OnClickListener {
+                    this.setOnClickListener {
                         // TODO Auto-generated method stub
                         finish()
-                    })
+                    }
                 }.lparams(width = matchParent,height = wrapContent){
                     topMargin = dip(20)
                     gravity = Gravity.LEFT
@@ -57,7 +62,7 @@ class RsetPasswordActivity : AppCompatActivity(){
 
                 linearLayout {
                     backgroundResource = R.drawable.input_border
-                    editText {
+                    password = editText {
                         hint = "请输入新密码"
                         backgroundColor = Color.WHITE
                     }.lparams(width = matchParent,height = wrapContent){
@@ -75,7 +80,7 @@ class RsetPasswordActivity : AppCompatActivity(){
                         topMargin = dip(10)
                     }
 
-                    editText {
+                    confirmPassword = editText {
                         hint = "请再次输入新密码"
                         backgroundColor = Color.WHITE
                     }.lparams(width = matchParent,height = wrapContent){
@@ -93,6 +98,10 @@ class RsetPasswordActivity : AppCompatActivity(){
                     text = "完成"
                     textColor = Color.WHITE
                     textSize = 21f
+
+                    onClick {
+                        fulfill()
+                    }
                 }.lparams(width = matchParent,height = wrapContent){
                     topMargin = dip(50)
                 }
@@ -101,5 +110,38 @@ class RsetPasswordActivity : AppCompatActivity(){
                 rightMargin = dip(20)
             }
         }
+    }
+
+    private fun closeFocusjianpan() {
+        //关闭ｅｄｉｔ光标
+        password.clearFocus()
+        confirmPassword.clearFocus()
+        //关闭键盘事件
+        val phone = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        phone.hideSoftInputFromWindow(password.windowToken, 0)
+        val code = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        code.hideSoftInputFromWindow(confirmPassword.windowToken, 0)
+    }
+
+    private fun fulfill(){
+        val myPassword = password.text.toString().trim()
+        val myConfirmPassword = confirmPassword.text.toString().trim()
+
+        if(myPassword.isNullOrEmpty()){
+            toast("密码不可为空！！")
+            return
+        }
+
+        if(myConfirmPassword.isNullOrEmpty()){
+            toast("确认密码不可为空")
+            return
+        }
+
+        if(myPassword != myConfirmPassword){
+            toast("密码前后不一致")
+            return
+        }
+
+        toast("完成")
     }
 }
