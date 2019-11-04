@@ -252,6 +252,7 @@ class StartActivity : AppCompatActivity(){
         val mEditor: SharedPreferences.Editor = saveTool.edit()
 
         mEditor.putString("token", "login")
+        mEditor.putString("userName","testName")
         mEditor.apply()
 
 
