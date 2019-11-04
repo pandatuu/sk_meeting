@@ -1,7 +1,6 @@
 package com.example.facetime.conference
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
@@ -11,19 +10,18 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
 import org.jetbrains.anko.*
-import org.jetbrains.anko.sdk25.coroutines.onClick
 
-class SetPassword : AppCompatActivity() {
+class RegisterSetPassword : AppCompatActivity() {
 
-    lateinit var passwordFirst: EditText
-    lateinit var passwordAgain: EditText
+    private lateinit var passwordFirst: EditText
+    private lateinit var passwordAgain: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         frameLayout {
             backgroundColor = Color.TRANSPARENT
-            onClick {
+            setOnClickListener {
                 closeFocusjianpan()
             }
             linearLayout {
@@ -38,7 +36,7 @@ class SetPassword : AppCompatActivity() {
                 }.lparams {
                     leftMargin = dip(10)
                 }
-                onClick {
+                setOnClickListener {
                     finish()
                     overridePendingTransition(R.anim.left_in, R.anim.right_out)
                 }
@@ -74,7 +72,7 @@ class SetPassword : AppCompatActivity() {
                     text = "下一步"
                     textColor = Color.WHITE
                     backgroundColor = Color.parseColor("#00BFFF")
-                    onClick {
+                    setOnClickListener {
                         closeFocusjianpan()
                         if (passwordFirst.text.toString() == "") {
                             toast("请输入密码")
@@ -85,8 +83,7 @@ class SetPassword : AppCompatActivity() {
                                 if (passwordAgain.text.toString() != passwordFirst.text.toString()) {
                                     toast("两次密码不匹配")
                                 } else {
-                                    val intent = Intent(this@SetPassword, SetNickName::class.java)
-                                    startActivity(intent)
+                                    startActivity<RegisterSetNickName>()
                                 }
                             }
                         }
@@ -106,8 +103,8 @@ class SetPassword : AppCompatActivity() {
         passwordAgain.clearFocus()
         //关闭键盘事件
         val phone = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        phone.hideSoftInputFromWindow(passwordFirst!!.windowToken, 0)
+        phone.hideSoftInputFromWindow(passwordFirst.windowToken, 0)
         val code = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        code.hideSoftInputFromWindow(passwordAgain!!.windowToken, 0)
+        code.hideSoftInputFromWindow(passwordAgain.windowToken, 0)
     }
 }
