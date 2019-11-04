@@ -3,8 +3,11 @@ package com.example.facetime.login
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
+import android.icu.util.MeasureUnit
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.view.Gravity
 import android.view.inputmethod.InputMethodManager
 import android.widget.CheckBox
@@ -12,6 +15,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
+import com.example.facetime.conference.MenuActivity
 import com.example.facetime.conference.RegisterActivity
 import com.google.i18n.phonenumbers.NumberParseException
 import com.google.i18n.phonenumbers.PhoneNumberUtil
@@ -25,11 +29,11 @@ class StartActivity : AppCompatActivity(){
     lateinit var password:EditText
     private lateinit var phoneNumber:TextView
     private lateinit var isChoose: CheckBox
+    lateinit var saveTool: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
-
         super.onCreate(savedInstanceState)
+        saveTool = PreferenceManager.getDefaultSharedPreferences(this@StartActivity)
 
         linearLayout {
             backgroundColor = Color.parseColor("#F2F2F2")
@@ -110,7 +114,7 @@ class StartActivity : AppCompatActivity(){
                    onClick {
                        isChoose.isChecked = !isChoose.isChecked
                    }
-                   
+
                    isChoose = checkBox {
                    }
 
@@ -241,5 +245,15 @@ class StartActivity : AppCompatActivity(){
         }
 
         toast("$phone,$myPassword")
+
+        val i = Intent(this, MenuActivity::class.java)
+
+        startActivity(i)
+        val mEditor: SharedPreferences.Editor = saveTool.edit()
+
+        mEditor.putString("token", "login")
+        mEditor.apply()
+
+
     }
 }
