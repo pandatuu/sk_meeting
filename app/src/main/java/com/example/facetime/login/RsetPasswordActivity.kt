@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
+import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -33,25 +34,43 @@ class RsetPasswordActivity : AppCompatActivity(){
                 }
 
                 linearLayout {
-                    orientation = LinearLayout.HORIZONTAL
-                    gravity = Gravity.BOTTOM
                     toolbar1 = toolbar {
+                        isEnabled = true
+                        title = ""
                         navigationIconResource = R.mipmap.icon_back
-                    }.lparams(dip(9), dip(15)){
-                        rightMargin = dip(5)
+                    }.lparams(){
+                        width = dip(9)
+                        height = dip(65 - getStatusBarHeight(this@RsetPasswordActivity))
+                        rightMargin = dip(15)
+
                     }
-                    textView {
-                        text = "返回"
-                        textSize = 16f
-                        textColor = Color.parseColor("#7F7F7F")
-                    }.lparams(width = wrapContent,height = wrapContent)
 
-                    this.setOnClickListener(View.OnClickListener {
-                        // TODO Auto-generated method stub
-                        finish()
-                    })
-                }.lparams(width = matchParent,height = dip(55))
+                    linearLayout {
+                        textView {
+                            setOnClickListener {
+                                finish()//返回
+                                overridePendingTransition(
+                                    R.anim.left_in,
+                                    R.anim.right_out
+                                )
+                            }
+                            text = "返回"
+                            gravity = Gravity.CENTER
 
+                        }.lparams() {
+                            height = matchParent
+                            width = wrapContent
+                        }
+                    }.lparams() {
+                        weight = 1f
+                        width = dip(0)
+                        height = dip(65 - getStatusBarHeight(this@RsetPasswordActivity))
+                        topMargin = dip(getStatusBarHeight(this@RsetPasswordActivity))
+                    }
+                }.lparams() {
+                    width = matchParent
+                    height = dip(65)
+                }
                 textView {
                     text = "重置密码"
                     gravity = Gravity.CENTER
@@ -66,6 +85,18 @@ class RsetPasswordActivity : AppCompatActivity(){
                     password = editText {
                         hint = "请输入新密码"
                         backgroundColor = Color.WHITE
+                        setOnKeyListener(object : View.OnKeyListener{
+                            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                                if (event != null) {
+                                    if (KeyEvent.KEYCODE_ENTER == keyCode && KeyEvent.ACTION_DOWN == event.action) {
+                                        //处理事件
+                                        confirmPassword.requestFocus()
+                                        return true
+                                    }
+                                }
+                                return false
+                            }
+                        })
                     }.lparams(width = matchParent,height = wrapContent){
                         weight = 1f
                     }
@@ -84,6 +115,19 @@ class RsetPasswordActivity : AppCompatActivity(){
                     confirmPassword = editText {
                         hint = "请再次输入新密码"
                         backgroundColor = Color.WHITE
+                        setOnKeyListener(object : View.OnKeyListener{
+                            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                                if (event != null) {
+                                    if (KeyEvent.KEYCODE_ENTER == keyCode && KeyEvent.ACTION_DOWN == event.action) {
+                                        //处理事件
+                                        clearFocus()
+                                        closeFocusjianpan()
+                                        return true
+                                    }
+                                }
+                                return false
+                            }
+                        })
                     }.lparams(width = matchParent,height = wrapContent){
                         weight = 1f
                     }
@@ -95,7 +139,7 @@ class RsetPasswordActivity : AppCompatActivity(){
 
 
                 button {
-                    backgroundResource = R.drawable.login_button
+                    backgroundResource = R.drawable.bottonbg
                     text = "完成"
                     textColor = Color.WHITE
                     textSize = 21f
@@ -118,6 +162,13 @@ class RsetPasswordActivity : AppCompatActivity(){
         StatusBarUtil.setTranslucentForImageView(this@RsetPasswordActivity, 0, toolbar1)
         getWindow().getDecorView()
             .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
+        toolbar1.setNavigationOnClickListener {
+            finish()//返回
+            overridePendingTransition(
+                R.anim.left_in,
+                R.anim.right_out
+            )
+        }
     }
     private fun closeFocusjianpan() {
         //关闭ｅｄｉｔ光标
@@ -130,6 +181,17 @@ class RsetPasswordActivity : AppCompatActivity(){
         code.hideSoftInputFromWindow(confirmPassword.windowToken, 0)
     }
 
+    fun getStatusBarHeight(context: Context): Int {
+        var result = 0
+        val resourceId =
+            context.getResources().getIdentifier("status_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            result = context.getResources().getDimensionPixelSize(resourceId)
+            var scale = context.getResources().getDisplayMetrics().density;
+            result = ((result / scale + 0.5f).toInt());
+        }
+        return result
+    }
     private fun fulfill(){
         val myPassword = password.text.toString().trim()
         val myConfirmPassword = confirmPassword.text.toString().trim()

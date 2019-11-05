@@ -33,22 +33,39 @@ class RegisterSetNickName : AppCompatActivity() {
                 closeFocusjianpan()
             }
             linearLayout {
-                orientation = LinearLayout.HORIZONTAL
-                gravity = Gravity.BOTTOM
                 toolbar1 = toolbar {
+                    isEnabled = true
+                    title = ""
                     navigationIconResource = R.mipmap.icon_back
-                }.lparams(dip(9), dip(15))
-                textView {
-                    text = "返回"
-                }.lparams(wrapContent, wrapContent) {
-                    leftMargin = dip(10)
+                }.lparams() {
+                    width = dip(45)
                 }
-                setOnClickListener {
-                    finish()
-                    overridePendingTransition(R.anim.left_in, R.anim.right_out)
+
+                linearLayout {
+                    textView {
+                        setOnClickListener {
+                            finish()//返回
+                            overridePendingTransition(
+                                R.anim.left_in,
+                                R.anim.right_out
+                            )
+                        }
+                        text = "返回"
+                        gravity = Gravity.CENTER
+
+                    }.lparams() {
+                        height = matchParent
+                        width = wrapContent
+                    }
+                }.lparams() {
+                    weight = 1f
+                    width = dip(0)
+                    height = dip(65 - getStatusBarHeight(this@RegisterSetNickName))
+                    topMargin = dip(getStatusBarHeight(this@RegisterSetNickName))
                 }
-            }.lparams(matchParent, dip(55)) {
-                setMargins(dip(15), 0, dip(15), 0)
+            }.lparams() {
+                width = matchParent
+                height = dip(65)
             }
             linearLayout {
                 orientation = LinearLayout.VERTICAL
@@ -58,46 +75,50 @@ class RegisterSetNickName : AppCompatActivity() {
                 }.lparams {
                     gravity = Gravity.CENTER_HORIZONTAL
                 }
-                nickName = editText {
-                    hint = "请输入昵称"
-                    maxLines = 1
-                    padding = dip(5)
-                    backgroundColor = Color.WHITE
-                    setOnKeyListener(object : View.OnKeyListener{
-                        override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
-                            if (event != null) {
-                                if (KeyEvent.KEYCODE_ENTER == keyCode && KeyEvent.ACTION_DOWN == event.action) {
-                                    //处理事件
-                                    clearFocus()
-                                    closeFocusjianpan()
-                                    return true
+                relativeLayout {
+                    backgroundResource = R.drawable.input_border
+                    nickName = editText {
+                        hint = "请输入昵称"
+                        maxLines = 1
+                        padding = dip(5)
+                        backgroundColor = Color.WHITE
+                        setOnKeyListener(object : View.OnKeyListener {
+                            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                                if (event != null) {
+                                    if (KeyEvent.KEYCODE_ENTER == keyCode && KeyEvent.ACTION_DOWN == event.action) {
+                                        //处理事件
+                                        clearFocus()
+                                        closeFocusjianpan()
+                                        return true
+                                    }
                                 }
+                                return false
                             }
-                            return false
-                        }
-                    })
-                }.lparams(matchParent,dip(45)){
+                        })
+                    }.lparams(matchParent, matchParent)
+                }.lparams(matchParent, dip(55)) {
                     topMargin = dip(15)
                 }
                 button {
                     gravity = Gravity.CENTER
                     text = "完成注册"
+                    textSize = 16f
                     textColor = Color.WHITE
-                    backgroundColor = Color.parseColor("#00BFFF")
+                    backgroundResource = R.drawable.bottonbg
                     setOnClickListener {
                         closeFocusjianpan()
-                        if(nickName.text.toString() != ""){
-                            if(nickName.text.length < 10){
+                        if (nickName.text.toString() != "") {
+                            if (nickName.text.length < 10) {
                                 startActivity<MenuActivity>()
                                 finish()
-                            }else{
+                            } else {
                                 toast("限制字数长度10以内")
                             }
-                        }else{
+                        } else {
                             toast("请输入名字")
                         }
                     }
-                }.lparams(matchParent,dip(50)){
+                }.lparams(matchParent, dip(50)) {
                     topMargin = dip(30)
                 }
             }.lparams(matchParent, wrapContent) {
@@ -112,6 +133,25 @@ class RegisterSetNickName : AppCompatActivity() {
         StatusBarUtil.setTranslucentForImageView(this@RegisterSetNickName, 0, toolbar1)
         getWindow().getDecorView()
             .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
+        toolbar1.setNavigationOnClickListener {
+            finish()//返回
+            overridePendingTransition(
+                R.anim.left_in,
+                R.anim.right_out
+            )
+        }
+    }
+
+    fun getStatusBarHeight(context: Context): Int {
+        var result = 0
+        val resourceId =
+            context.getResources().getIdentifier("status_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            result = context.getResources().getDimensionPixelSize(resourceId)
+            var scale = context.getResources().getDisplayMetrics().density;
+            result = ((result / scale + 0.5f).toInt());
+        }
+        return result
     }
 
     private fun closeFocusjianpan() {

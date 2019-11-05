@@ -71,10 +71,8 @@ class RegisterActivity : AppCompatActivity() {
                         overridePendingTransition(R.anim.left_in, R.anim.right_out)
                     }
                     padding = dip(10)
-                }.lparams(wrapContent, wrapContent) {
-                    rightMargin = dip(5)
-                }
-            }.lparams(matchParent, dip(55)) {
+                }.lparams(wrapContent, wrapContent)
+            }.lparams(matchParent, dip(65)) {
                 setMargins(dip(15),dip(15),dip(15),0)
             }
             linearLayout {
@@ -86,7 +84,7 @@ class RegisterActivity : AppCompatActivity() {
                     gravity = Gravity.CENTER_HORIZONTAL
                 }
                 linearLayout {
-                    backgroundColor = Color.WHITE
+                    backgroundResource = R.drawable.input_border
                     orientation = LinearLayout.HORIZONTAL
                     countryCode = textView {
                         gravity = Gravity.CENTER
@@ -121,11 +119,11 @@ class RegisterActivity : AppCompatActivity() {
                         weight = 1f
                         rightMargin = dip(10)
                     }
-                }.lparams(matchParent, dip(45)) {
+                }.lparams(matchParent, dip(55)) {
                     topMargin = dip(15)
                 }
                 linearLayout {
-                    backgroundColor = Color.WHITE
+                    backgroundResource = R.drawable.input_border
                     orientation = LinearLayout.HORIZONTAL
                     vcodeNum = editText {
                         hint = "请输入验证码"
@@ -171,7 +169,7 @@ class RegisterActivity : AppCompatActivity() {
                             }
                         }
                     }.lparams(dip(60), matchParent)
-                }.lparams(matchParent, dip(45)) {
+                }.lparams(matchParent, dip(55)) {
                     topMargin = dip(15)
                 }
                 linearLayout {
@@ -209,8 +207,9 @@ class RegisterActivity : AppCompatActivity() {
                 }
                 button {
                     text = "下一步"
+                    textSize = 16f
                     textColor = Color.WHITE
-                    backgroundColor = Color.parseColor("#00BFFF")
+                    backgroundResource = R.drawable.bottonbg
                     setOnClickListener {
                         val phone = countryCode.text.toString() + phoneNum.text.toString()
                         isPhoneFormat =

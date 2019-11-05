@@ -196,7 +196,7 @@ class StartActivity : AppCompatActivity() {
 
 
                 button {
-                    backgroundResource = R.drawable.login_button
+                    backgroundResource = R.drawable.bottonbg
                     text = "登录"
                     textColor = Color.WHITE
                     textSize = 21f

@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.Gravity
+import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -45,25 +46,43 @@ class ReadSetPasswordActivity : AppCompatActivity(){
                 }
 
                 linearLayout {
-                    orientation = LinearLayout.HORIZONTAL
-                    gravity = Gravity.BOTTOM
                     toolbar1 = toolbar {
+                        isEnabled = true
+                        title = ""
                         navigationIconResource = R.mipmap.icon_back
-                    }.lparams(dip(9), dip(15)){
-                        rightMargin = dip(5)
+                    }.lparams(){
+                        width = dip(9)
+                        height = dip(65 - getStatusBarHeight(this@ReadSetPasswordActivity))
+                        rightMargin = dip(15)
+
                     }
-                    textView {
-                        text = "返回"
-                        textSize = 16f
-                        textColor = Color.parseColor("#7F7F7F")
-                    }.lparams(width = wrapContent,height = wrapContent)
 
-                    this.setOnClickListener(View.OnClickListener {
-                        // TODO Auto-generated method stub
-                        finish()
-                    })
-                }.lparams(width = matchParent,height = dip(55))
+                    linearLayout {
+                        textView {
+                            setOnClickListener {
+                                finish()//返回
+                                overridePendingTransition(
+                                    R.anim.left_in,
+                                    R.anim.right_out
+                                )
+                            }
+                            text = "返回"
+                            gravity = Gravity.CENTER
 
+                        }.lparams() {
+                            height = matchParent
+                            width = wrapContent
+                        }
+                    }.lparams() {
+                        weight = 1f
+                        width = dip(0)
+                        height = dip(65 - getStatusBarHeight(this@ReadSetPasswordActivity))
+                        topMargin = dip(getStatusBarHeight(this@ReadSetPasswordActivity))
+                    }
+                }.lparams() {
+                    width = matchParent
+                    height = dip(65)
+                }
                 textView {
                     text = "重置密码"
                     gravity = Gravity.CENTER
@@ -93,6 +112,18 @@ class ReadSetPasswordActivity : AppCompatActivity(){
                     telephone = editText {
                         hint = "请输入手机号码"
                         backgroundColor = Color.WHITE
+                        setOnKeyListener(object : View.OnKeyListener{
+                            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                                if (event != null) {
+                                    if (KeyEvent.KEYCODE_ENTER == keyCode && KeyEvent.ACTION_DOWN == event.action) {
+                                        //处理事件
+                                        myCode.requestFocus()
+                                        return true
+                                    }
+                                }
+                                return false
+                            }
+                        })
                     }.lparams(width = matchParent,height = wrapContent){
                         weight = 1f
                     }
@@ -111,6 +142,19 @@ class ReadSetPasswordActivity : AppCompatActivity(){
                     myCode = editText {
                         hint = "请输入验证码"
                         backgroundColor = Color.WHITE
+                        setOnKeyListener(object : View.OnKeyListener{
+                            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                                if (event != null) {
+                                    if (KeyEvent.KEYCODE_ENTER == keyCode && KeyEvent.ACTION_DOWN == event.action) {
+                                        //处理事件
+                                        clearFocus()
+                                        closeFocusjianpan()
+                                        return true
+                                    }
+                                }
+                                return false
+                            }
+                        })
                     }.lparams(width = matchParent,height = wrapContent){
                         weight = 1f
                     }
@@ -137,7 +181,7 @@ class ReadSetPasswordActivity : AppCompatActivity(){
 
 
                 button {
-                    backgroundResource = R.drawable.login_button
+                    backgroundResource = R.drawable.bottonbg
                     text = "下一步"
                     textColor = Color.WHITE
                     textSize = 21f
@@ -160,6 +204,13 @@ class ReadSetPasswordActivity : AppCompatActivity(){
         StatusBarUtil.setTranslucentForImageView(this@ReadSetPasswordActivity, 0, toolbar1)
         getWindow().getDecorView()
             .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
+        toolbar1.setNavigationOnClickListener {
+            finish()//返回
+            overridePendingTransition(
+                R.anim.left_in,
+                R.anim.right_out
+            )
+        }
     }
     //发送验证码按钮
     private fun onPcode() {
@@ -173,6 +224,17 @@ class ReadSetPasswordActivity : AppCompatActivity(){
 
     }
 
+    fun getStatusBarHeight(context: Context): Int {
+        var result = 0
+        val resourceId =
+            context.getResources().getIdentifier("status_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            result = context.getResources().getDimensionPixelSize(resourceId)
+            var scale = context.getResources().getDisplayMetrics().density;
+            result = ((result / scale + 0.5f).toInt());
+        }
+        return result
+    }
     /**
      * 倒计时
      */
