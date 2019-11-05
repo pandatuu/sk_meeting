@@ -8,16 +8,16 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.Gravity
+import android.view.KeyEvent
+import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
 import com.example.facetime.login.StartActivity
 import com.google.i18n.phonenumbers.NumberParseException
 import com.google.i18n.phonenumbers.PhoneNumberUtil
+import com.jaeger.library.StatusBarUtil
 import com.sahooz.library.Country
 import com.sahooz.library.PickActivity
 import org.jetbrains.anko.*
@@ -28,6 +28,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var countryCode: TextView
     private lateinit var phoneNum: EditText
     private lateinit var vcodeNum: EditText
+    private lateinit var toolbar1: Toolbar
     var isPhoneFormat = false
     lateinit var codeText: TextView
     private var runningDownTimer: Boolean = false
@@ -41,23 +42,40 @@ class RegisterActivity : AppCompatActivity() {
             setOnClickListener {
                 closeFocusjianpan()
             }
+            relativeLayout() {
+                backgroundColor=Color.TRANSPARENT
+                toolbar1 = toolbar {
+                    backgroundColor=Color.TRANSPARENT
+                    isEnabled = true
+                    title = ""
+                }.lparams() {
+                    width = matchParent
+                    height = dip(0)
+                    alignParentBottom()
+
+                }
+            }.lparams() {
+                width = matchParent
+                height = dip(0)
+            }
             linearLayout {
                 gravity = Gravity.RIGHT
                 textView {
                     gravity = Gravity.CENTER
                     text = "登录"
-                    textSize = 14f
+                    textSize = 15f
                     setOnClickListener {
                         val intent = Intent(this@RegisterActivity, StartActivity::class.java)
                         startActivity(intent)
                         finish()
                         overridePendingTransition(R.anim.left_in, R.anim.right_out)
                     }
-                }.lparams(dip(30), matchParent) {
-                    rightMargin = dip(15)
+                    padding = dip(10)
+                }.lparams(wrapContent, wrapContent) {
+                    rightMargin = dip(5)
                 }
-            }.lparams(matchParent, dip(45)) {
-                topMargin = dip(15)
+            }.lparams(matchParent, dip(55)) {
+                setMargins(dip(15),dip(15),dip(15),0)
             }
             linearLayout {
                 orientation = LinearLayout.VERTICAL
@@ -87,6 +105,18 @@ class RegisterActivity : AppCompatActivity() {
                         hint = "请输入手机号码"
                         background = null
                         maxLines = 1
+                        setOnKeyListener(object : View.OnKeyListener{
+                            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                                if (event != null) {
+                                    if (KeyEvent.KEYCODE_ENTER == keyCode && KeyEvent.ACTION_DOWN == event.action) {
+                                        //处理事件
+                                        vcodeNum.requestFocus()
+                                        return true
+                                    }
+                                }
+                                return false
+                            }
+                        })
                     }.lparams(wrapContent, matchParent) {
                         weight = 1f
                         rightMargin = dip(10)
@@ -101,6 +131,19 @@ class RegisterActivity : AppCompatActivity() {
                         hint = "请输入验证码"
                         background = null
                         maxLines = 1
+                        setOnKeyListener(object : View.OnKeyListener{
+                            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                                if (event != null) {
+                                    if (KeyEvent.KEYCODE_ENTER == keyCode && KeyEvent.ACTION_DOWN == event.action) {
+                                        //处理事件
+                                        clearFocus()
+                                        closeFocusjianpan()
+                                        return true
+                                    }
+                                }
+                                return false
+                            }
+                        })
                     }.lparams(wrapContent, matchParent) {
                         weight = 1f
                         leftMargin = dip(10)
@@ -194,6 +237,14 @@ class RegisterActivity : AppCompatActivity() {
                 setMargins(dip(15), dip(150), dip(15), 0)
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        setActionBar(toolbar1)
+        StatusBarUtil.setTranslucentForImageView(this@RegisterActivity, 0, toolbar1)
+        getWindow().getDecorView()
+            .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
     }
 
     private fun closeFocusjianpan() {

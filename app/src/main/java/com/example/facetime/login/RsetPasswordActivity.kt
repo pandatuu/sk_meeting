@@ -4,16 +4,21 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
+import com.jaeger.library.StatusBarUtil
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 
 class RsetPasswordActivity : AppCompatActivity(){
     lateinit var password:EditText
     lateinit var confirmPassword:EditText
+    private lateinit var toolbar1: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,28 +33,24 @@ class RsetPasswordActivity : AppCompatActivity(){
                 }
 
                 linearLayout {
-                    imageView {
-                        imageResource = R.mipmap.icon_back
-                    }.lparams(width = wrapContent,height = wrapContent){
+                    orientation = LinearLayout.HORIZONTAL
+                    gravity = Gravity.BOTTOM
+                    toolbar1 = toolbar {
+                        navigationIconResource = R.mipmap.icon_back
+                    }.lparams(dip(9), dip(15)){
                         rightMargin = dip(5)
-                        gravity = Gravity.CENTER
                     }
                     textView {
                         text = "返回"
                         textSize = 16f
                         textColor = Color.parseColor("#7F7F7F")
-                    }.lparams(width = wrapContent,height = wrapContent){
-                        gravity = Gravity.CENTER
-                    }
+                    }.lparams(width = wrapContent,height = wrapContent)
 
-                    this.setOnClickListener {
+                    this.setOnClickListener(View.OnClickListener {
                         // TODO Auto-generated method stub
                         finish()
-                    }
-                }.lparams(width = matchParent,height = wrapContent){
-                    topMargin = dip(20)
-                    gravity = Gravity.LEFT
-                }
+                    })
+                }.lparams(width = matchParent,height = dip(55))
 
                 textView {
                     text = "重置密码"
@@ -111,7 +112,13 @@ class RsetPasswordActivity : AppCompatActivity(){
             }
         }
     }
-
+    override fun onStart() {
+        super.onStart()
+        setActionBar(toolbar1)
+        StatusBarUtil.setTranslucentForImageView(this@RsetPasswordActivity, 0, toolbar1)
+        getWindow().getDecorView()
+            .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
+    }
     private fun closeFocusjianpan() {
         //关闭ｅｄｉｔ光标
         password.clearFocus()
