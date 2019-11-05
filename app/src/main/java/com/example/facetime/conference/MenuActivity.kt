@@ -9,9 +9,15 @@ import com.jaeger.library.StatusBarUtil
 import org.jetbrains.anko.*
 import android.content.Intent
 import android.preference.PreferenceManager
+import android.view.KeyEvent
 import android.view.View
 import android.widget.*
 import com.example.facetime.R
+import kotlin.system.exitProcess
+import com.dropbox.core.v2.teamlog.ActorLogInfo.app
+import androidx.core.content.ContextCompat.getSystemService
+
+
 
 open class MenuActivity : AppCompatActivity() {
 
@@ -20,6 +26,7 @@ open class MenuActivity : AppCompatActivity() {
 
     private  lateinit var createMy:TextView
     private  lateinit var enterMy:TextView
+    private var exitTime: Long = 0
 
     override fun onActivityResult(
         requestCode: Int,
@@ -255,5 +262,22 @@ open class MenuActivity : AppCompatActivity() {
         isRoomCreated()
     }
 
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (event != null) {
+            if(keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_DOWN){
+                if((System.currentTimeMillis()-exitTime) > 2000){
+                    Toast.makeText(applicationContext, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                    exitTime = System.currentTimeMillis()
+                } else {
+                    val startMain = Intent(Intent.ACTION_MAIN)
+                    startMain.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    startMain.addCategory(Intent.CATEGORY_HOME)
+                    startActivity(startMain)
+                }
+                return true
+            }
+        }
+        return super.onKeyDown(keyCode, event)
+    }
 
 }

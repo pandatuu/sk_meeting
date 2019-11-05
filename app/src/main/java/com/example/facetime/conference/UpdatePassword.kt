@@ -1,10 +1,8 @@
 package com.example.facetime.conference
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.view.Gravity
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -13,14 +11,13 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
 import org.jetbrains.anko.*
 
-class RegisterSetNickName : AppCompatActivity() {
+class UpdatePassword: AppCompatActivity() {
 
-    private lateinit var nickName: EditText
-    lateinit var saveTool: SharedPreferences
+    private lateinit var passwordFirst: EditText
+    private lateinit var passwordAgain: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        saveTool = PreferenceManager.getDefaultSharedPreferences(this@RegisterSetNickName)
 
         frameLayout {
             backgroundColor = Color.TRANSPARENT
@@ -35,7 +32,8 @@ class RegisterSetNickName : AppCompatActivity() {
                 }.lparams(dip(9), dip(11))
                 textView {
                     text = "返回"
-                }.lparams(wrapContent, wrapContent) {
+                    textSize = 13f
+                }.lparams {
                     leftMargin = dip(10)
                 }
                 setOnClickListener {
@@ -48,54 +46,64 @@ class RegisterSetNickName : AppCompatActivity() {
             linearLayout {
                 orientation = LinearLayout.VERTICAL
                 textView {
-                    text = "设置昵称"
+                    text = "设置密码"
                     textSize = 23f
-                }.lparams {
+                }.lparams(wrapContent, wrapContent) {
                     gravity = Gravity.CENTER_HORIZONTAL
                 }
-                nickName = editText {
-                    hint = "请输入昵称"
+                passwordFirst = editText {
+                    hint = "请输入密码"
                     maxLines = 1
                     padding = dip(5)
                     backgroundColor = Color.WHITE
-                }.lparams(matchParent,dip(45)){
+                }.lparams(matchParent, dip(45)) {
+                    topMargin = dip(15)
+                }
+                passwordAgain = editText {
+                    hint = "请再次输入密码"
+                    maxLines = 1
+                    padding = dip(5)
+                    backgroundColor = Color.WHITE
+                }.lparams(matchParent, dip(45)) {
                     topMargin = dip(15)
                 }
                 button {
                     gravity = Gravity.CENTER
-                    text = "完成注册"
+                    text = "下一步"
                     textColor = Color.WHITE
                     backgroundColor = Color.parseColor("#00BFFF")
                     setOnClickListener {
                         closeFocusjianpan()
-                        if(nickName.text.toString() != ""){
-                            if(nickName.text.length < 10){
-//                                val mEditor: SharedPreferences.Editor = saveTool.edit()
-//                                mEditor.putString("token", "login")
-//                                mEditor.putString("userName", "testName")
-//                                mEditor.commit()
-                                startActivity<MenuActivity>()
-                                finish()
-                            }else{
-                                toast("限制字数长度10以内")
+                        if (passwordFirst.text.toString() == "") {
+                            toast("请输入密码")
+                        } else {
+                            if (passwordAgain.text.toString() == "") {
+                                toast("请再次输入密码")
+                            } else {
+                                if (passwordAgain.text.toString() != passwordFirst.text.toString()) {
+                                    toast("两次密码不匹配")
+                                } else {
+                                    finish()
+                                }
                             }
-                        }else{
-                            toast("请输入名字")
                         }
                     }
-                }.lparams(matchParent,dip(50)){
-                    topMargin = dip(30)
+                }.lparams(matchParent, dip(50)) {
+                    topMargin = dip(40)
                 }
             }.lparams(matchParent, wrapContent) {
                 setMargins(dip(15), dip(150), dip(15), 0)
             }
         }
     }
+
     private fun closeFocusjianpan() {
         //关闭ｅｄｉｔ光标
-        nickName.clearFocus()
+        passwordFirst.clearFocus()
+        passwordAgain.clearFocus()
         //关闭键盘事件
         val phone = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        phone.hideSoftInputFromWindow(nickName.windowToken, 0)
+        phone.hideSoftInputFromWindow(passwordFirst.windowToken, 0)
+        phone.hideSoftInputFromWindow(passwordAgain.windowToken, 0)
     }
 }

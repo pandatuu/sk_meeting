@@ -9,10 +9,12 @@ import android.icu.util.MeasureUnit
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.view.Gravity
+import android.view.KeyEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
 import com.example.facetime.conference.MenuActivity
@@ -24,160 +26,160 @@ import com.sahooz.library.PickActivity
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 
-class StartActivity : AppCompatActivity(){
-    private lateinit var telePhone:EditText
-    lateinit var password:EditText
-    private lateinit var phoneNumber:TextView
+class StartActivity : AppCompatActivity() {
+    private lateinit var telePhone: EditText
+    lateinit var password: EditText
+    private lateinit var phoneNumber: TextView
     private lateinit var isChoose: CheckBox
     lateinit var saveTool: SharedPreferences
+    private var exitTime: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if(isLogin()){
-        }else{
-            saveTool = PreferenceManager.getDefaultSharedPreferences(this@StartActivity)
-            linearLayout {
+        saveTool = PreferenceManager.getDefaultSharedPreferences(this@StartActivity)
+        linearLayout {
+            backgroundColor = Color.parseColor("#F2F2F2")
+            verticalLayout {
                 backgroundColor = Color.parseColor("#F2F2F2")
-                verticalLayout{
-                    backgroundColor = Color.parseColor("#F2F2F2")
-                    onClick {
-                        closeFocusjianpan()
-                    }
-                    textView {
-                        text = "注册"
-                        gravity = Gravity.RIGHT
-                        textSize = 16f
-                        textColor = Color.parseColor("#7F7F7F")
-                        onClick {
-                            startActivity<RegisterActivity>()
-                        }
-                    }.lparams(height = wrapContent,width = matchParent){
-                        topPadding = dip(20)
-                    }
-
-                    textView {
-                        text = "登录"
-                        gravity = Gravity.CENTER
-                        textSize = 21f
-                        textColor = Color.parseColor("#333333")
-                    }.lparams(height = wrapContent,width = matchParent){
-                        topMargin = dip(75)
-                    }
-
-                    linearLayout {
-                        backgroundResource = R.drawable.input_border
-                        phoneNumber = textView {
-                            text = "+86"
-                            gravity = Gravity.CENTER
-                            backgroundColor = Color.WHITE
-                            textSize = 15f
-                            textColor = Color.parseColor("#333333")
-                            onClick {
-                                startActivityForResult(Intent(applicationContext, PickActivity::class.java), 111)
-                            }
-                        }.lparams(height = matchParent,width = wrapContent){
-                            leftMargin = dip(5)
-                            rightMargin = dip(10)
-                        }
-
-                        telePhone = editText {
-                            hint = "请输入手机号码"
-                            backgroundColor = Color.WHITE
-                        }.lparams(width = matchParent,height = wrapContent){
-                            weight = 1f
-                        }
-                    }.lparams(height = wrapContent,width = matchParent){
-                        topMargin = dip(25)
-                    }
-
-                    linearLayout {
-                        backgroundResource = R.drawable.input_border
-                        textView {
-
-                        }.lparams(width = wrapContent,height = matchParent){
-                            topMargin = dip(10)
-                        }
-
-                        password = editText {
-                            hint = "请输入密码"
-                            backgroundColor = Color.WHITE
-                        }.lparams(width = matchParent,height = wrapContent){
-                            weight = 1f
-                        }
-                    }.lparams(height = wrapContent,width = matchParent){
-
-                        topMargin = dip(10)
-                        leftPadding = dip(10)
-                        rightPadding = dip(10)
-                    }
-
-                    linearLayout {
-                        onClick {
-                            isChoose.isChecked = !isChoose.isChecked
-                        }
-
-                        isChoose = checkBox {
-                        }
-
-                        textView {
-                            text = "我同意"
-                        }
-                        textView {
-                            text = "隐私协议"
-                            textColor = Color.parseColor("#44CDF6")
-                            onClick {
-                                toast("隐私协议")
-                            }
-                        }
-                        textView {
-                            text = "和"
-                        }
-                        textView {
-                            text = "服务声明"
-                            textColor = Color.parseColor("#44CDF6")
-                            onClick {
-                                toast("服务声明")
-                            }
-                        }
-                    }.lparams {
-                        topMargin = dip(15)
-                    }
-
-
-                    button {
-                        backgroundResource = R.drawable.login_button
-                        text = "登录"
-                        textColor = Color.WHITE
-                        textSize = 21f
-
-                        onClick {
-                            submit()
-                        }
-                    }.lparams(width = matchParent,height = wrapContent){
-                        topMargin = dip(30)
-                    }
-
-                    textView {
-                        text = "忘记密码"
-                        textColor = Color.parseColor("#7F7F7F")
-                        gravity = Gravity.RIGHT
-                        onClick {
-                            startActivity<ReadSetPasswordActivity>()
-                        }
-                    }.lparams(height = wrapContent,width = matchParent){
-                        topMargin = dip(25)
-                    }
-
-                }.lparams(width = matchParent,height = matchParent){
-                    leftMargin = dip(20)
-                    rightMargin = dip(20)
+                onClick {
+                    closeFocusjianpan()
                 }
+                textView {
+                    text = "注册"
+                    gravity = Gravity.RIGHT
+                    textSize = 16f
+                    textColor = Color.parseColor("#7F7F7F")
+                    onClick {
+                        startActivity<RegisterActivity>()
+                    }
+                }.lparams(height = wrapContent, width = matchParent) {
+                    topPadding = dip(20)
+                }
+
+                textView {
+                    text = "登录"
+                    gravity = Gravity.CENTER
+                    textSize = 21f
+                    textColor = Color.parseColor("#333333")
+                }.lparams(height = wrapContent, width = matchParent) {
+                    topMargin = dip(75)
+                }
+
+                linearLayout {
+                    backgroundResource = R.drawable.input_border
+                    phoneNumber = textView {
+                        text = "+86"
+                        gravity = Gravity.CENTER
+                        backgroundColor = Color.WHITE
+                        textSize = 15f
+                        textColor = Color.parseColor("#333333")
+                        onClick {
+                            startActivityForResult(
+                                Intent(
+                                    applicationContext,
+                                    PickActivity::class.java
+                                ), 111
+                            )
+                        }
+                    }.lparams(height = matchParent, width = wrapContent) {
+                        leftMargin = dip(5)
+                        rightMargin = dip(10)
+                    }
+
+                    telePhone = editText {
+                        hint = "请输入手机号码"
+                        backgroundColor = Color.WHITE
+                    }.lparams(width = matchParent, height = wrapContent) {
+                        weight = 1f
+                    }
+                }.lparams(height = wrapContent, width = matchParent) {
+                    topMargin = dip(25)
+                }
+
+                linearLayout {
+                    backgroundResource = R.drawable.input_border
+                    textView {
+
+                    }.lparams(width = wrapContent, height = matchParent) {
+                        topMargin = dip(10)
+                    }
+
+                    password = editText {
+                        hint = "请输入密码"
+                        backgroundColor = Color.WHITE
+                    }.lparams(width = matchParent, height = wrapContent) {
+                        weight = 1f
+                    }
+                }.lparams(height = wrapContent, width = matchParent) {
+
+                    topMargin = dip(10)
+                    leftPadding = dip(10)
+                    rightPadding = dip(10)
+                }
+
+                linearLayout {
+                    onClick {
+                        isChoose.isChecked = !isChoose.isChecked
+                    }
+
+                    isChoose = checkBox {
+                    }
+
+                    textView {
+                        text = "我同意"
+                    }
+                    textView {
+                        text = "隐私协议"
+                        textColor = Color.parseColor("#44CDF6")
+                        onClick {
+                            toast("隐私协议")
+                        }
+                    }
+                    textView {
+                        text = "和"
+                    }
+                    textView {
+                        text = "服务声明"
+                        textColor = Color.parseColor("#44CDF6")
+                        onClick {
+                            toast("服务声明")
+                        }
+                    }
+                }.lparams {
+                    topMargin = dip(15)
+                }
+
+
+                button {
+                    backgroundResource = R.drawable.login_button
+                    text = "登录"
+                    textColor = Color.WHITE
+                    textSize = 21f
+
+                    onClick {
+                        submit()
+                    }
+                }.lparams(width = matchParent, height = wrapContent) {
+                    topMargin = dip(30)
+                }
+
+                textView {
+                    text = "忘记密码"
+                    textColor = Color.parseColor("#7F7F7F")
+                    gravity = Gravity.RIGHT
+                    onClick {
+                        startActivity<ReadSetPasswordActivity>()
+                    }
+                }.lparams(height = wrapContent, width = matchParent) {
+                    topMargin = dip(25)
+                }
+
+            }.lparams(width = matchParent, height = matchParent) {
+                leftMargin = dip(20)
+                rightMargin = dip(20)
             }
-
         }
-
-
     }
 
     private fun closeFocusjianpan() {
@@ -221,45 +223,32 @@ class StartActivity : AppCompatActivity(){
     }
 
 
-    fun isLogin():Boolean{
-
-       val rommNum =
-            PreferenceManager.getDefaultSharedPreferences(this)
-                .getString("MyRoomNum", "").toString()
-        if(rommNum!=""){
-            val i = Intent(this, MenuActivity::class.java)
-            startActivity(i)
-            return true
-        }
-        return  false
-    }
-
-    private fun submit(){
+    private fun submit() {
         val countryCode = phoneNumber.text.toString().trim()
         val phone = telePhone.text.toString().trim()
         val myPassword = password.text.toString().trim()
         val country = countryCode.substring(1, 3)
-        val myPhone = countryCode+phone
-        val result = isPhoneNumberValid(myPhone,country)
+        val myPhone = countryCode + phone
+        val result = isPhoneNumberValid(myPhone, country)
         val myCheck = isChoose.isChecked
 
-        if(!myCheck){
+        if (!myCheck) {
             toast("请勾选协议")
             return
         }
 
-        if(phone.isEmpty()){
+        if (phone.isEmpty()) {
             toast("请输入手机号")
             return
         }
 
-        if(myPassword.isEmpty()){
+        if (myPassword.isEmpty()) {
             toast("请输入密码")
             return
         }
 
         // 电话判定,测试阶段屏蔽
-        if (!result){
+        if (!result) {
             toast("请输入正确的手机号")
             return
         }
@@ -272,11 +261,27 @@ class StartActivity : AppCompatActivity(){
         val mEditor: SharedPreferences.Editor = saveTool.edit()
 
         mEditor.putString("token", "login")
-        mEditor.putString("userName","testName")
+        mEditor.putString("userName", "testName")
 
-
-        mEditor.putString("MyRoomNum",phone)
         mEditor.commit()
 
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (event != null) {
+            if(keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_DOWN){
+                if((System.currentTimeMillis()-exitTime) > 2000){
+                    Toast.makeText(applicationContext, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                    exitTime = System.currentTimeMillis()
+                } else {
+                    val startMain = Intent(Intent.ACTION_MAIN)
+                    startMain.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    startMain.addCategory(Intent.CATEGORY_HOME)
+                    startActivity(startMain)
+                }
+                return true
+            }
+        }
+        return super.onKeyDown(keyCode, event)
     }
 }
