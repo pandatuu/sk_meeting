@@ -175,7 +175,7 @@ class StartActivity : AppCompatActivity() {
                     }
                     textView {
                         text = "隐私协议"
-                        textColor = Color.parseColor("#44CDF6")
+                        textColor = Color.parseColor("#219ad5")
                         onClick {
                             toast("隐私协议")
                         }
@@ -185,7 +185,7 @@ class StartActivity : AppCompatActivity() {
                     }
                     textView {
                         text = "服务声明"
-                        textColor = Color.parseColor("#44CDF6")
+                        textColor = Color.parseColor("#219ad5")
                         onClick {
                             toast("服务声明")
                         }
@@ -314,7 +314,7 @@ class StartActivity : AppCompatActivity() {
 
         mEditor.putString("token", "login")
         mEditor.putString("userName", "testName")
-
+        mEditor.putString("MyRoomNum", phone)
         mEditor.commit()
 
     }
