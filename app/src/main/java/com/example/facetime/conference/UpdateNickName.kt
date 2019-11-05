@@ -1,10 +1,8 @@
 package com.example.facetime.conference
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.view.Gravity
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -13,14 +11,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
 import org.jetbrains.anko.*
 
-class RegisterSetNickName : AppCompatActivity() {
+class UpdateNickName: AppCompatActivity() {
 
-    private lateinit var nickName: EditText
-    lateinit var saveTool: SharedPreferences
+    lateinit var nickName: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        saveTool = PreferenceManager.getDefaultSharedPreferences(this@RegisterSetNickName)
 
         frameLayout {
             backgroundColor = Color.TRANSPARENT
@@ -48,13 +44,13 @@ class RegisterSetNickName : AppCompatActivity() {
             linearLayout {
                 orientation = LinearLayout.VERTICAL
                 textView {
-                    text = "设置昵称"
+                    text = "设置新昵称"
                     textSize = 23f
                 }.lparams {
                     gravity = Gravity.CENTER_HORIZONTAL
                 }
                 nickName = editText {
-                    hint = "请输入昵称"
+                    hint = "请输入新昵称"
                     maxLines = 1
                     padding = dip(5)
                     backgroundColor = Color.WHITE
@@ -70,11 +66,6 @@ class RegisterSetNickName : AppCompatActivity() {
                         closeFocusjianpan()
                         if(nickName.text.toString() != ""){
                             if(nickName.text.length < 10){
-//                                val mEditor: SharedPreferences.Editor = saveTool.edit()
-//                                mEditor.putString("token", "login")
-//                                mEditor.putString("userName", "testName")
-//                                mEditor.commit()
-                                startActivity<MenuActivity>()
                                 finish()
                             }else{
                                 toast("限制字数长度10以内")
@@ -91,6 +82,7 @@ class RegisterSetNickName : AppCompatActivity() {
             }
         }
     }
+
     private fun closeFocusjianpan() {
         //关闭ｅｄｉｔ光标
         nickName.clearFocus()

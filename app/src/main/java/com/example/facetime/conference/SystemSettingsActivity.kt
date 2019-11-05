@@ -22,6 +22,9 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.*
 import com.example.facetime.R
+import com.example.facetime.login.StartActivity
+import com.umeng.commonsdk.stateless.UMSLEnvelopeBuild.mContext
+import org.jetbrains.anko.sdk25.coroutines.onClick
 
 
 open class SystemSettingsActivity : AppCompatActivity() {
@@ -84,6 +87,9 @@ open class SystemSettingsActivity : AppCompatActivity() {
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
                     gravity = Gravity.CENTER
+                    setOnClickListener {
+                        startActivity<UpdateNickName>()
+                    }
                 }.lparams() {
                     height = dip(60)
                     width = matchParent
@@ -102,6 +108,9 @@ open class SystemSettingsActivity : AppCompatActivity() {
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
                     gravity = Gravity.CENTER
+                    setOnClickListener {
+                        startActivity<UpdatePassword>()
+                    }
                 }.lparams() {
                     height = dip(60)
                     width = matchParent
@@ -121,6 +130,13 @@ open class SystemSettingsActivity : AppCompatActivity() {
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
                     gravity = Gravity.CENTER
+                    setOnClickListener {
+                        val sp = PreferenceManager.getDefaultSharedPreferences(this@SystemSettingsActivity).edit()
+                        sp.remove("token")
+                        sp.remove("userName")
+                        sp.commit()
+                        startActivity<StartActivity>()
+                    }
                 }.lparams() {
                     height = dip(60)
                     width = matchParent
