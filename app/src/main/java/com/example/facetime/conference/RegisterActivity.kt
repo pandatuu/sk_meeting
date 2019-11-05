@@ -186,7 +186,7 @@ class RegisterActivity : AppCompatActivity() {
                         }
                         textView {
                             text = "隐私协议"
-                            textColor = Color.BLUE
+                            textColor = Color.parseColor("#219ad5")
                             setOnClickListener {
                                 toast("隐私协议")
                             }
@@ -196,7 +196,7 @@ class RegisterActivity : AppCompatActivity() {
                         }
                         textView {
                             text = "服务声明"
-                            textColor = Color.BLUE
+                            textColor = Color.parseColor("#219ad5")
                             setOnClickListener {
                                 toast("服务声明")
                             }
