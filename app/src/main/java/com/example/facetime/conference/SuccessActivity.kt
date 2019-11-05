@@ -336,11 +336,19 @@ open class SuccessActivity : AppCompatActivity() {
 
     //转向视频界面
     private fun gotoVideoInterview(roomNum: String) {
+
+        var userName =
+            PreferenceManager.getDefaultSharedPreferences(this)
+                .getString("userName", "").toString()
+
         try {
             //链接视频
+            val user=JitsiMeetUserInfo()
+            user.displayName=(userName)
+
             val options = JitsiMeetConferenceOptions.Builder()
                 .setRoom(roomNum)
-                .setUserInfo(JitsiMeetUserInfo())
+                .setUserInfo(user)
                 .build()
 
             val intent = Intent(this, JitsiMeetActivitySon::class.java)

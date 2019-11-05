@@ -473,18 +473,20 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
 
     //转向视频界面
     private fun gotoVideoInterview(roomNum: String) {
+        var userName =
+            PreferenceManager.getDefaultSharedPreferences(this)
+                .getString("userName", "").toString()
+
         try {
-
-            var info=JitsiMeetUserInfo()
-            info.setDisplayName("xxxxx")
-
+            var user=JitsiMeetUserInfo()
+            user.setDisplayName(userName)
 
             //链接视频
             val options = JitsiMeetConferenceOptions.Builder()
                 .setAudioMuted(!switch_audio.isChecked)
                 .setVideoMuted(!switch_video.isChecked)
                 .setRoom(roomNum)
-                .setUserInfo(info)
+                .setUserInfo(user)
                 .build()
 
             val intent = Intent(this, JitsiMeetActivitySon::class.java)
