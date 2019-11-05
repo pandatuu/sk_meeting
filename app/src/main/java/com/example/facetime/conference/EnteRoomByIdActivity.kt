@@ -474,12 +474,17 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
     //转向视频界面
     private fun gotoVideoInterview(roomNum: String) {
         try {
+
+            var info=JitsiMeetUserInfo()
+            info.setDisplayName("xxxxx")
+
+
             //链接视频
             val options = JitsiMeetConferenceOptions.Builder()
                 .setAudioMuted(!switch_audio.isChecked)
                 .setVideoMuted(!switch_video.isChecked)
                 .setRoom(roomNum)
-                .setUserInfo(JitsiMeetUserInfo())
+                .setUserInfo(info)
                 .build()
 
             val intent = Intent(this, JitsiMeetActivitySon::class.java)
