@@ -36,7 +36,7 @@
         <activity
             android:name=".login.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.Black"
+            android:theme="@style/AppTheme.mainPageActionBar"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,6 +51,13 @@
                 <!-- sk://appShare?参数1=xxx&参数2=xxx -->
                 <data android:scheme="sk" android:host="appShare" tools:ignore="AppLinkUrlError"/>
             </intent-filter>
+        </activity>
+
+        <!-- 首页 -->
+        <activity android:name=".conference.MenuActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme.Black"
+            >
         </activity>
 
 
