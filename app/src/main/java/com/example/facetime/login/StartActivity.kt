@@ -10,17 +10,16 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.view.Gravity
 import android.view.KeyEvent
+import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
 import com.example.facetime.conference.MenuActivity
 import com.example.facetime.conference.RegisterActivity
 import com.google.i18n.phonenumbers.NumberParseException
 import com.google.i18n.phonenumbers.PhoneNumberUtil
+import com.jaeger.library.StatusBarUtil
 import com.sahooz.library.Country
 import com.sahooz.library.PickActivity
 import org.jetbrains.anko.*
@@ -33,6 +32,7 @@ class StartActivity : AppCompatActivity() {
     private lateinit var isChoose: CheckBox
     lateinit var saveTool: SharedPreferences
     private var exitTime: Long = 0
+    private lateinit var toolbar1: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +44,22 @@ class StartActivity : AppCompatActivity() {
                 backgroundColor = Color.parseColor("#F2F2F2")
                 onClick {
                     closeFocusjianpan()
+                }
+                relativeLayout() {
+                    backgroundColor=Color.TRANSPARENT
+                    toolbar1 = toolbar {
+                        backgroundColor=Color.TRANSPARENT
+                        isEnabled = true
+                        title = ""
+                    }.lparams() {
+                        width = matchParent
+                        height = dip(0)
+                        alignParentBottom()
+
+                    }
+                }.lparams() {
+                    width = matchParent
+                    height = dip(0)
                 }
                 textView {
                     text = "注册"
@@ -90,6 +106,19 @@ class StartActivity : AppCompatActivity() {
                     telePhone = editText {
                         hint = "请输入手机号码"
                         backgroundColor = Color.WHITE
+                        maxLines = 1
+                        setOnKeyListener(object : View.OnKeyListener{
+                            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                                if (event != null) {
+                                    if (KeyEvent.KEYCODE_ENTER == keyCode && KeyEvent.ACTION_DOWN == event.action) {
+                                        //处理事件
+                                        password.requestFocus()
+                                        return true
+                                    }
+                                }
+                                return false
+                            }
+                        })
                     }.lparams(width = matchParent, height = wrapContent) {
                         weight = 1f
                     }
@@ -108,6 +137,21 @@ class StartActivity : AppCompatActivity() {
                     password = editText {
                         hint = "请输入密码"
                         backgroundColor = Color.WHITE
+                        maxLines = 1
+                        setOnKeyListener(object : View.OnKeyListener{
+                            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                                if (event != null) {
+                                    if (KeyEvent.KEYCODE_ENTER == keyCode && KeyEvent.ACTION_DOWN == event.action) {
+                                        //处理事件
+                                        clearFocus()
+                                        closeFocusjianpan()
+                                        return true
+                                    }
+                                }
+                                return false
+                            }
+
+                        })
                     }.lparams(width = matchParent, height = wrapContent) {
                         weight = 1f
                     }
@@ -152,7 +196,7 @@ class StartActivity : AppCompatActivity() {
 
 
                 button {
-                    backgroundResource =  R.drawable.bottonbg
+                    backgroundResource = R.drawable.bottonbg
                     text = "登录"
                     textColor = Color.WHITE
                     textSize = 21f
@@ -180,6 +224,14 @@ class StartActivity : AppCompatActivity() {
                 rightMargin = dip(20)
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        setActionBar(toolbar1)
+        StatusBarUtil.setTranslucentForImageView(this@StartActivity, 0, toolbar1)
+        getWindow().getDecorView()
+            .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
     }
 
     private fun closeFocusjianpan() {
