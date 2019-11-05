@@ -18,6 +18,8 @@ open class MenuActivity : AppCompatActivity() {
 
     private lateinit var toolbar1: Toolbar
 
+    private  lateinit var createMy:TextView
+    private  lateinit var enterMy:TextView
 
     override fun onActivityResult(
         requestCode: Int,
@@ -109,81 +111,68 @@ open class MenuActivity : AppCompatActivity() {
             verticalLayout {
                 gravity = Gravity.CENTER_HORIZONTAL
 
+              createMy=  textView {
+                    text = "创建我的会议室"
+                    textSize = 14f
+                    textColor = Color.WHITE
+                    backgroundResource = R.drawable.bottonbg
+                    gravity = Gravity.CENTER
+                    visibility=View.GONE
+                    setOnClickListener {
 
+                        var intent = Intent(this@MenuActivity, CreateRoomNameActivity::class.java)
+                        startActivityForResult(intent, 3)
+                        overridePendingTransition(
+                            R.anim.right_in,
+                            R.anim.left_out
+                        )
 
-                var RoomNum =
-                    PreferenceManager.getDefaultSharedPreferences(this@MenuActivity)
-                        .getString("MyRoomName", "").toString()
-
-
-
-                println("-------------")
-                println(RoomNum.toString())
-                println("-------------")
-                if(RoomNum==""){
-                    textView {
-                        text = "创建我的会议室"
-                        textSize = 14f
-                        textColor = Color.WHITE
-                        backgroundResource = R.drawable.bottonbg
-                        gravity = Gravity.CENTER
-
-                        setOnClickListener {
-
-                            var intent = Intent(this@MenuActivity, CreateRoomNameActivity::class.java)
-                            startActivityForResult(intent, 3)
-                            overridePendingTransition(
-                                R.anim.right_in,
-                                R.anim.left_out
-                            )
-
-                        }
-
-
-                    }.lparams() {
-                        height = dip(40)
-                        width = dip(240)
-                        topMargin = dip(20)
                     }
-                }else{
-                    textView {
-                        text = "进入我的会议室"
-                        textSize = 14f
-                        textColor = Color.WHITE
-                        backgroundResource = R.drawable.bottonbg
-                        gravity = Gravity.CENTER
 
 
-
-                        setOnClickListener {
-
-                            var intentNow =
-                                Intent(this@MenuActivity, SuccessActivity::class.java)
-
-
-
-                            var MyRoomName =
-                                PreferenceManager.getDefaultSharedPreferences(this@MenuActivity)
-                                    .getString("MyRoomName", "").toString()
-
-
-                            intentNow.putExtra("RoomName",MyRoomName)
-                            startActivityForResult(intentNow, 50)
-                            overridePendingTransition(
-                                R.anim.right_in,
-                                R.anim.left_out
-                            )
-                        }
-
-
-
-                    }.lparams() {
-                        height = dip(40)
-                        width = dip(240)
-                        topMargin = dip(20)
-                    }
+                }.lparams() {
+                    height = dip(40)
+                    width = dip(240)
+                    topMargin = dip(20)
                 }
 
+
+              enterMy=  textView {
+                    text = "进入我的会议室"
+                    textSize = 14f
+                    textColor = Color.WHITE
+                    backgroundResource = R.drawable.bottonbg
+                    gravity = Gravity.CENTER
+                    visibility=View.GONE
+
+
+                    setOnClickListener {
+
+                        var intentNow =
+                            Intent(this@MenuActivity, SuccessActivity::class.java)
+
+
+
+                        var MyRoomName =
+                            PreferenceManager.getDefaultSharedPreferences(this@MenuActivity)
+                                .getString("MyRoomName", "").toString()
+
+
+                        intentNow.putExtra("RoomName",MyRoomName)
+                        startActivityForResult(intentNow, 50)
+                        overridePendingTransition(
+                            R.anim.right_in,
+                            R.anim.left_out
+                        )
+                    }
+
+
+
+                }.lparams() {
+                    height = dip(40)
+                    width = dip(240)
+                    topMargin = dip(20)
+                }
 
 
 
@@ -224,6 +213,36 @@ open class MenuActivity : AppCompatActivity() {
 
         }
 
+        isRoomCreated()
+
+    }
+
+
+
+
+    fun isRoomCreated(){
+
+
+
+        var MyRoomName =
+            PreferenceManager.getDefaultSharedPreferences(this@MenuActivity)
+                .getString("MyRoomName", "").toString()
+
+        if(MyRoomName==""){
+
+            createMy.visibility=View.VISIBLE
+            enterMy.visibility=View.GONE
+
+        }else{
+            createMy.visibility=View.GONE
+            enterMy.visibility=View.VISIBLE
+
+        }
+
+
+
+
+
     }
 
     override fun onStart() {
@@ -233,7 +252,7 @@ open class MenuActivity : AppCompatActivity() {
         getWindow().getDecorView()
             .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
 
-
+        isRoomCreated()
     }
 
 

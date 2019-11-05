@@ -41,6 +41,10 @@ open class SuccessActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        var myRoomNum =
+            PreferenceManager.getDefaultSharedPreferences(this)
+                .getString("MyRoomNum", "").toString()
+
         verticalLayout {
             backgroundColor = Color.parseColor("#f2f2f2")
 
@@ -121,7 +125,7 @@ open class SuccessActivity : AppCompatActivity() {
 
                         textColor = Color.BLACK
                         setHintTextColor(Color.BLACK)
-                        text = "303006"
+                        text = myRoomNum
                         imeOptions = IME_ACTION_DONE
                         backgroundColor=Color.TRANSPARENT
                         singleLine = true

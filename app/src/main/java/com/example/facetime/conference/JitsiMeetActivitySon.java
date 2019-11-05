@@ -74,6 +74,15 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
                 }catch (Exception e){
                     System.out.println("被动离开视频时，报错了！！！！！");
                 }
+
+                Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
+                startActivityForResult(intent, 12);
+                overridePendingTransition(
+                        R.anim.right_in,
+                        R.anim.left_out
+                );
+
+
                 finish();
                 overridePendingTransition(R.anim.left_in, R.anim.right_out);
             }
