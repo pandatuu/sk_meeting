@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.icu.util.MeasureUnit
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.text.InputType
@@ -24,14 +25,7 @@ import com.jaeger.library.StatusBarUtil
 import com.sahooz.library.Country
 import com.sahooz.library.PickActivity
 import org.jetbrains.anko.*
-<<<<<<< HEAD
 import org.jetbrains.anko.sdk25.coroutines.onClick
-import com.dropbox.core.v2.teamlog.ActorLogInfo.app
-import androidx.core.content.ContextCompat.getSystemService
-
-
-=======
->>>>>>> 8ab19fdc4d9ae49103b5eb03906c1e4d0ef98cd3
 
 class StartActivity : AppCompatActivity() {
     private lateinit var telePhone: EditText
@@ -76,7 +70,7 @@ class StartActivity : AppCompatActivity() {
                     textColor = Color.parseColor("#7F7F7F")
                     setOnClickListener {
                         startActivity<RegisterActivity>()
-                        this@StartActivity.overridePendingTransition(R.anim.right_in, R.anim.left_out)
+                        overridePendingTransition(R.anim.right_in, R.anim.left_out)
                     }
                 }.lparams(height = wrapContent, width = matchParent) {
                     topPadding = dip(20)
@@ -186,14 +180,9 @@ class StartActivity : AppCompatActivity() {
                     textView {
                         text = "隐私协议"
                         textColor = Color.parseColor("#219ad5")
-<<<<<<< HEAD
-                        onClick {
-                            startActivity<UserAgreement>()
-                            this@StartActivity.overridePendingTransition(R.anim.right_in, R.anim.left_out)
-=======
                         setOnClickListener {
-                            toast("隐私协议")
->>>>>>> 8ab19fdc4d9ae49103b5eb03906c1e4d0ef98cd3
+                            startActivity<UserAgreement>()
+                            overridePendingTransition(R.anim.right_in, R.anim.left_out)
                         }
                     }
                     textView {
@@ -202,14 +191,9 @@ class StartActivity : AppCompatActivity() {
                     textView {
                         text = "服务声明"
                         textColor = Color.parseColor("#219ad5")
-<<<<<<< HEAD
-                        onClick {
-                            startActivity<ServiceStatement>()
-                            this@StartActivity.overridePendingTransition(R.anim.right_in, R.anim.left_out)
-=======
                         setOnClickListener {
                             toast("服务声明")
->>>>>>> 8ab19fdc4d9ae49103b5eb03906c1e4d0ef98cd3
+                            overridePendingTransition(R.anim.right_in, R.anim.left_out)
                         }
                     }
                 }.lparams {
@@ -333,17 +317,8 @@ class StartActivity : AppCompatActivity() {
         val i = Intent(this, MenuActivity::class.java)
 
         startActivity(i)
-<<<<<<< HEAD
 
-        this@StartActivity.overridePendingTransition(R.anim.right_in, R.anim.left_out)
-=======
-        overridePendingTransition(
-            R.anim.fade_in_out,
-            R.anim.fade_in_out
-        )
-
-
->>>>>>> 8ab19fdc4d9ae49103b5eb03906c1e4d0ef98cd3
+        overridePendingTransition(R.anim.right_in, R.anim.left_out)
         val mEditor: SharedPreferences.Editor = saveTool.edit()
 
         mEditor.putString("token", "login")
