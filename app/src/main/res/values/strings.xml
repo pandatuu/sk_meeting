@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">FaceTime</string>
     <string name="action_settings">Settings</string>
+    <!--隐私协议地址-->
+    <string name="userAgreementUrl" translatable="false">https://blog.csdn.net/cysion1989/article/details/73431003</string>
+    <!--服务声明-->
+    <string name="serviceStatementUrl" translatable="false">https://www.baidu.com</string>
 </resources>

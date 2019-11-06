@@ -211,6 +211,7 @@ class RsetPasswordActivity : AppCompatActivity(){
             return
         }
 
-        toast("完成")
+        startActivity<StartActivity>()
+        this@RsetPasswordActivity.overridePendingTransition(R.anim.right_in, R.anim.left_out)
     }
 }
