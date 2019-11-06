@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
-import android.icu.util.MeasureUnit
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.view.Gravity
@@ -23,7 +22,6 @@ import com.jaeger.library.StatusBarUtil
 import com.sahooz.library.Country
 import com.sahooz.library.PickActivity
 import org.jetbrains.anko.*
-import org.jetbrains.anko.sdk25.coroutines.onClick
 
 class StartActivity : AppCompatActivity() {
     private lateinit var telePhone: EditText
@@ -42,7 +40,7 @@ class StartActivity : AppCompatActivity() {
             backgroundColor = Color.parseColor("#F2F2F2")
             verticalLayout {
                 backgroundColor = Color.parseColor("#F2F2F2")
-                onClick {
+                setOnClickListener {
                     closeFocusjianpan()
                 }
                 relativeLayout() {
@@ -66,7 +64,7 @@ class StartActivity : AppCompatActivity() {
                     gravity = Gravity.RIGHT
                     textSize = 16f
                     textColor = Color.parseColor("#7F7F7F")
-                    onClick {
+                    setOnClickListener {
                         startActivity<RegisterActivity>()
                     }
                 }.lparams(height = wrapContent, width = matchParent) {
@@ -90,7 +88,7 @@ class StartActivity : AppCompatActivity() {
                         backgroundColor = Color.WHITE
                         textSize = 15f
                         textColor = Color.parseColor("#333333")
-                        onClick {
+                        setOnClickListener {
                             startActivityForResult(
                                 Intent(
                                     applicationContext,
@@ -163,7 +161,7 @@ class StartActivity : AppCompatActivity() {
                 }
 
                 linearLayout {
-                    onClick {
+                    setOnClickListener {
                         isChoose.isChecked = !isChoose.isChecked
                     }
 
@@ -176,7 +174,7 @@ class StartActivity : AppCompatActivity() {
                     textView {
                         text = "隐私协议"
                         textColor = Color.parseColor("#219ad5")
-                        onClick {
+                        setOnClickListener {
                             toast("隐私协议")
                         }
                     }
@@ -186,7 +184,7 @@ class StartActivity : AppCompatActivity() {
                     textView {
                         text = "服务声明"
                         textColor = Color.parseColor("#219ad5")
-                        onClick {
+                        setOnClickListener {
                             toast("服务声明")
                         }
                     }
@@ -201,7 +199,7 @@ class StartActivity : AppCompatActivity() {
                     textColor = Color.WHITE
                     textSize = 21f
 
-                    onClick {
+                    setOnClickListener {
                         submit()
                     }
                 }.lparams(width = matchParent, height = wrapContent) {
@@ -212,7 +210,7 @@ class StartActivity : AppCompatActivity() {
                     text = "忘记密码"
                     textColor = Color.parseColor("#7F7F7F")
                     gravity = Gravity.RIGHT
-                    onClick {
+                    setOnClickListener {
                         startActivity<ReadSetPasswordActivity>()
                     }
                 }.lparams(height = wrapContent, width = matchParent) {
@@ -310,6 +308,12 @@ class StartActivity : AppCompatActivity() {
         val i = Intent(this, MenuActivity::class.java)
 
         startActivity(i)
+        overridePendingTransition(
+            R.anim.fade_in_out,
+            R.anim.fade_in_out
+        )
+
+
         val mEditor: SharedPreferences.Editor = saveTool.edit()
 
         mEditor.putString("token", "login")

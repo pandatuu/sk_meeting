@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.Gravity
@@ -13,6 +14,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.LinearLayout.HORIZONTAL
 import android.widget.TextView
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
@@ -25,94 +27,104 @@ import com.sahooz.library.PickActivity
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 
-class ReadSetPasswordActivity : AppCompatActivity(){
+class ReadSetPasswordActivity : AppCompatActivity() {
     private var runningDownTimer: Boolean = false
-    lateinit var timeButton:TextView
-    lateinit var telephone:EditText
-    lateinit var myCode:EditText
-    lateinit var phoneNumber:TextView
+    lateinit var timeButton: TextView
+    lateinit var telephone: EditText
+    lateinit var myCode: EditText
+    lateinit var phoneNumber: TextView
     private lateinit var toolbar1: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        linearLayout {
-            backgroundColor = Color.parseColor("#F2F2F2")
-            verticalLayout {
-                backgroundColor = Color.parseColor("#F2F2F2")
+        verticalLayout {
+            backgroundColor = Color.parseColor("#f2f2f2")
+            setOnClickListener {
+                closeFocusjianpan()
+            }
 
-                onClick {
-                    closeFocusjianpan()
+            linearLayout {
+                toolbar1 = toolbar {
+                    isEnabled = true
+                    title = ""
+                    navigationIconResource = R.mipmap.icon_back
+                }.lparams() {
+                    width = dip(45)
                 }
+
 
                 linearLayout {
-                    toolbar1 = toolbar {
-                        isEnabled = true
-                        title = ""
-                        navigationIconResource = R.mipmap.icon_back
-                    }.lparams(){
-                        width = dip(9)
-                        height = dip(65 - getStatusBarHeight(this@ReadSetPasswordActivity))
-                        rightMargin = dip(15)
-
-                    }
-
-                    linearLayout {
-                        textView {
-                            setOnClickListener {
-                                finish()//返回
-                                overridePendingTransition(
-                                    R.anim.left_in,
-                                    R.anim.right_out
-                                )
-                            }
-                            text = "返回"
-                            gravity = Gravity.CENTER
-
-                        }.lparams() {
-                            height = matchParent
-                            width = wrapContent
+                    textView {
+                        setOnClickListener {
+                            finish()//返回
+                            overridePendingTransition(
+                                R.anim.left_in,
+                                R.anim.right_out
+                            )
                         }
+                        text = "返回"
+                        gravity = Gravity.CENTER
+
                     }.lparams() {
-                        weight = 1f
-                        width = dip(0)
-                        height = dip(65 - getStatusBarHeight(this@ReadSetPasswordActivity))
-                        topMargin = dip(getStatusBarHeight(this@ReadSetPasswordActivity))
+                        height = matchParent
+                        width = wrapContent
                     }
                 }.lparams() {
-                    width = matchParent
-                    height = dip(65)
+                    weight = 1f
+                    width = dip(0)
+                    height = dip(65 - getStatusBarHeight(this@ReadSetPasswordActivity))
+                    topMargin = dip(getStatusBarHeight(this@ReadSetPasswordActivity))
                 }
+            }.lparams() {
+                width = matchParent
+                height = dip(65)
+            }
+
+
+
+            verticalLayout {
                 textView {
                     text = "重置密码"
                     gravity = Gravity.CENTER
                     textSize = 21f
-                    textColor = Color.parseColor("#333333")
-                }.lparams(height = wrapContent,width = matchParent){
+                    typeface = Typeface.DEFAULT_BOLD
+                    textColor = Color.BLACK
+                }.lparams(height = wrapContent, width = matchParent) {
                     topMargin = dip(75)
                 }
 
                 linearLayout {
-                    backgroundResource = R.drawable.input_border
+                    backgroundResource = R.drawable.border
+                    orientation=HORIZONTAL
+
                     phoneNumber = textView {
                         text = "+86"
                         gravity = Gravity.CENTER
-                        backgroundColor = Color.WHITE
+                        backgroundColor = Color.TRANSPARENT
                         textSize = 15f
-                        textColor = Color.parseColor("#333333")
+                        textColor = Color.BLACK
+                        typeface = Typeface.DEFAULT_BOLD
 
-                        onClick {
-                            startActivityForResult(Intent(applicationContext, PickActivity::class.java), 111)
+                        setOnClickListener {
+                            startActivityForResult(
+                                Intent(
+                                    applicationContext,
+                                    PickActivity::class.java
+                                ), 111
+                            )
                         }
-                    }.lparams(height = matchParent,width = wrapContent){
+                    }.lparams(height = matchParent, width = wrapContent) {
                         leftMargin = dip(5)
                         rightMargin = dip(10)
                     }
 
                     telephone = editText {
                         hint = "请输入手机号码"
-                        backgroundColor = Color.WHITE
-                        setOnKeyListener(object : View.OnKeyListener{
+                        backgroundColor = Color.TRANSPARENT
+                        setHintTextColor(Color.GRAY)
+                        textColor = Color.BLACK
+                        setOnKeyListener(object : View.OnKeyListener {
                             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                                 if (event != null) {
                                     if (KeyEvent.KEYCODE_ENTER == keyCode && KeyEvent.ACTION_DOWN == event.action) {
@@ -124,25 +136,31 @@ class ReadSetPasswordActivity : AppCompatActivity(){
                                 return false
                             }
                         })
-                    }.lparams(width = matchParent,height = wrapContent){
+
+                        setOnFocusChangeListener { view, b ->
+                            if (b) {
+                                setHintTextColor(Color.BLACK)
+                            } else {
+                                setHintTextColor(Color.GRAY)
+                            }
+                        }
+                    }.lparams(width = matchParent, height = matchParent) {
+                        margin=dip(1)
                         weight = 1f
                     }
-                }.lparams(height = wrapContent,width = matchParent){
+                }.lparams(height = dip(50), width = matchParent) {
                     topMargin = dip(25)
                 }
 
                 linearLayout {
-                    backgroundResource = R.drawable.input_right
-                    textView {
-
-                    }.lparams(width = wrapContent,height = matchParent){
-                        topMargin = dip(10)
-                    }
+                    backgroundResource = R.drawable.border
 
                     myCode = editText {
                         hint = "请输入验证码"
-                        backgroundColor = Color.WHITE
-                        setOnKeyListener(object : View.OnKeyListener{
+                        backgroundColor = Color.TRANSPARENT
+                        setHintTextColor(Color.GRAY)
+                        textColor = Color.BLACK
+                        setOnKeyListener(object : View.OnKeyListener {
                             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                                 if (event != null) {
                                     if (KeyEvent.KEYCODE_ENTER == keyCode && KeyEvent.ACTION_DOWN == event.action) {
@@ -155,19 +173,30 @@ class ReadSetPasswordActivity : AppCompatActivity(){
                                 return false
                             }
                         })
-                    }.lparams(width = matchParent,height = wrapContent){
+
+                        setOnFocusChangeListener { view, b ->
+                            if (b) {
+                                setHintTextColor(Color.BLACK)
+                            } else {
+                                setHintTextColor(Color.GRAY)
+                            }
+                        }
+                    }.lparams(width = dip(0), height = matchParent) {
                         weight = 1f
+                        leftMargin=dip(10)
                     }
 
                     timeButton = textView {
                         gravity = Gravity.CENTER
                         text = "获取"
                         textSize = 14f
-                    }.lparams(width = dip(60),height = matchParent){
+                        typeface = Typeface.DEFAULT_BOLD
+                        textColor = Color.BLACK
+                    }.lparams(width = dip(60), height = matchParent) {
 
                         setOnClickListener {
                             val result = determinePhone()
-                            if(result){
+                            if (result) {
                                 onPcode()
                             } else {
                                 toast("请输入正确的手机号")
@@ -175,29 +204,30 @@ class ReadSetPasswordActivity : AppCompatActivity(){
                         }
                     }
 
-                }.lparams(height = wrapContent,width = matchParent){
+                }.lparams(height = dip(50), width = matchParent) {
                     topMargin = dip(10)
                 }
 
 
-                button {
-                    backgroundResource = R.drawable.bottonbg
+                textView {
                     text = "下一步"
+                    textSize = 16f
                     textColor = Color.WHITE
-                    textSize = 21f
-
-                    onClick {
+                    backgroundResource = R.drawable.bottonbg
+                    gravity = Gravity.CENTER
+                    setOnClickListener {
                         next()
                     }
-                }.lparams(width = matchParent,height = wrapContent){
+                }.lparams(width = matchParent,  height = dip(50)) {
                     topMargin = dip(50)
                 }
-            }.lparams(width = matchParent,height = matchParent){
+            }.lparams(width = matchParent, height = matchParent) {
                 leftMargin = dip(20)
                 rightMargin = dip(20)
             }
         }
     }
+
     override fun onStart() {
         super.onStart()
         setActionBar(toolbar1)
@@ -212,6 +242,7 @@ class ReadSetPasswordActivity : AppCompatActivity(){
             )
         }
     }
+
     //发送验证码按钮
     private fun onPcode() {
 
@@ -235,6 +266,7 @@ class ReadSetPasswordActivity : AppCompatActivity(){
         }
         return result
     }
+
     /**
      * 倒计时
      */
@@ -242,7 +274,7 @@ class ReadSetPasswordActivity : AppCompatActivity(){
         @SuppressLint("SetTextI18n")
         override fun onTick(l: Long) {
             val result = determinePhone()
-            if(result){
+            if (result) {
                 runningDownTimer = true
                 timeButton.text = (l / 1000).toString() + "s"
                 timeButton.setOnClickListener { null }
@@ -284,10 +316,10 @@ class ReadSetPasswordActivity : AppCompatActivity(){
         val countryCode = phoneNumber.text.toString().trim()
         val phone = telephone.text.toString().trim()
         val country = countryCode.substring(1, 3)
-        val myPhone = countryCode+phone
-        val result = isPhoneNumberValid(myPhone,country)
+        val myPhone = countryCode + phone
+        val result = isPhoneNumberValid(myPhone, country)
 
-        if(result){
+        if (result) {
             return true
         }
         return false
@@ -313,22 +345,22 @@ class ReadSetPasswordActivity : AppCompatActivity(){
         return false
     }
 
-    fun next(){
+    fun next() {
         val res = determinePhone()
         val phone = telephone.text.toString().trim()
         val code = myCode.text.toString().trim()
 
-        if(phone.isNullOrEmpty()){
+        if (phone.isNullOrEmpty()) {
             toast("请输入手机号码")
             return
         }
 
-        if(code.isNullOrEmpty()){
+        if (code.isNullOrEmpty()) {
             toast("请输入验证码")
             return
         }
 
-        if(!res){
+        if (!res) {
             toast("请输入正确的手机号码")
             return
         }
