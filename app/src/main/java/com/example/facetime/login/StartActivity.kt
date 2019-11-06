@@ -6,10 +6,10 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Typeface
-import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.text.InputType
+import android.text.method.PasswordTransformationMethod
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
@@ -25,9 +25,6 @@ import com.jaeger.library.StatusBarUtil
 import com.sahooz.library.Country
 import com.sahooz.library.PickActivity
 import org.jetbrains.anko.*
-import com.dropbox.core.v2.teamlog.ActorLogInfo.app
-import androidx.core.content.ContextCompat.getSystemService
-
 
 
 class StartActivity : AppCompatActivity() {
@@ -73,6 +70,7 @@ class StartActivity : AppCompatActivity() {
                     textColor = Color.parseColor("#7F7F7F")
                     setOnClickListener {
                         startActivity<RegisterActivity>()
+                        overridePendingTransition(R.anim.right_in, R.anim.left_out)
                     }
                 }.lparams(height = wrapContent, width = matchParent) {
                     topPadding = dip(20)
@@ -81,6 +79,7 @@ class StartActivity : AppCompatActivity() {
                 textView {
                     text = "登录"
                     gravity = Gravity.CENTER
+                    typeface = Typeface.DEFAULT_BOLD
                     textSize = 21f
                     typeface = Typeface.DEFAULT_BOLD
                     textColor = Color.BLACK
@@ -90,6 +89,8 @@ class StartActivity : AppCompatActivity() {
 
                 linearLayout {
                     backgroundResource = R.drawable.border
+                    orientation= LinearLayout.HORIZONTAL
+
                     phoneNumber = textView {
                         text = "+86"
                         gravity = Gravity.CENTER
@@ -106,16 +107,16 @@ class StartActivity : AppCompatActivity() {
                             )
                         }
                     }.lparams(height = matchParent, width = wrapContent) {
-                        leftMargin = dip(5)
+                        margin=dip(1)
+                        leftMargin=dip(10)
                         rightMargin = dip(10)
                     }
 
                     telePhone = editText {
                         hint = "请输入手机号码"
                         backgroundColor = Color.TRANSPARENT
-                        singleLine = true
                         setHintTextColor(Color.GRAY)
-                        textColor = Color.BLACK
+                        singleLine=true
                         setOnKeyListener(object : View.OnKeyListener{
                             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                                 if (event != null) {
@@ -128,30 +129,34 @@ class StartActivity : AppCompatActivity() {
                                 return false
                             }
                         })
-                    }.lparams(width = matchParent, height = wrapContent) {
+                        setOnFocusChangeListener { view, b ->
+                            if (b) {
+                                setHintTextColor(Color.BLACK)
+                            } else {
+                                setHintTextColor(Color.GRAY)
+                            }
+                        }
+                    }.lparams(width = dip(1), height = matchParent) {
                         weight = 1f
-                        leftMargin=dip(10)
+                        margin=dip(1)
                     }
-                }.lparams(height = wrapContent, width = matchParent) {
+                }.lparams(height = dip(50), width = matchParent) {
                     topMargin = dip(25)
                 }
 
                 linearLayout {
                     backgroundResource = R.drawable.border
-                    textView {
-
-                    }.lparams(width = wrapContent, height = matchParent) {
-                        topMargin = dip(10)
-                    }
 
                     password = editText {
                         hint = "请输入密码"
                         backgroundColor = Color.TRANSPARENT
-                        singleLine = true
-                        setHintTextColor(Color.GRAY)
-                        textColor = Color.BLACK
+                        singleLine=true
                         inputType =
                             InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                        setHintTextColor(Color.GRAY)
+
+                       transformationMethod = PasswordTransformationMethod()
+
                         setOnKeyListener(object : View.OnKeyListener{
                             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                                 if (event != null) {
@@ -166,11 +171,17 @@ class StartActivity : AppCompatActivity() {
                             }
 
                         })
-                    }.lparams(width = matchParent, height = wrapContent) {
-                        weight = 1f
+                        setOnFocusChangeListener { view, b ->
+                            if (b) {
+                                setHintTextColor(Color.BLACK)
+                            } else {
+                                setHintTextColor(Color.GRAY)
+                            }
+                        }
+                    }.lparams(width = matchParent, height = matchParent) {
                         leftMargin=dip(10)
                     }
-                }.lparams(height = wrapContent, width = matchParent) {
+                }.lparams(height = dip(50), width = matchParent) {
 
                     topMargin = dip(10)
                     leftPadding = dip(10)
@@ -192,7 +203,8 @@ class StartActivity : AppCompatActivity() {
                         text = "隐私协议"
                         textColor = Color.parseColor("#219ad5")
                         setOnClickListener {
-                            toast("隐私协议")
+                            startActivity<UserAgreement>()
+                            overridePendingTransition(R.anim.right_in, R.anim.left_out)
                         }
                     }
                     textView {
@@ -203,6 +215,7 @@ class StartActivity : AppCompatActivity() {
                         textColor = Color.parseColor("#219ad5")
                         setOnClickListener {
                             toast("服务声明")
+                            overridePendingTransition(R.anim.right_in, R.anim.left_out)
                         }
                     }
                 }.lparams {
@@ -210,16 +223,16 @@ class StartActivity : AppCompatActivity() {
                 }
 
 
-                button {
+                textView {
                     backgroundResource = R.drawable.bottonbg
                     text = "登录"
                     textColor = Color.WHITE
-                    textSize = 21f
-
+                    textSize = 16f
+                    gravity = Gravity.CENTER
                     setOnClickListener {
                         submit()
                     }
-                }.lparams(width = matchParent, height = wrapContent) {
+                }.lparams(width = matchParent,height = dip(50)) {
                     topMargin = dip(30)
                 }
 
@@ -229,6 +242,7 @@ class StartActivity : AppCompatActivity() {
                     gravity = Gravity.RIGHT
                     setOnClickListener {
                         startActivity<ReadSetPasswordActivity>()
+                        this@StartActivity.overridePendingTransition(R.anim.right_in, R.anim.left_out)
                     }
                 }.lparams(height = wrapContent, width = matchParent) {
                     topMargin = dip(25)
@@ -325,18 +339,14 @@ class StartActivity : AppCompatActivity() {
         val i = Intent(this, MenuActivity::class.java)
 
         startActivity(i)
-        overridePendingTransition(
-            R.anim.fade_in_out,
-            R.anim.fade_in_out
-        )
 
-
+        overridePendingTransition(R.anim.right_in, R.anim.left_out)
         val mEditor: SharedPreferences.Editor = saveTool.edit()
 
         mEditor.putString("token", "login")
         mEditor.putString("userName", "testName")
         mEditor.putString("MyRoomNum", phone)
-        mEditor.commit()
+        mEditor.apply()
 
     }
 
