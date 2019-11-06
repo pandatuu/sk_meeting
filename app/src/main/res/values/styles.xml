@@ -45,6 +45,6 @@
     <style name="AppTheme.mainPageActionBar">
         <item name="windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
-        <item name="android:windowBackground">@drawable/layer_splash</item>
+        <item name="android:windowBackground">@mipmap/company_bg</item>
     </style>
 </resources>
