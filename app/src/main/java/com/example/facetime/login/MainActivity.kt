@@ -1,71 +1,65 @@
 package com.example.facetime.login
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.preference.PreferenceManager
-import android.view.Gravity
-import android.view.View
-import android.widget.Toolbar
+import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
 import com.example.facetime.conference.MenuActivity
-import com.jaeger.library.StatusBarUtil
 import org.jetbrains.anko.*
 import java.lang.Thread.sleep
 
-@SuppressLint("Registered")
-class MainActivity : AppCompatActivity(){
+class MainActivity : AppCompatActivity() {
+    //    private lateinit var toolbar1: Toolbar
+
     private var mContext: Context? = null
-    private lateinit var toolbar1: Toolbar
+    private lateinit var frameLayout: FrameLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         mContext = this
-        frameLayout {
-            backgroundResource = R.mipmap.company_bg
-            relativeLayout() {
-                backgroundColor=Color.TRANSPARENT
-                toolbar1 = toolbar {
-                    backgroundColor=Color.TRANSPARENT
-                    isEnabled = true
-                    title = ""
+        super.onCreate(savedInstanceState)
+            frameLayout = frameLayout {
+                relativeLayout() {
+                    backgroundResource = R.mipmap.screen
                 }.lparams() {
                     width = matchParent
-                    height = dip(0)
-                    alignParentBottom()
-
+                    height = matchParent
                 }
-            }.lparams() {
-                width = matchParent
-                height = dip(0)
             }
+        //启动页延迟
+        runOnUiThread {
+            sleep(500)
         }
-        Thread(Runnable {
-            sleep(2000)
+        //刚搞页延迟
+        val mainHandler = Handler(Looper.getMainLooper());
+        mainHandler.postDelayed( Runnable() {
             determination()
-        }).start()
+        },2000)
+
     }
 
-    override fun onStart() {
-        super.onStart()
-        setActionBar(toolbar1)
-        StatusBarUtil.setTranslucentForImageView(this@MainActivity, 0, toolbar1)
-        getWindow().getDecorView()
-            .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
-    }
 
-    private fun determination(){
+    private fun determination() {
         val sp = PreferenceManager.getDefaultSharedPreferences(mContext)
         val token = sp.getString("token", "")
         println("本机token为：$token")
-        if (token.isNullOrEmpty()){
+        if (token.isNullOrEmpty()) {
             startActivity<StartActivity>()
+            overridePendingTransition(
+                R.anim.fade_in_out,
+                R.anim.fade_in_out
+            )
             finish()
-        }else{
+        } else {
             startActivity<MenuActivity>()
+            overridePendingTransition(
+                R.anim.fade_in_out,
+                R.anim.fade_in_out
+            )
             finish()
         }
-
     }
 }

@@ -149,7 +149,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
 
                                 override fun afterTextChanged(s: Editable?) {
                                     if (text.toString() == "") {
-                                        hint = "进入会议室时开启视频"
+                                        hint = "请输入会议室ID"
                                     } else {
                                         hint = ""
                                     }
