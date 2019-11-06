@@ -376,7 +376,7 @@ open class SuccessActivity : AppCompatActivity() {
         lateinit var serverURL: URL
         try {
             serverURL = URL(add)
-        } catch (e: MalformedURLException) {
+        } catch (e: Throwable) {
             e.printStackTrace()
         }
         try {

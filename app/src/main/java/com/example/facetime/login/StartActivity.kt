@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
-import android.icu.util.MeasureUnit
+import android.graphics.Typeface
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.text.InputType
@@ -79,6 +79,7 @@ class StartActivity : AppCompatActivity() {
                 textView {
                     text = "登录"
                     gravity = Gravity.CENTER
+                    typeface = Typeface.DEFAULT_BOLD
                     textSize = 21f
                     textColor = Color.parseColor("#333333")
                 }.lparams(height = wrapContent, width = matchParent) {
@@ -86,13 +87,17 @@ class StartActivity : AppCompatActivity() {
                 }
 
                 linearLayout {
-                    backgroundResource = R.drawable.input_border
+                    backgroundResource = R.drawable.border
+                    orientation= LinearLayout.HORIZONTAL
+
                     phoneNumber = textView {
                         text = "+86"
                         gravity = Gravity.CENTER
-                        backgroundColor = Color.WHITE
+                        backgroundColor = Color.TRANSPARENT
                         textSize = 15f
                         textColor = Color.parseColor("#333333")
+                        typeface = Typeface.DEFAULT_BOLD
+
                         setOnClickListener {
                             startActivityForResult(
                                 Intent(
@@ -102,14 +107,16 @@ class StartActivity : AppCompatActivity() {
                             )
                         }
                     }.lparams(height = matchParent, width = wrapContent) {
-                        leftMargin = dip(5)
+                        margin=dip(1)
+                        leftMargin=dip(10)
                         rightMargin = dip(10)
                     }
 
                     telePhone = editText {
                         hint = "请输入手机号码"
-                        backgroundColor = Color.WHITE
-                        maxLines = 1
+                        backgroundColor = Color.TRANSPARENT
+                        setHintTextColor(Color.GRAY)
+                        singleLine=true
                         setOnKeyListener(object : View.OnKeyListener{
                             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                                 if (event != null) {
@@ -122,26 +129,34 @@ class StartActivity : AppCompatActivity() {
                                 return false
                             }
                         })
-                    }.lparams(width = matchParent, height = wrapContent) {
+                        setOnFocusChangeListener { view, b ->
+                            if (b) {
+                                setHintTextColor(Color.BLACK)
+                            } else {
+                                setHintTextColor(Color.GRAY)
+                            }
+                        }
+                    }.lparams(width = dip(1), height = matchParent) {
                         weight = 1f
+                        margin=dip(1)
                     }
-                }.lparams(height = wrapContent, width = matchParent) {
+                }.lparams(height = dip(50), width = matchParent) {
                     topMargin = dip(25)
                 }
 
                 linearLayout {
-                    backgroundResource = R.drawable.input_border
-                    textView {
-
-                    }.lparams(width = wrapContent, height = matchParent) {
-                        topMargin = dip(10)
-                    }
+                    backgroundResource = R.drawable.border
 
                     password = editText {
                         hint = "请输入密码"
-                        backgroundColor = Color.WHITE
+                        backgroundColor = Color.TRANSPARENT
+                        singleLine=true
+                        inputType =
+                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                        setHintTextColor(Color.GRAY)
+
                        transformationMethod = PasswordTransformationMethod()
-                        maxLines = 1
+
                         setOnKeyListener(object : View.OnKeyListener{
                             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                                 if (event != null) {
@@ -156,10 +171,17 @@ class StartActivity : AppCompatActivity() {
                             }
 
                         })
-                    }.lparams(width = matchParent, height = wrapContent) {
-                        weight = 1f
+                        setOnFocusChangeListener { view, b ->
+                            if (b) {
+                                setHintTextColor(Color.BLACK)
+                            } else {
+                                setHintTextColor(Color.GRAY)
+                            }
+                        }
+                    }.lparams(width = matchParent, height = matchParent) {
+                        leftMargin=dip(10)
                     }
-                }.lparams(height = wrapContent, width = matchParent) {
+                }.lparams(height = dip(50), width = matchParent) {
 
                     topMargin = dip(10)
                     leftPadding = dip(10)
@@ -201,16 +223,16 @@ class StartActivity : AppCompatActivity() {
                 }
 
 
-                button {
+                textView {
                     backgroundResource = R.drawable.bottonbg
                     text = "登录"
                     textColor = Color.WHITE
-                    textSize = 21f
-
+                    textSize = 16f
+                    gravity = Gravity.CENTER
                     setOnClickListener {
                         submit()
                     }
-                }.lparams(width = matchParent, height = wrapContent) {
+                }.lparams(width = matchParent,height = dip(50)) {
                     topMargin = dip(30)
                 }
 

@@ -89,6 +89,10 @@ open class SystemSettingsActivity : AppCompatActivity() {
                     gravity = Gravity.CENTER
                     setOnClickListener {
                         startActivity<UpdateNickName>()
+                        overridePendingTransition(
+                            R.anim.right_in,
+                            R.anim.left_out
+                        )
                     }
                 }.lparams() {
                     height = dip(60)
@@ -110,6 +114,10 @@ open class SystemSettingsActivity : AppCompatActivity() {
                     gravity = Gravity.CENTER
                     setOnClickListener {
                         startActivity<UpdatePassword>()
+                        overridePendingTransition(
+                                    R.anim.right_in,
+                                    R.anim.left_out
+                                )
                     }
                 }.lparams() {
                     height = dip(60)
@@ -136,6 +144,10 @@ open class SystemSettingsActivity : AppCompatActivity() {
                         sp.remove("userName")
                         sp.commit()
                         startActivity<StartActivity>()
+                        overridePendingTransition(
+                            R.anim.fade_in_out,
+                            R.anim.fade_in_out
+                        )
                     }
                 }.lparams() {
                     height = dip(60)

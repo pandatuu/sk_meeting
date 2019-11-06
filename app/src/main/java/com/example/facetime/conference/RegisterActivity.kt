@@ -65,10 +65,13 @@ class RegisterActivity : AppCompatActivity() {
                     text = "登录"
                     textSize = 15f
                     setOnClickListener {
-                        val intent = Intent(this@RegisterActivity, StartActivity::class.java)
-                        startActivity(intent)
+//                        val intent = Intent(this@RegisterActivity, StartActivity::class.java)
+//                        startActivity(intent)
                         finish()
-                        overridePendingTransition(R.anim.left_in, R.anim.right_out)
+                        overridePendingTransition(
+                            R.anim.left_in,
+                            R.anim.right_out
+                        )
                     }
                     padding = dip(10)
                 }.lparams(wrapContent, wrapContent)
