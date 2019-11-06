@@ -5,7 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
-import android.icu.util.MeasureUnit
+import android.graphics.Typeface
+import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.text.InputType
@@ -24,7 +25,10 @@ import com.jaeger.library.StatusBarUtil
 import com.sahooz.library.Country
 import com.sahooz.library.PickActivity
 import org.jetbrains.anko.*
-import org.jetbrains.anko.sdk25.coroutines.onClick
+import com.dropbox.core.v2.teamlog.ActorLogInfo.app
+import androidx.core.content.ContextCompat.getSystemService
+
+
 
 class StartActivity : AppCompatActivity() {
     private lateinit var telePhone: EditText
@@ -43,7 +47,7 @@ class StartActivity : AppCompatActivity() {
             backgroundColor = Color.parseColor("#F2F2F2")
             verticalLayout {
                 backgroundColor = Color.parseColor("#F2F2F2")
-                onClick {
+                setOnClickListener {
                     closeFocusjianpan()
                 }
                 relativeLayout() {
@@ -67,7 +71,7 @@ class StartActivity : AppCompatActivity() {
                     gravity = Gravity.RIGHT
                     textSize = 16f
                     textColor = Color.parseColor("#7F7F7F")
-                    onClick {
+                    setOnClickListener {
                         startActivity<RegisterActivity>()
                     }
                 }.lparams(height = wrapContent, width = matchParent) {
@@ -78,20 +82,22 @@ class StartActivity : AppCompatActivity() {
                     text = "登录"
                     gravity = Gravity.CENTER
                     textSize = 21f
-                    textColor = Color.parseColor("#333333")
+                    typeface = Typeface.DEFAULT_BOLD
+                    textColor = Color.BLACK
                 }.lparams(height = wrapContent, width = matchParent) {
                     topMargin = dip(75)
                 }
 
                 linearLayout {
-                    backgroundResource = R.drawable.input_border
+                    backgroundResource = R.drawable.border
                     phoneNumber = textView {
                         text = "+86"
                         gravity = Gravity.CENTER
-                        backgroundColor = Color.WHITE
+                        backgroundColor = Color.TRANSPARENT
                         textSize = 15f
-                        textColor = Color.parseColor("#333333")
-                        onClick {
+                        textColor = Color.BLACK
+                        typeface = Typeface.DEFAULT_BOLD
+                        setOnClickListener {
                             startActivityForResult(
                                 Intent(
                                     applicationContext,
@@ -106,14 +112,16 @@ class StartActivity : AppCompatActivity() {
 
                     telePhone = editText {
                         hint = "请输入手机号码"
-                        backgroundColor = Color.WHITE
-                        maxLines = 1
+                        backgroundColor = Color.TRANSPARENT
+                        singleLine = true
+                        setHintTextColor(Color.GRAY)
+                        textColor = Color.BLACK
                         setOnKeyListener(object : View.OnKeyListener{
                             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                                 if (event != null) {
                                     if (KeyEvent.KEYCODE_ENTER == keyCode && KeyEvent.ACTION_DOWN == event.action) {
                                         //处理事件
-                                        password.requestFocus()
+//                                        password.requestFocus()
                                         return true
                                     }
                                 }
@@ -122,13 +130,14 @@ class StartActivity : AppCompatActivity() {
                         })
                     }.lparams(width = matchParent, height = wrapContent) {
                         weight = 1f
+                        leftMargin=dip(10)
                     }
                 }.lparams(height = wrapContent, width = matchParent) {
                     topMargin = dip(25)
                 }
 
                 linearLayout {
-                    backgroundResource = R.drawable.input_border
+                    backgroundResource = R.drawable.border
                     textView {
 
                     }.lparams(width = wrapContent, height = matchParent) {
@@ -137,8 +146,10 @@ class StartActivity : AppCompatActivity() {
 
                     password = editText {
                         hint = "请输入密码"
-                        backgroundColor = Color.WHITE
-                        maxLines = 1
+                        backgroundColor = Color.TRANSPARENT
+                        singleLine = true
+                        setHintTextColor(Color.GRAY)
+                        textColor = Color.BLACK
                         inputType =
                             InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
                         setOnKeyListener(object : View.OnKeyListener{
@@ -157,6 +168,7 @@ class StartActivity : AppCompatActivity() {
                         })
                     }.lparams(width = matchParent, height = wrapContent) {
                         weight = 1f
+                        leftMargin=dip(10)
                     }
                 }.lparams(height = wrapContent, width = matchParent) {
 
@@ -166,7 +178,7 @@ class StartActivity : AppCompatActivity() {
                 }
 
                 linearLayout {
-                    onClick {
+                    setOnClickListener {
                         isChoose.isChecked = !isChoose.isChecked
                     }
 
@@ -179,7 +191,7 @@ class StartActivity : AppCompatActivity() {
                     textView {
                         text = "隐私协议"
                         textColor = Color.parseColor("#219ad5")
-                        onClick {
+                        setOnClickListener {
                             toast("隐私协议")
                         }
                     }
@@ -189,7 +201,7 @@ class StartActivity : AppCompatActivity() {
                     textView {
                         text = "服务声明"
                         textColor = Color.parseColor("#219ad5")
-                        onClick {
+                        setOnClickListener {
                             toast("服务声明")
                         }
                     }
@@ -204,7 +216,7 @@ class StartActivity : AppCompatActivity() {
                     textColor = Color.WHITE
                     textSize = 21f
 
-                    onClick {
+                    setOnClickListener {
                         submit()
                     }
                 }.lparams(width = matchParent, height = wrapContent) {
@@ -215,7 +227,7 @@ class StartActivity : AppCompatActivity() {
                     text = "忘记密码"
                     textColor = Color.parseColor("#7F7F7F")
                     gravity = Gravity.RIGHT
-                    onClick {
+                    setOnClickListener {
                         startActivity<ReadSetPasswordActivity>()
                     }
                 }.lparams(height = wrapContent, width = matchParent) {
@@ -313,6 +325,12 @@ class StartActivity : AppCompatActivity() {
         val i = Intent(this, MenuActivity::class.java)
 
         startActivity(i)
+        overridePendingTransition(
+            R.anim.fade_in_out,
+            R.anim.fade_in_out
+        )
+
+
         val mEditor: SharedPreferences.Editor = saveTool.edit()
 
         mEditor.putString("token", "login")
