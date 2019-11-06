@@ -12,6 +12,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
 import com.example.facetime.conference.MenuActivity
 import com.jaeger.library.StatusBarUtil
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.*
 import java.lang.Thread.sleep
 
@@ -41,10 +45,12 @@ class MainActivity : AppCompatActivity(){
                 height = dip(0)
             }
         }
-        Thread(Runnable {
-            sleep(2000)
-            determination()
-        }).start()
+        GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+            Thread(Runnable {
+                sleep(2000)
+                determination()
+            }).start()
+        }
     }
 
     override fun onStart() {
