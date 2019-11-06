@@ -115,7 +115,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                             )
                         }
                     }.lparams(height = matchParent, width = wrapContent) {
-                        leftMargin = dip(5)
+                        leftMargin=dip(10)
                         rightMargin = dip(10)
                     }
 
@@ -124,6 +124,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                         backgroundColor = Color.TRANSPARENT
                         setHintTextColor(Color.GRAY)
                         textColor = Color.BLACK
+                        singleLine=true
                         setOnKeyListener(object : View.OnKeyListener {
                             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                                 if (event != null) {
@@ -160,6 +161,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                         backgroundColor = Color.TRANSPARENT
                         setHintTextColor(Color.GRAY)
                         textColor = Color.BLACK
+                        singleLine=true
                         setOnKeyListener(object : View.OnKeyListener {
                             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                                 if (event != null) {
