@@ -192,7 +192,7 @@ class StartActivity : AppCompatActivity() {
                         text = "服务声明"
                         textColor = Color.parseColor("#219ad5")
                         setOnClickListener {
-                            toast("服务声明")
+                            startActivity<ServiceStatement>()
                             overridePendingTransition(R.anim.right_in, R.anim.left_out)
                         }
                     }
