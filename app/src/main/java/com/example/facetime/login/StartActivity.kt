@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.icu.util.MeasureUnit
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.text.InputType
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
@@ -138,6 +139,8 @@ class StartActivity : AppCompatActivity() {
                         hint = "请输入密码"
                         backgroundColor = Color.WHITE
                         maxLines = 1
+                        inputType =
+                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
                         setOnKeyListener(object : View.OnKeyListener{
                             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                                 if (event != null) {

@@ -3,6 +3,7 @@ package com.example.facetime.conference
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.text.InputType
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
@@ -79,6 +80,8 @@ class UpdatePassword : AppCompatActivity() {
                         maxLines = 1
                         padding = dip(5)
                         backgroundColor = Color.WHITE
+                        inputType =
+                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
                         setOnKeyListener(object : View.OnKeyListener {
                             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                                 if (event != null) {
@@ -102,6 +105,8 @@ class UpdatePassword : AppCompatActivity() {
                         maxLines = 1
                         padding = dip(5)
                         backgroundColor = Color.WHITE
+                        inputType =
+                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
                         setOnKeyListener(object : View.OnKeyListener {
                             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                                 if (event != null) {
