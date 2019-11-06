@@ -334,5 +334,6 @@ class ReadSetPasswordActivity : AppCompatActivity(){
         }
 
         startActivity<RsetPasswordActivity>()
+        this@ReadSetPasswordActivity.overridePendingTransition(R.anim.right_in, R.anim.left_out)
     }
 }
