@@ -222,4 +222,17 @@ class RsetPasswordActivity : AppCompatActivity(){
         startActivity<StartActivity>()
         this@RsetPasswordActivity.overridePendingTransition(R.anim.right_in, R.anim.left_out)
     }
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (event != null) {
+            if(keyCode == KeyEvent.KEYCODE_BACK ){
+                finish()
+                overridePendingTransition(
+                    R.anim.left_in,
+                    R.anim.right_out
+                )
+                return true
+            }
+        }
+        return super.onKeyDown(keyCode, event)
+    }
 }

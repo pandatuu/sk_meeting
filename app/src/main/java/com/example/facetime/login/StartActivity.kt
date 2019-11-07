@@ -7,6 +7,7 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.os.Handler
 import android.preference.PreferenceManager
 import android.text.InputType
 import android.text.method.PasswordTransformationMethod
@@ -19,6 +20,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
 import com.example.facetime.conference.MenuActivity
 import com.example.facetime.conference.RegisterActivity
+import com.example.facetime.util.DialogUtils
+import com.example.facetime.util.MyDialog
 import com.google.i18n.phonenumbers.NumberParseException
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.jaeger.library.StatusBarUtil
@@ -367,29 +370,19 @@ class StartActivity : AppCompatActivity() {
 
         toast("$phone,$myPassword")
 
-        val i = Intent(this, MenuActivity::class.java)
+        val mEditor: SharedPreferences.Editor = saveTool.edit()
 
-        startActivity(i)
+        mEditor.putString("token", "login")
+        mEditor.putString("userName", "testName")
+
+        var str=getNum()
+        mEditor.putString("MyRoomNum", str)
+
+        mEditor.commit()
+
+        startActivity<MenuActivity>()
 
         overridePendingTransition(R.anim.fade_in_out, R.anim.fade_in_out)
-
-
-        Thread(Runnable {
-
-
-            val mEditor: SharedPreferences.Editor = saveTool.edit()
-
-            mEditor.putString("token", "login")
-            mEditor.putString("userName", "testName")
-
-            var str=getNum()
-            mEditor.putString("MyRoomNum", str)
-
-            mEditor.apply()
-
-        }).start()
-
-
     }
 
 
@@ -400,9 +393,9 @@ class StartActivity : AppCompatActivity() {
 
     fun getNum():String{
         var result=""
-        val random=Math.random()*1000
         var d=0
         while(true){
+            val random=Math.random()*1000
             d=Math.ceil(random).toInt()%9
             if(d>3){
              break
