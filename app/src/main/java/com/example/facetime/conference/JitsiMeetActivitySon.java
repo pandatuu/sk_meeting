@@ -9,11 +9,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
 
@@ -202,6 +204,8 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
     int second = 0;
     String minStr="";
     String secStr="";
+
+    int max=600;
     public void onConferenceJoined(Map<String, Object> data) {
         Log.d(TAG, "Conference joined: " + data);
 
@@ -264,13 +268,32 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    count = count + 1;
-                    if (count > 180) {
+
+
+                    if(count>max-5){
+                        mainHandler.postDelayed( new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast toast = Toast.makeText(
+                                        getApplicationContext(),
+                                        "视频会议即将结束",
+                                        Toast.LENGTH_SHORT
+                                );
+                                toast. setGravity(Gravity.CENTER, 0, 0);
+                                toast.show();
+                            }
+                        },0);
+
+                    }
+
+                    if (count > max-1) {
+
 
                         finishVideo(1);
 
                         break;
                     }
+                    count = count + 1;
                 }
             }
         }).start();
