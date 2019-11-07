@@ -340,7 +340,7 @@ class StartActivity : AppCompatActivity() {
 
         startActivity(i)
 
-        overridePendingTransition(R.anim.right_in, R.anim.left_out)
+        overridePendingTransition(R.anim.fade_in_out, R.anim.fade_in_out)
 
 
         Thread(Runnable {

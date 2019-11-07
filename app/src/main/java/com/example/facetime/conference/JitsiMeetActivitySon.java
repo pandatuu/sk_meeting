@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -72,7 +73,7 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        context=this;
+        context = this;
 
         this.setContentView(layout.activity_jitsi_meet);
         if (!this.extraInitialize()) {
@@ -86,7 +87,6 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
 //         view = CommonActivity.Companion.addMyChild(this);
 //
 //        addContentView(view, params);
-
 
 
     }
@@ -216,26 +216,26 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
         new Thread(new Runnable() {
             @Override
             public void run() {
-                        int count = 0;
-                        int min = 0;
-                        int second = 0;
+                int count = 0;
+                int min = 0;
+                int second = 0;
 
 //                        LinearLayout layout=(LinearLayout)  ((LinearLayout) view).getChildAt(0);
 //                        TextView text=(TextView)layout.getChildAt(0);
-                        while (true) {
-                            try {
-                                Thread.sleep(1000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            count = count + 1;
-                            if(count>1800){
+                while (true) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    count = count + 1;
+                    if (count > 1800) {
 
-                                //finishVideo(1);
+                        //finishVideo(1);
 
-                                break;
-                            }
-                        }
+                        break;
+                    }
+                }
             }
         }).start();
 
@@ -265,4 +265,28 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
     public void closeVideo() {
         this.finishVideo(2);
     }
+
+
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+
+
+            Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
+            startActivityForResult(intent, 12);
+            overridePendingTransition(
+                    R.anim.left_in,
+                    R.anim.right_out
+            );
+
+            finish();
+
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+
 }
