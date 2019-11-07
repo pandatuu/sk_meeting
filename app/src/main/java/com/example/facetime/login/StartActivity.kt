@@ -350,13 +350,12 @@ class StartActivity : AppCompatActivity() {
 
             mEditor.putString("token", "login")
             mEditor.putString("userName", "testName")
-            mEditor.apply()
-
 
             var str=getNum()
-
             mEditor.putString("MyRoomNum", str)
+
             mEditor.apply()
+
         }).start()
 
 
