@@ -28,6 +28,7 @@ import com.jaeger.library.StatusBarUtil
 import com.sahooz.library.Country
 import com.sahooz.library.PickActivity
 import org.jetbrains.anko.*
+import java.lang.Thread.sleep
 
 
 class StartActivity : AppCompatActivity() {
@@ -59,8 +60,8 @@ class StartActivity : AppCompatActivity() {
                         setOnClickListener {
                             finish()//返回
                             overridePendingTransition(
-                                R.anim.left_in,
-                                R.anim.right_out
+                                R.anim.fade_in_out,
+                                R.anim.fade_in_out
                             )
                         }
                         text="返回"
@@ -291,8 +292,8 @@ class StartActivity : AppCompatActivity() {
         toolbar1.setNavigationOnClickListener {
             startActivity<MenuActivity>()
             overridePendingTransition(
-                R.anim.left_in,
-                R.anim.right_out
+                R.anim.fade_in_out,
+                R.anim.fade_in_out
             )
         }
     }
@@ -370,33 +371,26 @@ class StartActivity : AppCompatActivity() {
 
         toast("$phone,$myPassword")
 
-        val mEditor: SharedPreferences.Editor = saveTool.edit()
 
+        val mEditor: SharedPreferences.Editor = saveTool.edit()
         mEditor.putString("token", "login")
         mEditor.putString("userName", "testName")
 
         var str=getNum()
         mEditor.putString("MyRoomNum", str)
 
-        mEditor.commit()
-
-        startActivity<MenuActivity>()
-
+        val i = Intent(this, MenuActivity::class.java)
+        startActivity(i)
         overridePendingTransition(R.anim.fade_in_out, R.anim.fade_in_out)
+        mEditor.apply()
     }
-
-
-
-
-
-
 
     fun getNum():String{
         var result=""
         var d=0
         while(true){
-            val random=Math.random()*1000
-            d=Math.ceil(random).toInt()%9
+            val random=(Math.random()*1000).toInt()
+            d=random%9
             if(d>3){
              break
             }

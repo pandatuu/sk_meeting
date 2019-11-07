@@ -51,32 +51,25 @@ open class CommonActivity  {
 
     companion object {
         fun addMyChild(mContext:Context): View {
-            lateinit var textView:TextView
             val view = with(mContext!!) {
                 verticalLayout {
                     linearLayout() {
 
+                       backgroundResource= com.example.facetime.R.drawable.border_transparent
 
-                        backgroundResource= com.example.facetime.R.drawable.border
-
-                        textView= textView {
+                        textView {
                             gravity = Gravity.CENTER or Gravity.LEFT
-
-                            textColor=Color.BLACK
-                            textSize=14f
-
-
-
-
-
+                            textColor=Color.RED
+                            textSize=16f
+                            typeface = Typeface.DEFAULT_BOLD
                         }.lparams() {
-                            width = org.jetbrains.anko.wrapContent
-                            height = org.jetbrains.anko.matchParent
+                            width = dip(200)
+                            height = matchParent
                         }
 
                     }.lparams() {
                         height = dip(50)
-                        width = org.jetbrains.anko.matchParent
+                        width = dip(200)
                         leftMargin = dip(10)
                         rightMargin = dip(10)
                         topMargin=dip(10)

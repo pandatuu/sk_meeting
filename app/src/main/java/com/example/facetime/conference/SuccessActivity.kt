@@ -148,7 +148,7 @@ open class SuccessActivity : AppCompatActivity(),ShareFragment.SharetDialogSelec
 
 
                     gravity = Gravity.CENTER
-                    backgroundResource=R.drawable.border_transparent
+                    backgroundResource=R.drawable.border
 
 
                     textView1 = textView() {
@@ -197,7 +197,7 @@ open class SuccessActivity : AppCompatActivity(),ShareFragment.SharetDialogSelec
 
 
                     gravity = Gravity.CENTER
-                    backgroundResource=R.drawable.border_transparent
+                    backgroundResource=R.drawable.border
 
 
                     textView1 = textView() {
@@ -245,7 +245,7 @@ open class SuccessActivity : AppCompatActivity(),ShareFragment.SharetDialogSelec
 //
 //
 //                    gravity = Gravity.CENTER
-//                    backgroundResource=R.drawable.border_transparent
+//                    backgroundResource=R.drawable.border
 //
 //
 //                    textView1 = textView() {
@@ -379,6 +379,15 @@ open class SuccessActivity : AppCompatActivity(),ShareFragment.SharetDialogSelec
 
     //转向视频界面
     private fun gotoVideoInterview(roomNum: String) {
+
+        val toast = Toast.makeText(
+            applicationContext,
+            "视频会议最多持续半个小时",
+            Toast.LENGTH_SHORT
+        )
+
+        toast.setGravity(Gravity.CENTER, 0, 0)
+        toast.show()
 
         var userName =
             PreferenceManager.getDefaultSharedPreferences(this)
