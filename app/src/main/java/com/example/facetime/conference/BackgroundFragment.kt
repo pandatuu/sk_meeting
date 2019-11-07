@@ -12,7 +12,12 @@ import org.jetbrains.anko.verticalLayout
 
 class BackgroundFragment: Fragment() {
 
+    interface ClickBack{
+        fun clickAll()
+    }
+
     private var mContext: Context? = null
+    private lateinit var clickback:ClickBack
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +31,7 @@ class BackgroundFragment: Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        clickback = activity as ClickBack
         val fragmentView=createView()
         mContext = activity
         return fragmentView
@@ -36,6 +42,9 @@ class BackgroundFragment: Fragment() {
             verticalLayout {
                 isClickable = true
                 backgroundColorResource = R.color.black66000000
+                setOnClickListener {
+                    clickback.clickAll()
+                }
             }
         }
     }

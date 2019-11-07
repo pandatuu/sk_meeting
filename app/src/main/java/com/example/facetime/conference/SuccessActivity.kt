@@ -37,7 +37,7 @@ import java.net.MalformedURLException
 import java.net.URL
 
 
-open class SuccessActivity : AppCompatActivity(),ShareFragment.SharetDialogSelect {
+open class SuccessActivity : AppCompatActivity(),ShareFragment.SharetDialogSelect,BackgroundFragment.ClickBack {
 
 
     private lateinit var toolbar1: Toolbar
@@ -419,6 +419,9 @@ open class SuccessActivity : AppCompatActivity(),ShareFragment.SharetDialogSelec
         }
     }
 
+    override fun clickAll() {
+        closeAlertDialog()
+    }
     //初始化视频面试
     private fun initVideoInterview() {
 

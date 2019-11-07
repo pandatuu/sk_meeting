@@ -36,7 +36,11 @@ import com.umeng.socialize.bean.SHARE_MEDIA
 
 
 open class BaseActivity : AppCompatActivity(),
-    ShareFragment.SharetDialogSelect {
+    ShareFragment.SharetDialogSelect,BackgroundFragment.ClickBack {
+    override fun clickAll() {
+        closeAlertDialog()
+    }
+
     override suspend fun getSelectedItem(index: Int) {
         UMConfigure.init(
             this, "5cdcc324570df3ffc60009c3"

@@ -58,8 +58,11 @@ class RegisterActivity : AppCompatActivity() {
                         textSize = 16f
                         textColor = Color.parseColor("#7F7F7F")
                         setOnClickListener {
-                            startActivity<StartActivity>()
-                            overridePendingTransition(R.anim.right_in, R.anim.left_out)
+                            finish()
+                            overridePendingTransition(
+                                R.anim.left_in,
+                                R.anim.right_out
+                            )
                         }
                     }.lparams(height = wrapContent, width = matchParent) {
                         centerVertically()
