@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
             frameLayout = frameLayout {
                 relativeLayout() {
-                    backgroundResource = R.mipmap.screen
+                    backgroundResource = R.mipmap.company_bg
                 }.lparams() {
                     width = matchParent
                     height = matchParent
@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         runOnUiThread {
             sleep(500)
         }
-        //刚搞页延迟
+        //广告页延迟
         val mainHandler = Handler(Looper.getMainLooper());
         mainHandler.postDelayed( Runnable() {
             determination()
