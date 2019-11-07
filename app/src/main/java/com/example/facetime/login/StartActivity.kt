@@ -25,7 +25,7 @@ import com.jaeger.library.StatusBarUtil
 import com.sahooz.library.Country
 import com.sahooz.library.PickActivity
 import org.jetbrains.anko.*
-import org.jetbrains.anko.sdk25.coroutines.onClick
+
 
 class StartActivity : AppCompatActivity() {
     private lateinit var telePhone: EditText
@@ -81,7 +81,8 @@ class StartActivity : AppCompatActivity() {
                     gravity = Gravity.CENTER
                     typeface = Typeface.DEFAULT_BOLD
                     textSize = 21f
-                    textColor = Color.parseColor("#333333")
+                    typeface = Typeface.DEFAULT_BOLD
+                    textColor = Color.BLACK
                 }.lparams(height = wrapContent, width = matchParent) {
                     topMargin = dip(75)
                 }
@@ -95,9 +96,8 @@ class StartActivity : AppCompatActivity() {
                         gravity = Gravity.CENTER
                         backgroundColor = Color.TRANSPARENT
                         textSize = 15f
-                        textColor = Color.parseColor("#333333")
+                        textColor = Color.BLACK
                         typeface = Typeface.DEFAULT_BOLD
-
                         setOnClickListener {
                             startActivityForResult(
                                 Intent(
@@ -122,7 +122,7 @@ class StartActivity : AppCompatActivity() {
                                 if (event != null) {
                                     if (KeyEvent.KEYCODE_ENTER == keyCode && KeyEvent.ACTION_DOWN == event.action) {
                                         //处理事件
-                                        password.requestFocus()
+//                                        password.requestFocus()
                                         return true
                                     }
                                 }

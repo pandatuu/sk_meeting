@@ -3,6 +3,7 @@ package com.example.facetime.conference
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.view.Gravity
@@ -71,17 +72,21 @@ class RegisterSetNickName : AppCompatActivity() {
                 orientation = LinearLayout.VERTICAL
                 textView {
                     text = "设置昵称"
-                    textSize = 23f
+                    textSize = 21f
+                    typeface = Typeface.DEFAULT_BOLD
+                    textColor = Color.BLACK
                 }.lparams {
                     gravity = Gravity.CENTER_HORIZONTAL
                 }
                 relativeLayout {
-                    backgroundResource = R.drawable.input_border
+                    backgroundResource = R.drawable.border
                     nickName = editText {
                         hint = "请输入昵称"
-                        maxLines = 1
+                        singleLine = true
                         padding = dip(5)
-                        backgroundColor = Color.WHITE
+                        setHintTextColor(Color.GRAY)
+                        textColor = Color.BLACK
+                        backgroundColor = Color.TRANSPARENT
                         setOnKeyListener(object : View.OnKeyListener {
                             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                                 if (event != null) {

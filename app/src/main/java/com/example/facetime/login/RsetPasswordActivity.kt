@@ -2,6 +2,7 @@ package com.example.facetime.login
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.Gravity
 import android.view.KeyEvent
@@ -75,16 +76,19 @@ class RsetPasswordActivity : AppCompatActivity(){
                     text = "重置密码"
                     gravity = Gravity.CENTER
                     textSize = 21f
-                    textColor = Color.parseColor("#333333")
+                    typeface = Typeface.DEFAULT_BOLD
+                    textColor = Color.BLACK
                 }.lparams(height = wrapContent,width = matchParent){
                     topMargin = dip(75)
                 }
 
                 linearLayout {
-                    backgroundResource = R.drawable.input_border
+                    backgroundResource = R.drawable.border
                     password = editText {
                         hint = "请输入新密码"
-                        backgroundColor = Color.WHITE
+                        setHintTextColor(Color.GRAY)
+                        textColor = Color.BLACK
+                        backgroundColor = Color.TRANSPARENT
                         setOnKeyListener(object : View.OnKeyListener{
                             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                                 if (event != null) {
@@ -99,13 +103,14 @@ class RsetPasswordActivity : AppCompatActivity(){
                         })
                     }.lparams(width = matchParent,height = wrapContent){
                         weight = 1f
+                        leftMargin=dip(10)
                     }
                 }.lparams(height = wrapContent,width = matchParent){
                     topMargin = dip(25)
                 }
 
                 linearLayout {
-                    backgroundResource = R.drawable.input_border
+                    backgroundResource = R.drawable.border
                     textView {
 
                     }.lparams(width = wrapContent,height = matchParent){
@@ -114,7 +119,9 @@ class RsetPasswordActivity : AppCompatActivity(){
 
                     confirmPassword = editText {
                         hint = "请再次输入新密码"
-                        backgroundColor = Color.WHITE
+                        setHintTextColor(Color.GRAY)
+                        textColor = Color.BLACK
+                        backgroundColor = Color.TRANSPARENT
                         setOnKeyListener(object : View.OnKeyListener{
                             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                                 if (event != null) {
@@ -130,6 +137,7 @@ class RsetPasswordActivity : AppCompatActivity(){
                         })
                     }.lparams(width = matchParent,height = wrapContent){
                         weight = 1f
+                        leftMargin=dip(10)
                     }
                 }.lparams(height = wrapContent,width = matchParent){
                     topMargin = dip(10)
