@@ -43,23 +43,33 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun determination() {
-        val sp = PreferenceManager.getDefaultSharedPreferences(mContext)
-        val token = sp.getString("token", "")
-        println("本机token为：$token")
-        if (token.isNullOrEmpty()) {
-            startActivity<StartActivity>()
-            overridePendingTransition(
-                R.anim.fade_in_out,
-                R.anim.fade_in_out
-            )
-            finish()
-        } else {
-            startActivity<MenuActivity>()
-            overridePendingTransition(
-                R.anim.fade_in_out,
-                R.anim.fade_in_out
-            )
-            finish()
-        }
+
+
+        startActivity<MenuActivity>()
+        overridePendingTransition(
+            R.anim.fade_in_out,
+            R.anim.fade_in_out
+        )
+        finish()
+
+
+//        val sp = PreferenceManager.getDefaultSharedPreferences(mContext)
+//        val token = sp.getString("token", "")
+//        println("本机token为：$token")
+//        if (token.isNullOrEmpty()) {
+//            startActivity<StartActivity>()
+//            overridePendingTransition(
+//                R.anim.fade_in_out,
+//                R.anim.fade_in_out
+//            )
+//            finish()
+//        } else {
+//            startActivity<MenuActivity>()
+//            overridePendingTransition(
+//                R.anim.fade_in_out,
+//                R.anim.fade_in_out
+//            )
+//            finish()
+//        }
     }
 }

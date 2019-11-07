@@ -16,7 +16,7 @@ import com.example.facetime.R
 import kotlin.system.exitProcess
 import com.dropbox.core.v2.teamlog.ActorLogInfo.app
 import androidx.core.content.ContextCompat.getSystemService
-
+import com.example.facetime.login.StartActivity
 
 
 open class MenuActivity : AppCompatActivity() {
@@ -127,12 +127,27 @@ open class MenuActivity : AppCompatActivity() {
                     visibility=View.GONE
                     setOnClickListener {
 
-                        var intent = Intent(this@MenuActivity, CreateRoomNameActivity::class.java)
-                        startActivityForResult(intent, 3)
-                        overridePendingTransition(
-                            R.anim.right_in,
-                            R.anim.left_out
-                        )
+
+
+
+                        val sp = PreferenceManager.getDefaultSharedPreferences(context)
+                        val token = sp.getString("token", "")
+                        println("本机token为：$token")
+
+                        if (token.isNullOrEmpty()) {
+                            startActivity<StartActivity>()
+                            overridePendingTransition(
+                                R.anim.fade_in_out,
+                                R.anim.fade_in_out
+                            )
+                        } else {
+                            startActivity<CreateRoomNameActivity>()
+                            overridePendingTransition(
+                                R.anim.right_in,
+                                R.anim.left_out
+                            )
+                        }
+
 
                     }
 
@@ -228,8 +243,6 @@ open class MenuActivity : AppCompatActivity() {
 
 
     fun isRoomCreated(){
-
-
 
         var MyRoomName =
             PreferenceManager.getDefaultSharedPreferences(this@MenuActivity)

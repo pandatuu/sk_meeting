@@ -23,6 +23,7 @@ import android.os.Build
 import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
 import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentTransaction
@@ -335,7 +336,20 @@ open class SuccessActivity : AppCompatActivity(),ShareFragment.SharetDialogSelec
         }
     }
 
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
 
+        if (event != null) {
+            if(keyCode == KeyEvent.KEYCODE_BACK ){
+                finish()
+                overridePendingTransition(
+                    R.anim.left_in,
+                    R.anim.right_out
+                )
+                return true
+            }
+        }
+        return super.onKeyDown(keyCode, event)
+    }
 
 
 
