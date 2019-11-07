@@ -2,15 +2,33 @@ package com.example.facetime.login
 
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Handler
+import android.view.Gravity
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
+import com.example.facetime.util.DialogUtils
+import com.example.facetime.util.MyDialog
 import org.jetbrains.anko.*
 
 class UserAgreement:AppCompatActivity() {
     lateinit var agreement:WebView
+    var thisDialog: MyDialog?=null
+    var mHandler = Handler()
+    var r: Runnable = Runnable {
+        //do something
+
+        if (thisDialog!=null && thisDialog?.isShowing!!){
+            val toast = Toast.makeText(this, "网络出错....", Toast.LENGTH_SHORT)//网路出现问题
+            toast.setGravity(Gravity.CENTER, 0, 0)
+            toast.show()
+        }
+        DialogUtils.hideLoading(thisDialog)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -28,15 +46,16 @@ class UserAgreement:AppCompatActivity() {
 
                         // 请求发送，等待过程
                         override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                            super.onPageStarted(view, url, favicon)
+                            thisDialog= DialogUtils.showLoading(this@UserAgreement)
+                            mHandler.postDelayed(r, 20000)
                         }
 
                         // 请求成功，返回结果，取消提示
                         override fun onPageFinished(view: WebView?, url: String?) {
-                            super.onPageFinished(view, url)
+                            DialogUtils.hideLoading(thisDialog)
                         }
                     }
-                    this.loadUrl(R.string.userAgreementUrl.toString())
+                    this.loadUrl(this@UserAgreement.getString(R.string.userAgreementUrl))
                 }.lparams(width = matchParent,height = matchParent){}
             }.lparams(width = matchParent,height = wrapContent){
                 weight = 1f
