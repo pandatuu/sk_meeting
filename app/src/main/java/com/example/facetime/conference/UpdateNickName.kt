@@ -111,6 +111,10 @@ class UpdateNickName : AppCompatActivity() {
                         if (nickName.text.toString() != "") {
                             if (nickName.text.length < 10) {
                                 finish()
+                                overridePendingTransition(
+                                    R.anim.left_in,
+                                    R.anim.right_out
+                                )
                             } else {
                                 toast("限制字数长度10以内")
                             }

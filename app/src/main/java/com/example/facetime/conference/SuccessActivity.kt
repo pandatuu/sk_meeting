@@ -1,6 +1,7 @@
 package com.example.facetime.conference
 
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.graphics.Color
@@ -18,23 +19,35 @@ import org.jitsi.meet.sdk.*
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Typeface
+import android.os.Build
 import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
 import android.widget.*
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.FragmentTransaction
 import com.example.facetime.R
+import com.twitter.sdk.android.tweetcomposer.TweetComposer
+import com.umeng.commonsdk.UMConfigure
+import com.umeng.socialize.ShareAction
+import com.umeng.socialize.bean.SHARE_MEDIA
+import org.jetbrains.anko.sdk25.coroutines.onClick
 import java.net.MalformedURLException
 import java.net.URL
 
 
-open class SuccessActivity : AppCompatActivity() {
+open class SuccessActivity : AppCompatActivity(),ShareFragment.SharetDialogSelect {
 
 
     private lateinit var toolbar1: Toolbar
     private lateinit var textView1:TextView
     private lateinit var textView2:TextView
     private lateinit var textView3:TextView
+
+    private var backgroundFragment: BackgroundFragment? = null
+    private var shareFragment: ShareFragment? = null
+    private lateinit var vertical: FrameLayout
 
 
 
@@ -46,7 +59,9 @@ open class SuccessActivity : AppCompatActivity() {
             PreferenceManager.getDefaultSharedPreferences(this)
                 .getString("MyRoomNum", "").toString()
 
-        verticalLayout {
+        val mainId = 1
+        vertical  = frameLayout {
+            id = mainId
             backgroundColor = Color.parseColor("#f2f2f2")
 
             linearLayout {
@@ -73,6 +88,20 @@ open class SuccessActivity : AppCompatActivity() {
                     }.lparams(){
                         height= matchParent
                         width= wrapContent
+                    }
+                    relativeLayout {
+                        imageView {
+                            imageResource = R.mipmap.icon_share_zwxq
+                            setOnClickListener {
+                                addListFragment()
+                            }
+                        }.lparams(wrapContent, wrapContent){
+                            alignParentRight()
+                            centerVertically()
+                            rightMargin = dip(15)
+                        }
+                    }.lparams(dip(0),matchParent){
+                        weight = 1f
                     }
                 }.lparams() {
                     weight = 1f
@@ -279,7 +308,7 @@ open class SuccessActivity : AppCompatActivity() {
 
 
             }.lparams() {
-                topMargin = dip(20)
+                topMargin = dip(85)
                 rightMargin=dip(15)
                 leftMargin=dip(15)
                 height = wrapContent
@@ -410,5 +439,85 @@ open class SuccessActivity : AppCompatActivity() {
         }
     }
 
+    override suspend fun getSelectedItem(index: Int) {
+        UMConfigure.init(
+            this, "5cdcc324570df3ffc60009c3"
+            , "umeng", UMConfigure.DEVICE_TYPE_PHONE, ""
+        )
+        when (index) {
+            0 -> {
+                if (Build.VERSION.SDK_INT >= 23) {
+                    val mPermissionList = arrayOf(
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.CALL_PHONE,
+                        Manifest.permission.READ_LOGS,
+                        Manifest.permission.READ_PHONE_STATE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.SET_DEBUG_APP,
+                        Manifest.permission.SYSTEM_ALERT_WINDOW,
+                        Manifest.permission.GET_ACCOUNTS,
+                        Manifest.permission.WRITE_APN_SETTINGS
+                    )
+                    ActivityCompat.requestPermissions(this, mPermissionList, 123)
+                }
+                ShareAction(this)
+                    .setPlatform(SHARE_MEDIA.LINE)//传入平台
+                    .withText("this is chat App,welcome to try")
+                    .setShareboardclickCallback { _, _ -> println("11111111111111111111111111111111111111111 ") }
+                    .share()
 
+                //调用创建分享信息接口
+            }
+            1 -> {
+                val builder = TweetComposer.Builder(this)
+                builder.text("this is chat App,welcome to try")
+                    .show()
+
+                //调用创建分享信息接口
+            }
+            else -> {
+                closeAlertDialog()
+            }
+        }
+    }
+    private fun addListFragment() {
+        val mTransaction = supportFragmentManager.beginTransaction()
+        mTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+        if (backgroundFragment == null) {
+            backgroundFragment =
+                BackgroundFragment.newInstance()
+            mTransaction.add(vertical.id, backgroundFragment!!)
+        }
+
+        mTransaction.setCustomAnimations(
+            R.anim.bottom_in,
+            R.anim.bottom_in
+        )
+
+        shareFragment = ShareFragment.newInstance()
+        mTransaction.add(vertical.id, shareFragment!!)
+
+        mTransaction.commit()
+    }
+    private fun closeAlertDialog() {
+
+        val mTransaction = supportFragmentManager.beginTransaction()
+        if (shareFragment != null) {
+            mTransaction.setCustomAnimations(
+                R.anim.bottom_out, R.anim.bottom_out
+            )
+            mTransaction.remove(shareFragment!!)
+            shareFragment = null
+        }
+
+        if (backgroundFragment != null) {
+            mTransaction.setCustomAnimations(
+                R.anim.fade_in_out, R.anim.fade_in_out
+            )
+            mTransaction.remove(backgroundFragment!!)
+            backgroundFragment = null
+        }
+        mTransaction.commit()
+    }
 }

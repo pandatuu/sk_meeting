@@ -15,6 +15,7 @@ import android.widget.LinearLayout
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
+import com.example.facetime.login.StartActivity
 import com.jaeger.library.StatusBarUtil
 import org.jetbrains.anko.*
 
@@ -114,8 +115,11 @@ class RegisterSetNickName : AppCompatActivity() {
                         closeFocusjianpan()
                         if (nickName.text.toString() != "") {
                             if (nickName.text.length < 10) {
-                                startActivity<MenuActivity>()
-                                finish()
+                                startActivity<StartActivity>()
+                                overridePendingTransition(
+                                    R.anim.right_in,
+                                    R.anim.left_out
+                                )
                             } else {
                                 toast("限制字数长度10以内")
                             }
@@ -165,5 +169,19 @@ class RegisterSetNickName : AppCompatActivity() {
         //关闭键盘事件
         val phone = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         phone.hideSoftInputFromWindow(nickName.windowToken, 0)
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (event != null) {
+            if(keyCode == KeyEvent.KEYCODE_BACK ){
+                finish()
+                overridePendingTransition(
+                    R.anim.left_in,
+                    R.anim.right_out
+                )
+                return true
+            }
+        }
+        return super.onKeyDown(keyCode, event)
     }
 }

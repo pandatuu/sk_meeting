@@ -137,6 +137,10 @@ class UpdatePassword : AppCompatActivity() {
                                     toast("两次密码不匹配")
                                 } else {
                                     finish()
+                                    overridePendingTransition(
+                                        R.anim.left_in,
+                                        R.anim.right_out
+                                    )
                                 }
                             }
                         }
