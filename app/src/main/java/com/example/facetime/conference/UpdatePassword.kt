@@ -2,7 +2,9 @@ package com.example.facetime.conference
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.InputType
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
@@ -68,40 +70,38 @@ class UpdatePassword : AppCompatActivity() {
                 orientation = LinearLayout.VERTICAL
                 textView {
                     text = "设置密码"
-                    textSize = 23f
+                    textSize = 21f
+                    typeface = Typeface.DEFAULT_BOLD
+                    textColor = Color.BLACK
                 }.lparams(wrapContent, wrapContent) {
                     gravity = Gravity.CENTER_HORIZONTAL
                 }
                 relativeLayout {
-                    backgroundResource = R.drawable.input_border
+                    backgroundResource = R.drawable.border
                     passwordFirst = editText {
                         hint = "请输入密码"
-                        maxLines = 1
+                        singleLine = true
+                        setHintTextColor(Color.GRAY)
+                        textColor = Color.BLACK
                         padding = dip(5)
-                        backgroundColor = Color.WHITE
-                        setOnKeyListener(object : View.OnKeyListener {
-                            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
-                                if (event != null) {
-                                    if (KeyEvent.KEYCODE_ENTER == keyCode && KeyEvent.ACTION_DOWN == event.action) {
-                                        //处理事件
-                                        passwordAgain.requestFocus()
-                                        return true
-                                    }
-                                }
-                                return false
-                            }
-                        })
+                        backgroundColor = Color.TRANSPARENT
+                        inputType =
+                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
                     }.lparams(matchParent, matchParent)
                 }.lparams(matchParent, dip(55)) {
                     topMargin = dip(15)
                 }
                 relativeLayout {
-                    backgroundResource = R.drawable.input_border
+                    backgroundResource = R.drawable.border
                     passwordAgain = editText {
                         hint = "请再次输入密码"
-                        maxLines = 1
+                        singleLine = true
                         padding = dip(5)
-                        backgroundColor = Color.WHITE
+                        backgroundColor = Color.TRANSPARENT
+                        setHintTextColor(Color.GRAY)
+                        textColor = Color.BLACK
+                        inputType =
+                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
                         setOnKeyListener(object : View.OnKeyListener {
                             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                                 if (event != null) {

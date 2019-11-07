@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.Gravity
@@ -82,17 +83,21 @@ class RegisterActivity : AppCompatActivity() {
                 orientation = LinearLayout.VERTICAL
                 textView {
                     text = "注册"
-                    textSize = 23f
+                    textSize = 21f
+                    typeface = Typeface.DEFAULT_BOLD
+                    textColor = Color.BLACK
                 }.lparams(wrapContent, wrapContent) {
                     gravity = Gravity.CENTER_HORIZONTAL
                 }
                 linearLayout {
-                    backgroundResource = R.drawable.input_border
+                    backgroundResource = R.drawable.border
                     orientation = LinearLayout.HORIZONTAL
                     countryCode = textView {
                         gravity = Gravity.CENTER
                         text = "+86"
-                        textSize = 14f
+                        textSize = 15f
+                        textColor = Color.BLACK
+                        typeface = Typeface.DEFAULT_BOLD
                         setOnClickListener {
                             startActivityForResult(
                                 Intent(
@@ -104,20 +109,10 @@ class RegisterActivity : AppCompatActivity() {
                     }.lparams(dip(50), matchParent)
                     phoneNum = editText {
                         hint = "请输入手机号码"
+                        setHintTextColor(Color.GRAY)
+                        textColor = Color.BLACK
                         background = null
-                        maxLines = 1
-                        setOnKeyListener(object : View.OnKeyListener{
-                            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
-                                if (event != null) {
-                                    if (KeyEvent.KEYCODE_ENTER == keyCode && KeyEvent.ACTION_DOWN == event.action) {
-                                        //处理事件
-                                        vcodeNum.requestFocus()
-                                        return true
-                                    }
-                                }
-                                return false
-                            }
-                        })
+                        singleLine = true
                     }.lparams(wrapContent, matchParent) {
                         weight = 1f
                         rightMargin = dip(10)
@@ -126,12 +121,14 @@ class RegisterActivity : AppCompatActivity() {
                     topMargin = dip(15)
                 }
                 linearLayout {
-                    backgroundResource = R.drawable.input_border
+                    backgroundResource = R.drawable.border
                     orientation = LinearLayout.HORIZONTAL
                     vcodeNum = editText {
                         hint = "请输入验证码"
+                        setHintTextColor(Color.GRAY)
+                        textColor = Color.BLACK
                         background = null
-                        maxLines = 1
+                        singleLine = true
                         setOnKeyListener(object : View.OnKeyListener{
                             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                                 if (event != null) {
@@ -153,6 +150,8 @@ class RegisterActivity : AppCompatActivity() {
                         gravity = Gravity.CENTER
                         text = "获取"
                         textSize = 14f
+                        typeface = Typeface.DEFAULT_BOLD
+                        textColor = Color.BLACK
                         setOnClickListener {
                             closeFocusjianpan()
                             if (phoneNum.text.toString() != "") {
