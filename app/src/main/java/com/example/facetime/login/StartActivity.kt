@@ -341,27 +341,83 @@ class StartActivity : AppCompatActivity() {
         startActivity(i)
 
         overridePendingTransition(R.anim.right_in, R.anim.left_out)
-        val mEditor: SharedPreferences.Editor = saveTool.edit()
 
-        mEditor.putString("token", "login")
-        mEditor.putString("userName", "testName")
-        mEditor.putString("MyRoomNum", phone)
-        mEditor.apply()
+
+        Thread(Runnable {
+
+
+            val mEditor: SharedPreferences.Editor = saveTool.edit()
+
+            mEditor.putString("token", "login")
+            mEditor.putString("userName", "testName")
+            mEditor.apply()
+
+
+            var str=getNum()
+
+            mEditor.putString("MyRoomNum", str)
+            mEditor.apply()
+        }).start()
+
 
     }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (event != null) {
-            if(keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_DOWN){
-                if((System.currentTimeMillis()-exitTime) > 2000){
-                    Toast.makeText(applicationContext, "再按一次退出程序", Toast.LENGTH_SHORT).show();
-                    exitTime = System.currentTimeMillis()
-                } else {
-                    val startMain = Intent(Intent.ACTION_MAIN)
-                    startMain.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    startMain.addCategory(Intent.CATEGORY_HOME)
-                    startActivity(startMain)
+
+
+
+
+
+
+    fun getNum():String{
+        var result=""
+        val random=Math.random()*1000
+        var d=0
+        while(true){
+            d=Math.ceil(random).toInt()%9
+            if(d>3){
+             break
+            }
+        }
+
+        for(i in 0 until d){
+            var c=""
+            while(true){
+                var r=Math.ceil(Math.random()*1000).toInt()%122
+                if((r>=48 && r<=57)  || (r>=65 && r<=90)  || (r>=97 && r<=122) ){
+                    c= r.toChar().toString()
+                    break
                 }
+            }
+            result=result+c
+        }
+
+        return result
+    }
+
+
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+//        if (event != null) {
+//            if(keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_DOWN){
+//                if((System.currentTimeMillis()-exitTime) > 2000){
+//                    Toast.makeText(applicationContext, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+//                    exitTime = System.currentTimeMillis()
+//                } else {
+//                    val startMain = Intent(Intent.ACTION_MAIN)
+//                    startMain.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+//                    startMain.addCategory(Intent.CATEGORY_HOME)
+//                    startActivity(startMain)
+//                }
+//                return true
+//            }
+//        }
+        if (event != null) {
+            if(keyCode == KeyEvent.KEYCODE_BACK ){
+                finish()
+                overridePendingTransition(
+                    R.anim.fade_in_out,
+                    R.anim.fade_in_out
+                )
                 return true
             }
         }

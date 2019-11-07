@@ -139,11 +139,14 @@ open class SystemSettingsActivity : AppCompatActivity() {
                     backgroundResource = R.drawable.bottonbg
                     gravity = Gravity.CENTER
                     setOnClickListener {
+
                         val sp = PreferenceManager.getDefaultSharedPreferences(this@SystemSettingsActivity).edit()
                         sp.remove("token")
                         sp.remove("userName")
+                        sp.remove("MyRoomNum")
+                        sp.remove("MyRoomName")
                         sp.commit()
-                        startActivity<StartActivity>()
+                        startActivity<MenuActivity>()
                         overridePendingTransition(
                             R.anim.fade_in_out,
                             R.anim.fade_in_out

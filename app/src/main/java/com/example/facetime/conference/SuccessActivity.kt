@@ -21,6 +21,7 @@ import android.graphics.Typeface
 import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
 import android.widget.*
 import com.example.facetime.R
 import java.net.MalformedURLException
@@ -306,7 +307,20 @@ open class SuccessActivity : AppCompatActivity() {
         }
     }
 
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
 
+        if (event != null) {
+            if(keyCode == KeyEvent.KEYCODE_BACK ){
+                finish()
+                overridePendingTransition(
+                    R.anim.left_in,
+                    R.anim.right_out
+                )
+                return true
+            }
+        }
+        return super.onKeyDown(keyCode, event)
+    }
 
 
 
