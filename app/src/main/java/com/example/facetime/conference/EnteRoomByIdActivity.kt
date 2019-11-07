@@ -507,10 +507,13 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
 
     //初始化视频面试
     private fun initVideoInterview() {
+
+        //
+        //https://meet.skjob.jp/
         var add = ""
         add =
             PreferenceManager.getDefaultSharedPreferences(this)
-                .getString("selected", "https://meet.skjob.jp/").toString()
+                .getString("selected", "https://meet.guanxinqiao.com/").toString()
         lateinit var serverURL: URL
         try {
             serverURL = URL(add)

@@ -1,14 +1,23 @@
 package com.example.facetime.conference;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.facetime.R;
+import com.example.facetime.util.CommonActivity;
 import com.facebook.react.modules.core.PermissionListener;
 
 import org.jitsi.meet.sdk.JitsiMeetActivityDelegate;
@@ -32,14 +41,19 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
     public static final String JITSI_MEET_CONFERENCE_OPTIONS = "JitsiMeetConferenceOptions";
 
 
-    private static int leaveType=2 ;
+    private static int leaveType = 2;
+
+    Context context;
+
+    final Handler cwjHandler = new Handler();
+    View view;
 
     public JitsiMeetActivitySon() {
     }
 
-    public  void launch(Context context, JitsiMeetConferenceOptions options, String interviewId) {
+    public void launch(Context context, JitsiMeetConferenceOptions options, String interviewId) {
 
-        Intent intent = new Intent(context,JitsiMeetActivitySon.class);
+        Intent intent = new Intent(context, JitsiMeetActivitySon.class);
         intent.setAction("org.jitsi.meet.CONFERENCE");
         intent.putExtra("JitsiMeetConferenceOptions", options);
         context.startActivity(intent);
@@ -57,21 +71,35 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        context=this;
+
         this.setContentView(layout.activity_jitsi_meet);
         if (!this.extraInitialize()) {
             this.initialize();
         }
+
+
+//        ViewGroup.LayoutParams params = new LinearLayout.LayoutParams(200, 200);
+//
+//
+//         view = CommonActivity.Companion.addMyChild(this);
+//
+//        addContentView(view, params);
+
+
+
     }
 
-    public void finishVideo(int  type) {
-        leaveType=type;
+    public void finishVideo(int type) {
+        leaveType = type;
         System.out.println("离开视频！！！！！！！！！！！！！！！！！");
         JitsiMeetActivitySon.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                try{
+                try {
                     leave();
-                }catch (Exception e){
+                } catch (Exception e) {
                     System.out.println("被动离开视频时，报错了！！！！！");
                 }
 
@@ -93,7 +121,7 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
 
     protected JitsiMeetView getJitsiView() {
 
-        JitsiMeetFragment fragment = (JitsiMeetFragment)this.getSupportFragmentManager().findFragmentById(id.jitsiFragment);
+        JitsiMeetFragment fragment = (JitsiMeetFragment) this.getSupportFragmentManager().findFragmentById(id.jitsiFragment);
         return fragment.getJitsiView();
         //return new JitsiMeetView(this);
     }
@@ -112,12 +140,9 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
 
         try {
             this.getJitsiView().leave();
-        }
-        finally {
+        } finally {
 
         }
-
-
 
 
     }
@@ -131,7 +156,7 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
                 return (new Builder()).setRoom(uri.toString()).build();
             }
         } else if ("org.jitsi.meet.CONFERENCE".equals(action)) {
-            return (JitsiMeetConferenceOptions)intent.getParcelableExtra("JitsiMeetConferenceOptions");
+            return (JitsiMeetConferenceOptions) intent.getParcelableExtra("JitsiMeetConferenceOptions");
         }
 
         return null;
@@ -174,20 +199,59 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
 
     public void onConferenceJoined(Map<String, Object> data) {
         Log.d(TAG, "Conference joined: " + data);
+
+
+//        AlertDialog dialog = new AlertDialog.Builder(JitsiMeetActivitySon.this).setTitle("警告")
+//                .setIcon(android.R.drawable.ic_dialog_info)
+//                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Log.d(TAG, "onClick");
+//                        JitsiMeetActivitySon.this.finish();
+//                    }
+//                }).show();
+//        Log.e(TAG, "AlertDialog");
+//        dialog.setCanceledOnTouchOutside(false);
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                        int count = 0;
+                        int min = 0;
+                        int second = 0;
+
+//                        LinearLayout layout=(LinearLayout)  ((LinearLayout) view).getChildAt(0);
+//                        TextView text=(TextView)layout.getChildAt(0);
+                        while (true) {
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            count = count + 1;
+                            if(count>1800){
+
+                                //finishVideo(1);
+
+                                break;
+                            }
+                        }
+            }
+        }).start();
+
+
     }
 
     public void onConferenceTerminated(Map<String, Object> data) {
         Log.d(TAG, "Conference terminated: " + data);
         System.out.println("onConferenceTerminated");
 
-        if(leaveType!=2){
+        if (leaveType != 2) {
             //thiscontext.sendMessageToHimToshutDownVideo(thisInterviewId);
-           // this.finishVideo(1);
+            // this.finishVideo(1);
         }
-       
-        leaveType=0;
 
-
+        leaveType = 0;
 
 
         this.finishVideo(1);
