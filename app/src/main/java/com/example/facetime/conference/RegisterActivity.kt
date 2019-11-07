@@ -43,41 +43,38 @@ class RegisterActivity : AppCompatActivity() {
             setOnClickListener {
                 closeFocusjianpan()
             }
-            relativeLayout() {
-                backgroundColor=Color.TRANSPARENT
+            linearLayout {
                 toolbar1 = toolbar {
-                    backgroundColor=Color.TRANSPARENT
                     isEnabled = true
                     title = ""
                 }.lparams() {
-                    width = matchParent
-                    height = dip(0)
-                    alignParentBottom()
+                    width = dip(45)
+                }
 
+                relativeLayout {
+                    textView {
+                        text = "登录"
+                        gravity = Gravity.RIGHT
+                        textSize = 16f
+                        textColor = Color.parseColor("#7F7F7F")
+                        setOnClickListener {
+                            startActivity<StartActivity>()
+                            overridePendingTransition(R.anim.right_in, R.anim.left_out)
+                        }
+                    }.lparams(height = wrapContent, width = matchParent) {
+                        centerVertically()
+                        alignParentRight()
+                        rightMargin = dip(20)
+                    }
+                }.lparams() {
+                    weight = 1f
+                    width = dip(0)
+                    height = dip(65 - getStatusBarHeight(this@RegisterActivity))
+                    topMargin = dip(getStatusBarHeight(this@RegisterActivity))
                 }
             }.lparams() {
                 width = matchParent
-                height = dip(0)
-            }
-            linearLayout {
-                gravity = Gravity.RIGHT
-                textView {
-                    gravity = Gravity.CENTER
-                    text = "登录"
-                    textSize = 15f
-                    setOnClickListener {
-//                        val intent = Intent(this@RegisterActivity, StartActivity::class.java)
-//                        startActivity(intent)
-                        finish()
-                        overridePendingTransition(
-                            R.anim.left_in,
-                            R.anim.right_out
-                        )
-                    }
-                    padding = dip(10)
-                }.lparams(wrapContent, wrapContent)
-            }.lparams(matchParent, dip(65)) {
-                setMargins(dip(15),dip(15),dip(15),0)
+                height = dip(65)
             }
             linearLayout {
                 orientation = LinearLayout.VERTICAL
@@ -129,7 +126,7 @@ class RegisterActivity : AppCompatActivity() {
                         textColor = Color.BLACK
                         background = null
                         singleLine = true
-                        setOnKeyListener(object : View.OnKeyListener{
+                        setOnKeyListener(object : View.OnKeyListener {
                             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                                 if (event != null) {
                                     if (KeyEvent.KEYCODE_ENTER == keyCode && KeyEvent.ACTION_DOWN == event.action) {
@@ -227,6 +224,10 @@ class RegisterActivity : AppCompatActivity() {
                             } else {
                                 if (isChoose.isChecked) {
                                     startActivity<RegisterSetPassword>()
+                                    overridePendingTransition(
+                                        R.anim.right_in,
+                                        R.anim.left_out
+                                    )
                                 } else {
                                     toast("请勾选协议")
                                 }
@@ -316,5 +317,30 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         return false
+    }
+
+    fun getStatusBarHeight(context: Context): Int {
+        var result = 0
+        val resourceId =
+            context.getResources().getIdentifier("status_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            result = context.getResources().getDimensionPixelSize(resourceId)
+            var scale = context.getResources().getDisplayMetrics().density;
+            result = ((result / scale + 0.5f).toInt());
+        }
+        return result
+    }
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (event != null) {
+            if(keyCode == KeyEvent.KEYCODE_BACK ){
+                finish()
+                overridePendingTransition(
+                    R.anim.left_in,
+                    R.anim.right_out
+                )
+                return true
+            }
+        }
+        return super.onKeyDown(keyCode, event)
     }
 }

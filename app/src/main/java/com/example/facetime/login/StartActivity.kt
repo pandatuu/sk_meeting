@@ -40,40 +40,64 @@ class StartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         saveTool = PreferenceManager.getDefaultSharedPreferences(this@StartActivity)
-        linearLayout {
+        frameLayout {
             backgroundColor = Color.parseColor("#F2F2F2")
-            verticalLayout {
-                backgroundColor = Color.parseColor("#F2F2F2")
-                setOnClickListener {
-                    closeFocusjianpan()
+            linearLayout {
+                toolbar1 = toolbar {
+                    isEnabled = true
+                    title = ""
+                    navigationIconResource = R.mipmap.icon_back
+                }.lparams() {
+                    width = dip(45)
                 }
-                relativeLayout() {
-                    backgroundColor=Color.TRANSPARENT
-                    toolbar1 = toolbar {
-                        backgroundColor=Color.TRANSPARENT
-                        isEnabled = true
-                        title = ""
-                    }.lparams() {
-                        width = matchParent
-                        height = dip(0)
-                        alignParentBottom()
 
+                linearLayout {
+                    textView {
+                        setOnClickListener {
+                            finish()//返回
+                            overridePendingTransition(
+                                R.anim.left_in,
+                                R.anim.right_out
+                            )
+                        }
+                        text="返回"
+                        gravity=Gravity.CENTER
+
+                    }.lparams(){
+                        height= matchParent
+                        width= wrapContent
+                    }
+                    relativeLayout {
+                        textView {
+                            text = "注册"
+                            gravity = Gravity.RIGHT
+                            textSize = 16f
+                            textColor = Color.parseColor("#7F7F7F")
+                            setOnClickListener {
+                                startActivity<RegisterActivity>()
+                                overridePendingTransition(R.anim.right_in, R.anim.left_out)
+                            }
+                        }.lparams(height = wrapContent, width = matchParent){
+                            centerVertically()
+                            alignParentRight()
+                            rightMargin = dip(20)
+                        }
+                    }.lparams(dip(0),matchParent){
+                        weight = 1f
                     }
                 }.lparams() {
-                    width = matchParent
-                    height = dip(0)
+                    weight = 1f
+                    width = dip(0)
+                    height = dip(65 - getStatusBarHeight(this@StartActivity))
+                    topMargin=dip(getStatusBarHeight(this@StartActivity))
                 }
-                textView {
-                    text = "注册"
-                    gravity = Gravity.RIGHT
-                    textSize = 16f
-                    textColor = Color.parseColor("#7F7F7F")
-                    setOnClickListener {
-                        startActivity<RegisterActivity>()
-                        overridePendingTransition(R.anim.right_in, R.anim.left_out)
-                    }
-                }.lparams(height = wrapContent, width = matchParent) {
-                    topPadding = dip(20)
+            }.lparams() {
+                width = matchParent
+                height = dip(65)
+            }
+            verticalLayout {
+                setOnClickListener {
+                    closeFocusjianpan()
                 }
 
                 textView {
@@ -251,16 +275,23 @@ class StartActivity : AppCompatActivity() {
             }.lparams(width = matchParent, height = matchParent) {
                 leftMargin = dip(20)
                 rightMargin = dip(20)
+                topMargin = dip(65)
             }
         }
     }
-
     override fun onStart() {
         super.onStart()
         setActionBar(toolbar1)
         StatusBarUtil.setTranslucentForImageView(this@StartActivity, 0, toolbar1)
         getWindow().getDecorView()
             .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
+        toolbar1.setNavigationOnClickListener {
+            startActivity<MenuActivity>()
+            overridePendingTransition(
+                R.anim.left_in,
+                R.anim.right_out
+            )
+        }
     }
 
     private fun closeFocusjianpan() {
@@ -393,29 +424,25 @@ class StartActivity : AppCompatActivity() {
         return result
     }
 
-
+    fun getStatusBarHeight(context: Context): Int {
+        var result = 0
+        val resourceId =
+            context.getResources().getIdentifier("status_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            result = context.getResources().getDimensionPixelSize(resourceId)
+            var scale = context.getResources().getDisplayMetrics().density;
+            result = ((result / scale + 0.5f).toInt());
+        }
+        return result
+    }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-//        if (event != null) {
-//            if(keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_DOWN){
-//                if((System.currentTimeMillis()-exitTime) > 2000){
-//                    Toast.makeText(applicationContext, "再按一次退出程序", Toast.LENGTH_SHORT).show();
-//                    exitTime = System.currentTimeMillis()
-//                } else {
-//                    val startMain = Intent(Intent.ACTION_MAIN)
-//                    startMain.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-//                    startMain.addCategory(Intent.CATEGORY_HOME)
-//                    startActivity(startMain)
-//                }
-//                return true
-//            }
-//        }
         if (event != null) {
             if(keyCode == KeyEvent.KEYCODE_BACK ){
-                finish()
+                startActivity<MenuActivity>()
                 overridePendingTransition(
-                    R.anim.fade_in_out,
-                    R.anim.fade_in_out
+                    R.anim.left_in,
+                    R.anim.right_out
                 )
                 return true
             }

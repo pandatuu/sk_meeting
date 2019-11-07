@@ -137,6 +137,10 @@ class RegisterSetPassword : AppCompatActivity() {
                                     toast("两次密码不匹配")
                                 } else {
                                     startActivity<RegisterSetNickName>()
+                                    overridePendingTransition(
+                                        R.anim.right_in,
+                                        R.anim.left_out
+                                    )
                                 }
                             }
                         }
@@ -186,5 +190,19 @@ class RegisterSetPassword : AppCompatActivity() {
         phone.hideSoftInputFromWindow(passwordFirst.windowToken, 0)
         val code = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         code.hideSoftInputFromWindow(passwordAgain.windowToken, 0)
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (event != null) {
+            if(keyCode == KeyEvent.KEYCODE_BACK ){
+                finish()
+                overridePendingTransition(
+                    R.anim.left_in,
+                    R.anim.right_out
+                )
+                return true
+            }
+        }
+        return super.onKeyDown(keyCode, event)
     }
 }
