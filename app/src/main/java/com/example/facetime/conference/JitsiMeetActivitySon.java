@@ -81,12 +81,12 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
         }
 
 
-//        ViewGroup.LayoutParams params = new LinearLayout.LayoutParams(200, 200);
-//
-//
-//         view = CommonActivity.Companion.addMyChild(this);
-//
-//        addContentView(view, params);
+        ViewGroup.LayoutParams params = new LinearLayout.LayoutParams(400, 200);
+
+
+         view = CommonActivity.Companion.addMyChild(this);
+
+        addContentView(view, params);
 
 
     }
@@ -197,6 +197,11 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
         JitsiMeetActivityDelegate.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
+    int count = 0;
+    int min = 0;
+    int second = 0;
+    String minStr="";
+    String secStr="";
     public void onConferenceJoined(Map<String, Object> data) {
         Log.d(TAG, "Conference joined: " + data);
 
@@ -216,22 +221,53 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
         new Thread(new Runnable() {
             @Override
             public void run() {
-                int count = 0;
-                int min = 0;
-                int second = 0;
 
-//                        LinearLayout layout=(LinearLayout)  ((LinearLayout) view).getChildAt(0);
-//                        TextView text=(TextView)layout.getChildAt(0);
+
+
+                //刚搞页延迟
+                Handler mainHandler = new Handler(Looper.getMainLooper());
+
+                LinearLayout layout=(LinearLayout)  ((LinearLayout) view).getChildAt(0);
+
+                TextView text=(TextView)layout.getChildAt(0);
                 while (true) {
                     try {
                         Thread.sleep(1000);
+
+                        mainHandler.postDelayed( new Runnable() {
+                            @Override
+                            public void run() {
+
+
+                                min=count/60;
+                                second=count%60;
+
+
+                                if(min<10){
+                                    minStr="0"+min;
+                                }else{
+                                    minStr=min+"";
+                                }
+
+                                if(second<10){
+                                    secStr="0"+second;
+                                }else{
+                                    secStr=second+"";
+                                }
+
+                                text.setText("已经视频："+minStr+":"+secStr);
+
+                            }
+                        },0);
+
+
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                     count = count + 1;
-                    if (count > 1800) {
+                    if (count > 180) {
 
-                        //finishVideo(1);
+                        finishVideo(1);
 
                         break;
                     }
