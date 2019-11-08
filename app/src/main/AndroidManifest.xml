@@ -89,6 +89,13 @@ android:windowSoftInputMode="adjustPan"
             >
         </activity>
 
+        <!-- 设置服务器地址 -->
+        <activity android:name="com.example.facetime.conference.SetServiceAddr"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme.Black"
+            >
+        </activity>
+
         <!-- 用户协议 -->
         <activity android:name="com.example.facetime.login.UserAgreement"
             android:windowSoftInputMode="adjustPan"
