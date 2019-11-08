@@ -69,7 +69,7 @@ class UpdatePassword : AppCompatActivity() {
             linearLayout {
                 orientation = LinearLayout.VERTICAL
                 textView {
-                    text = "设置密码"
+                    text = "修改密码"
                     textSize = 21f
                     typeface = Typeface.DEFAULT_BOLD
                     textColor = Color.BLACK
@@ -121,7 +121,7 @@ class UpdatePassword : AppCompatActivity() {
                 }
                 button {
                     gravity = Gravity.CENTER
-                    text = "下一步"
+                    text = "完成"
                     textSize = 16f
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg

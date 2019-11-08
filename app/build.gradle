@@ -37,8 +37,8 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://facebook.github.io/react-native/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
-            minifyEnabled true
+            signingConfig signingConfigs.release
+//            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -92,6 +92,8 @@ dependencies {
     implementation files('libs/libphonenumber-8.9.7.jar')
 
     implementation "androidx.versionedparcelable:versionedparcelable:1.1.0"
+    //apk生成错误引入
+    implementation 'org.conscrypt:conscrypt-android:2.2.1'
 
     implementation 'org.conscrypt:conscrypt-android:2.2.1'
 
