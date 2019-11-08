@@ -183,7 +183,7 @@ class StartActivity : AppCompatActivity() {
                             InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
                         setHintTextColor(Color.GRAY)
 
-                       transformationMethod = PasswordTransformationMethod()
+                       transformationMethod =    PasswordTransformationMethod()
 
                         setOnKeyListener(object : View.OnKeyListener{
                             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {

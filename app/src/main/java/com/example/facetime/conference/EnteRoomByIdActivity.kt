@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.jaeger.library.StatusBarUtil
 import org.jetbrains.anko.*
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Typeface
 import android.preference.PreferenceManager
 import android.text.Editable
@@ -38,12 +39,14 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
 
     private lateinit var switch_video: Switch
     private lateinit var switch_audio: Switch
+    lateinit var ms: SharedPreferences
 
 
     private var chooseRoomIdFragment: ChooseRoomIdFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ms = PreferenceManager.getDefaultSharedPreferences(this)
 
         verticalLayout {
 
@@ -496,6 +499,24 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
             "视频会议最多持续半个小时",
             Toast.LENGTH_SHORT
         )
+        toast.setGravity(Gravity.CENTER, 0, 0)
+        toast.show()
+
+
+        var usedRoomNum =
+            PreferenceManager.getDefaultSharedPreferences(this)
+                .getStringSet("usedRoomNum", hashSetOf())
+
+        var newRoomSet=setOf<String>()
+
+
+        usedRoomNum?.add(roomNum)
+
+        var mEditor: SharedPreferences.Editor = ms.edit()
+        mEditor.putStringSet("usedRoomNum",usedRoomNum)
+        mEditor.commit()
+
+
 
         var userName =
             PreferenceManager.getDefaultSharedPreferences(this)
@@ -537,7 +558,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
         var add = ""
         add =
             PreferenceManager.getDefaultSharedPreferences(this)
-                .getString("selected", "https://meet.guanxinqiao.com/").toString()
+                .getString("serviceAdd", "https://meet.guanxinqiao.com/").toString()
         lateinit var serverURL: URL
         try {
             serverURL = URL(add)
