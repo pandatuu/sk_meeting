@@ -242,7 +242,7 @@ open class MenuActivity : AppCompatActivity(),UpdateTipsFrag.ButtomCLick,
         }
         //检查更新
         val version = getLocalVersion(this@MenuActivity)
-        if (version < 2) {
+        if (version < 1) {
             opendialog()
         }
 
@@ -370,7 +370,7 @@ open class MenuActivity : AppCompatActivity(),UpdateTipsFrag.ButtomCLick,
     }
     //点击屏幕
     override fun clickAll() {
-        closeAlertDialog()
+
     }
 
 }

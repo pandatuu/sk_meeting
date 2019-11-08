@@ -139,11 +139,11 @@ open class SystemSettingsActivity : AppCompatActivity() {
                     backgroundResource = R.drawable.bottonbg
                     gravity = Gravity.CENTER
                     setOnClickListener {
-//                        startActivity<UpdatePassword>()
-//                        overridePendingTransition(
-//                            R.anim.right_in,
-//                            R.anim.left_out
-//                        )
+                        startActivity<SetServiceAddr>()
+                        overridePendingTransition(
+                            R.anim.right_in,
+                            R.anim.left_out
+                        )
                     }
                 }.lparams() {
                     height = dip(60)
