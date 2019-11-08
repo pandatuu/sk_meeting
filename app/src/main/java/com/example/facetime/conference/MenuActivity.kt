@@ -370,7 +370,6 @@ open class MenuActivity : AppCompatActivity(),UpdateTipsFrag.ButtomCLick,
     }
     //点击屏幕
     override fun clickAll() {
-        closeAlertDialog()
     }
 
 }
