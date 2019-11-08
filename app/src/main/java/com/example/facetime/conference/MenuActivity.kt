@@ -370,10 +370,6 @@ open class MenuActivity : AppCompatActivity(),UpdateTipsFrag.ButtomCLick,
     }
     //点击屏幕
     override fun clickAll() {
-<<<<<<< HEAD
-
-=======
->>>>>>> 1a8ce8d1bf8b20df233be0d842156777a39d2d8c
     }
 
 }
