@@ -133,6 +133,32 @@ open class SystemSettingsActivity : AppCompatActivity() {
                 }
 
                 textView {
+                    text = "修改服务器地址"
+                    textSize = 14f
+                    textColor = Color.WHITE
+                    backgroundResource = R.drawable.bottonbg
+                    gravity = Gravity.CENTER
+                    setOnClickListener {
+//                        startActivity<UpdatePassword>()
+//                        overridePendingTransition(
+//                            R.anim.right_in,
+//                            R.anim.left_out
+//                        )
+                    }
+                }.lparams() {
+                    height = dip(60)
+                    width = matchParent
+                }
+
+                textView {
+                    backgroundColor= Color.parseColor("#cccccc")
+
+                }.lparams() {
+                    height = dip(px2sp(1))
+                    width = matchParent
+                }
+
+                textView {
                     text = "退出登录"
                     textSize = 14f
                     textColor = Color.WHITE

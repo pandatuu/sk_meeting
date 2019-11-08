@@ -290,7 +290,7 @@ open class SuccessActivity : AppCompatActivity(),ShareFragment.SharetDialogSelec
                     setOnClickListener {
 
                         val num=intent.getStringExtra("MyRoomNum")
-                        gotoVideoInterview("xxxx")
+                        gotoVideoInterview(num)
 
                     }
 
@@ -430,7 +430,7 @@ open class SuccessActivity : AppCompatActivity(),ShareFragment.SharetDialogSelec
         var add = ""
         add =
             PreferenceManager.getDefaultSharedPreferences(this)
-                .getString("selected", "https://meet.guanxinqiao.com/").toString()
+                .getString("serviceAdd", "https://meet.guanxinqiao.com/").toString()
         lateinit var serverURL: URL
         try {
             serverURL = URL(add)

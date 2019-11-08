@@ -3,6 +3,7 @@ package com.example.facetime.conference
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -60,11 +61,14 @@ class ChooseRoomIdFragment : Fragment() {
             }
         }
 
+        var usedRoomNum =
+            PreferenceManager.getDefaultSharedPreferences(mContext)
+                .getStringSet("usedRoomNum",setOf<String>())
+        var it=usedRoomNum?.iterator()
+        for(i in 0 until  usedRoomNum!!.size){
+            verticalLayout.addView(addMyChild(it!!.next(),""))
 
-        verticalLayout.addView(addMyChild("123456","动画谷美术部美术部"))
-        verticalLayout.addView(addMyChild("1324134","动画谷美术部"))
-        verticalLayout.addView(addMyChild("1212143456","动画谷美术部"))
-        verticalLayout.addView(addMyChild("123124456","动画美术部谷美术部"))
+        }
 
 
         return view
@@ -88,13 +92,13 @@ class ChooseRoomIdFragment : Fragment() {
                     backgroundResource=R.drawable.border_bottom
 
                     textView {
-                        gravity = Gravity.CENTER or Gravity.LEFT
+                        gravity = Gravity.CENTER
 
                         text = t
                         textColor=Color.BLACK
                         textSize=14f
                     }.lparams() {
-                        width = wrapContent
+                        width = matchParent
                         height = matchParent
                     }
 
