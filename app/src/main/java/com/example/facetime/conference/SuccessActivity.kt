@@ -289,7 +289,12 @@ open class SuccessActivity : AppCompatActivity(),ShareFragment.SharetDialogSelec
 
                     setOnClickListener {
 
-                        val num=intent.getStringExtra("MyRoomNum")
+
+                        var num =
+                            PreferenceManager.getDefaultSharedPreferences(this@SuccessActivity)
+                                .getString("MyRoomNum", "").toString()
+
+
                         gotoVideoInterview(num)
 
                     }
