@@ -578,7 +578,9 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                     R.anim.left_out
                 )
             }
-
+            if(it.code() == 406){
+                println("参数错误")
+            }
             DialogUtils.hideLoading(thisDialog)
         } catch (throwable: Throwable) {
             if (throwable is HttpException) {
