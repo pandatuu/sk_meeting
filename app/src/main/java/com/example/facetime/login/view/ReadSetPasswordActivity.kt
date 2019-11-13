@@ -18,7 +18,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.fastjson.JSON
 import com.example.facetime.R
-import com.example.facetime.api.LoginApi
+import com.example.facetime.login.api.LoginApi
 import com.example.facetime.util.DialogUtils
 import com.example.facetime.util.MimeType
 import com.example.facetime.util.MyDialog

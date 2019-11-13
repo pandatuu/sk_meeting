@@ -17,7 +17,8 @@ import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.fastjson.JSON
 import com.example.facetime.R
-import com.example.facetime.api.LoginApi
+import com.example.facetime.login.api.LoginApi
+import com.example.facetime.setting.api.SettingApi
 import com.example.facetime.util.DialogUtils
 import com.example.facetime.util.MimeType
 import com.example.facetime.util.MyDialog
@@ -228,7 +229,7 @@ class UpdatePassword : AppCompatActivity() {
             val body = RequestBody.create(MimeType.APPLICATION_JSON, userJson)
 
             val retrofitUils = RetrofitUtils(this@UpdatePassword, "https://apass.sklife.jp/")
-            val it = retrofitUils.create(LoginApi::class.java)
+            val it = retrofitUils.create(SettingApi::class.java)
                 .updatePassword(body)
                 .subscribeOn(Schedulers.io())
                 .awaitSingle()

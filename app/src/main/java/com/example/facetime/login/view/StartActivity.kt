@@ -20,11 +20,10 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.fastjson.JSON
 import com.example.facetime.R
-import com.example.facetime.api.LoginApi
+import com.example.facetime.login.api.LoginApi
 import com.example.facetime.util.RetrofitUtils
 import com.example.facetime.conference.view.MenuActivity
 import com.example.facetime.login.fragment.UserAgreement
-import com.example.facetime.register.view.RegisterActivity
 import com.example.facetime.util.DialogUtils
 import com.example.facetime.util.MyDialog
 import com.google.i18n.phonenumbers.NumberParseException

@@ -2,8 +2,6 @@ package com.example.facetime.setting.view
 
 
 import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
@@ -16,9 +14,10 @@ import org.jetbrains.anko.*
 import android.preference.PreferenceManager
 import android.widget.*
 import com.example.facetime.R
-import com.example.facetime.api.LoginApi
+import com.example.facetime.login.api.LoginApi
 import com.example.facetime.conference.view.MenuActivity
 import com.example.facetime.login.view.StartActivity
+import com.example.facetime.setting.api.SettingApi
 import com.example.facetime.util.DialogUtils
 import com.example.facetime.util.MyDialog
 import com.example.facetime.util.RetrofitUtils
@@ -261,7 +260,7 @@ open class SystemSettingsActivity : AppCompatActivity() {
     private suspend fun loginout(){
         try {
             val retrofitUils = RetrofitUtils(this@SystemSettingsActivity, "https://apass.sklife.jp/")
-            val it = retrofitUils.create(LoginApi::class.java)
+            val it = retrofitUils.create(SettingApi::class.java)
                 .logout("MOBILE")
                 .subscribeOn(Schedulers.io())
                 .awaitSingle()
