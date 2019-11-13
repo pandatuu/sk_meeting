@@ -1,4 +1,4 @@
-package com.example.facetime.conference
+package com.example.facetime.setting.view
 
 import android.content.Context
 import android.graphics.Color
@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide
 import com.example.facetime.R
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
-import org.jetbrains.anko.support.v4.UI
 
 class UpdateTipsFrag : Fragment() {
 
@@ -25,7 +24,7 @@ class UpdateTipsFrag : Fragment() {
     companion object {
         fun newInstance(
             context: Context
-        ):UpdateTipsFrag{
+        ): UpdateTipsFrag {
             val fragment = UpdateTipsFrag()
             fragment.mContext = context
             return fragment

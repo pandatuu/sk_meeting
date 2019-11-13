@@ -1,4 +1,4 @@
-package com.example.facetime.login
+package com.example.facetime.login.view
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -15,7 +15,6 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import android.widget.LinearLayout.HORIZONTAL
 import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.fastjson.JSON
 import com.example.facetime.R
@@ -37,8 +36,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx2.awaitSingle
 import okhttp3.RequestBody
 import org.jetbrains.anko.*
-import org.jetbrains.anko.sdk25.coroutines.onClick
-import org.jetbrains.anko.support.v4.startActivity
 import retrofit2.HttpException
 
 class ReadSetPasswordActivity : AppCompatActivity() {
@@ -123,7 +120,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
 
                 linearLayout {
                     backgroundResource = R.drawable.border
-                    orientation = HORIZONTAL
+                    orientation = LinearLayout.HORIZONTAL
 
                     phoneNumber = textView {
                         text = "+86"

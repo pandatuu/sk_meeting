@@ -1,4 +1,4 @@
-package com.example.facetime.conference
+package com.example.facetime.conference.view
 
 
 import android.content.Context
@@ -20,6 +20,7 @@ import android.text.TextWatcher
 import android.view.KeyEvent
 import android.widget.*
 import com.example.facetime.R
+import com.example.facetime.conference.fragment.ChooseRoomIdFragment
 import org.jitsi.meet.sdk.JitsiMeet
 import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
 import org.jitsi.meet.sdk.JitsiMeetUserInfo

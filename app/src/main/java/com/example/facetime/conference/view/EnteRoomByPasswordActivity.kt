@@ -1,9 +1,8 @@
-package com.example.facetime.conference
+package com.example.facetime.conference.view
 
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity

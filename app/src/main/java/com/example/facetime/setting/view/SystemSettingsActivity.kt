@@ -1,30 +1,19 @@
-package com.example.facetime.conference
+package com.example.facetime.setting.view
 
 
-import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
-import android.view.inputmethod.EditorInfo.IME_ACTION_DONE
-import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import com.jaeger.library.StatusBarUtil
 import org.jetbrains.anko.*
 
-import com.facebook.react.modules.core.PermissionListener
-import org.jitsi.meet.sdk.*
-import android.content.Intent
-import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import android.text.Editable
-import android.text.TextWatcher
 import android.widget.*
 import com.example.facetime.R
-import com.example.facetime.login.StartActivity
-import com.umeng.commonsdk.stateless.UMSLEnvelopeBuild.mContext
-import org.jetbrains.anko.sdk25.coroutines.onClick
+import com.example.facetime.conference.view.MenuActivity
 
 
 open class SystemSettingsActivity : AppCompatActivity() {

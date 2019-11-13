@@ -1,4 +1,4 @@
-package com.example.facetime.conference
+package com.example.facetime.conference.fragment
 
 import android.content.Context
 import android.os.Bundle
@@ -17,7 +17,7 @@ class BackgroundFragment: Fragment() {
     }
 
     private var mContext: Context? = null
-    private lateinit var clickback:ClickBack
+    private lateinit var clickback: ClickBack
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

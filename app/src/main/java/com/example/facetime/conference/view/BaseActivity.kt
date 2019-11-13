@@ -1,4 +1,4 @@
-package com.example.facetime.conference
+package com.example.facetime.conference.view
 
 
 import android.Manifest
@@ -29,6 +29,10 @@ import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentTransaction
 import com.example.facetime.R
+import com.example.facetime.setting.view.SettingsActivity
+import com.example.facetime.conference.listener.VideoChatControllerListener
+import com.example.facetime.conference.fragment.BackgroundFragment
+import com.example.facetime.conference.fragment.ShareFragment
 import com.twitter.sdk.android.tweetcomposer.TweetComposer
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.socialize.ShareAction
@@ -36,7 +40,7 @@ import com.umeng.socialize.bean.SHARE_MEDIA
 
 
 open class BaseActivity : AppCompatActivity(),
-    ShareFragment.SharetDialogSelect,BackgroundFragment.ClickBack {
+    ShareFragment.SharetDialogSelect, BackgroundFragment.ClickBack {
     override fun clickAll() {
         closeAlertDialog()
     }

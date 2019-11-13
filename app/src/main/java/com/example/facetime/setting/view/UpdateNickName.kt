@@ -1,10 +1,9 @@
-package com.example.facetime.conference
+package com.example.facetime.setting.view
 
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
-import android.text.InputType
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
@@ -17,10 +16,9 @@ import com.example.facetime.R
 import com.jaeger.library.StatusBarUtil
 import org.jetbrains.anko.*
 
-class RegisterSetPassword : AppCompatActivity() {
+class UpdateNickName : AppCompatActivity() {
 
-    private lateinit var passwordFirst: EditText
-    private lateinit var passwordAgain: EditText
+    lateinit var nickName: EditText
     private lateinit var toolbar1: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,8 +57,8 @@ class RegisterSetPassword : AppCompatActivity() {
                 }.lparams() {
                     weight = 1f
                     width = dip(0)
-                    height = dip(65 - getStatusBarHeight(this@RegisterSetPassword))
-                    topMargin = dip(getStatusBarHeight(this@RegisterSetPassword))
+                    height = dip(65 - getStatusBarHeight(this@UpdateNickName))
+                    topMargin = dip(getStatusBarHeight(this@UpdateNickName))
                 }
             }.lparams() {
                 width = matchParent
@@ -69,39 +67,22 @@ class RegisterSetPassword : AppCompatActivity() {
             linearLayout {
                 orientation = LinearLayout.VERTICAL
                 textView {
-                    text = "设置密码"
+                    text = "设置新昵称"
                     textSize = 21f
                     typeface = Typeface.DEFAULT_BOLD
                     textColor = Color.BLACK
-                }.lparams(wrapContent, wrapContent) {
+                }.lparams {
                     gravity = Gravity.CENTER_HORIZONTAL
                 }
                 relativeLayout {
                     backgroundResource = R.drawable.border
-                    passwordFirst = editText {
-                        hint = "请输入密码"
+                    nickName = editText {
+                        hint = "请输入新昵称"
                         singleLine = true
                         padding = dip(5)
                         setHintTextColor(Color.GRAY)
                         textColor = Color.BLACK
                         backgroundColor = Color.TRANSPARENT
-                        inputType =
-                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-                    }.lparams(matchParent, matchParent)
-                }.lparams(matchParent, dip(55)) {
-                    topMargin = dip(15)
-                }
-                relativeLayout {
-                    backgroundResource = R.drawable.border
-                    passwordAgain = editText {
-                        hint = "请再次输入密码"
-                        singleLine = true
-                        padding = dip(5)
-                        backgroundColor = Color.TRANSPARENT
-                        setHintTextColor(Color.GRAY)
-                        textColor = Color.BLACK
-                        inputType =
-                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
                         setOnKeyListener(object : View.OnKeyListener {
                             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                                 if (event != null) {
@@ -121,32 +102,28 @@ class RegisterSetPassword : AppCompatActivity() {
                 }
                 button {
                     gravity = Gravity.CENTER
-                    text = "下一步"
+                    text = "完成"
                     textSize = 16f
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
                     setOnClickListener {
                         closeFocusjianpan()
-                        if (passwordFirst.text.toString() == "") {
-                            toast("请输入密码")
-                        } else {
-                            if (passwordAgain.text.toString() == "") {
-                                toast("请再次输入密码")
+                        if (nickName.text.toString() != "") {
+                            if (nickName.text.length < 10) {
+                                finish()
+                                overridePendingTransition(
+                                    R.anim.left_in,
+                                    R.anim.right_out
+                                )
                             } else {
-                                if (passwordAgain.text.toString() != passwordFirst.text.toString()) {
-                                    toast("两次密码不匹配")
-                                } else {
-                                    startActivity<RegisterSetNickName>()
-                                    overridePendingTransition(
-                                        R.anim.right_in,
-                                        R.anim.left_out
-                                    )
-                                }
+                                toast("限制字数长度10以内")
                             }
+                        } else {
+                            toast("请输入名字")
                         }
                     }
                 }.lparams(matchParent, dip(50)) {
-                    topMargin = dip(40)
+                    topMargin = dip(30)
                 }
             }.lparams(matchParent, wrapContent) {
                 setMargins(dip(15), dip(150), dip(15), 0)
@@ -157,7 +134,7 @@ class RegisterSetPassword : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         setActionBar(toolbar1)
-        StatusBarUtil.setTranslucentForImageView(this@RegisterSetPassword, 0, toolbar1)
+        StatusBarUtil.setTranslucentForImageView(this@UpdateNickName, 0, toolbar1)
         getWindow().getDecorView()
             .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
         toolbar1.setNavigationOnClickListener {
@@ -183,26 +160,9 @@ class RegisterSetPassword : AppCompatActivity() {
 
     private fun closeFocusjianpan() {
         //关闭ｅｄｉｔ光标
-        passwordFirst.clearFocus()
-        passwordAgain.clearFocus()
+        nickName.clearFocus()
         //关闭键盘事件
         val phone = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        phone.hideSoftInputFromWindow(passwordFirst.windowToken, 0)
-        val code = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        code.hideSoftInputFromWindow(passwordAgain.windowToken, 0)
-    }
-
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (event != null) {
-            if(keyCode == KeyEvent.KEYCODE_BACK ){
-                finish()
-                overridePendingTransition(
-                    R.anim.left_in,
-                    R.anim.right_out
-                )
-                return true
-            }
-        }
-        return super.onKeyDown(keyCode, event)
+        phone.hideSoftInputFromWindow(nickName.windowToken, 0)
     }
 }

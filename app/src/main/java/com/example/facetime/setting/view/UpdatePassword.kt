@@ -1,4 +1,4 @@
-package com.example.facetime.conference
+package com.example.facetime.setting.view
 
 import android.content.Context
 import android.content.SharedPreferences

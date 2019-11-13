@@ -1,4 +1,4 @@
-package com.example.facetime.conference
+package com.example.facetime.conference.view
 
 import android.content.Context
 import android.graphics.Color
@@ -17,14 +17,15 @@ import android.view.KeyEvent
 import android.view.View
 import android.widget.*
 import com.example.facetime.R
-import kotlin.system.exitProcess
-import com.dropbox.core.v2.teamlog.ActorLogInfo.app
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.FragmentTransaction
-import com.example.facetime.login.StartActivity
+import com.example.facetime.setting.view.SystemSettingsActivity
+import com.example.facetime.setting.view.UpdateTipsFrag
+import com.example.facetime.conference.fragment.BackgroundFragment
+import com.example.facetime.login.view.StartActivity
 
 
-open class MenuActivity : AppCompatActivity(),UpdateTipsFrag.ButtomCLick,
+open class MenuActivity : AppCompatActivity(),
+    UpdateTipsFrag.ButtomCLick,
     BackgroundFragment.ClickBack{
 
     private lateinit var toolbar1: Toolbar
@@ -330,7 +331,8 @@ open class MenuActivity : AppCompatActivity(),UpdateTipsFrag.ButtomCLick,
             mTransaction.add(fram!!.id, shadowFragment!!)
         }
         if (updateTips == null) {
-            updateTips = UpdateTipsFrag.newInstance(this@MenuActivity)
+            updateTips =
+                UpdateTipsFrag.newInstance(this@MenuActivity)
             mTransaction.add(fram!!.id, updateTips!!)
         }
         mTransaction.commit()

@@ -1,4 +1,4 @@
-package com.example.facetime.conference
+package com.example.facetime.conference.fragment
 
 import android.content.Context
 import android.graphics.Color
@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import com.example.facetime.R
+import com.example.facetime.conference.view.EnteRoomByIdActivity
 import org.jetbrains.anko.*
 
 class ChooseRoomIdFragment : Fragment() {

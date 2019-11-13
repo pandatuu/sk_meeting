@@ -1,4 +1,4 @@
-package com.example.facetime.conference
+package com.example.facetime.register.view
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -15,7 +15,7 @@ import android.widget.LinearLayout
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
-import com.example.facetime.login.StartActivity
+import com.example.facetime.login.view.StartActivity
 import com.jaeger.library.StatusBarUtil
 import org.jetbrains.anko.*
 

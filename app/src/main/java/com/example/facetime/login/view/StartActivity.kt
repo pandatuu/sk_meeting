@@ -1,4 +1,4 @@
-package com.example.facetime.login
+package com.example.facetime.login.view
 
 import android.app.Activity
 import android.content.Context
@@ -23,6 +23,9 @@ import com.example.facetime.api.Api
 import com.example.facetime.conference.MenuActivity
 import com.example.facetime.conference.RegisterActivity
 import com.example.facetime.util.RetrofitUtils
+import com.example.facetime.conference.view.MenuActivity
+import com.example.facetime.login.fragment.UserAgreement
+import com.example.facetime.register.view.RegisterActivity
 import com.google.i18n.phonenumbers.NumberParseException
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.jaeger.library.StatusBarUtil

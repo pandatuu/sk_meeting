@@ -1,8 +1,6 @@
-package com.example.facetime.conference;
+package com.example.facetime.conference.view;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +18,7 @@ import android.widget.Toast;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.facetime.R;
+import com.example.facetime.conference.listener.VideoChatControllerListener;
 import com.example.facetime.util.CommonActivity;
 import com.facebook.react.modules.core.PermissionListener;
 

@@ -1,14 +1,13 @@
-package com.example.facetime.login
+package com.example.facetime.login.view
 
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.preference.PreferenceManager
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
-import com.example.facetime.conference.MenuActivity
+import com.example.facetime.conference.view.MenuActivity
 import org.jetbrains.anko.*
 import java.lang.Thread.sleep
 
