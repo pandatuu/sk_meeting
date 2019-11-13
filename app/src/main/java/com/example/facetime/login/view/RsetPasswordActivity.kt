@@ -1,4 +1,4 @@
-package com.example.facetime.setting.view
+package com.example.facetime.login.view
 
 import android.content.Context
 import android.graphics.Color
@@ -12,7 +12,6 @@ import android.widget.EditText
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
-import com.example.facetime.login.view.StartActivity
 import com.jaeger.library.StatusBarUtil
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick

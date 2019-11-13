@@ -1,4 +1,4 @@
-package com.example.facetime.setting.view
+package com.example.facetime.login.view
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -6,32 +6,62 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Handler
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.LinearLayout.HORIZONTAL
-import android.widget.TextView
-import android.widget.Toolbar
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.alibaba.fastjson.JSON
 import com.example.facetime.R
+import com.example.facetime.api.LoginApi
+import com.example.facetime.util.DialogUtils
+import com.example.facetime.util.MimeType
+import com.example.facetime.util.MyDialog
+import com.example.facetime.util.RetrofitUtils
 import com.google.i18n.phonenumbers.NumberParseException
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.jaeger.library.StatusBarUtil
 import com.sahooz.library.Country
 import com.sahooz.library.PickActivity
+import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx2.awaitSingle
+import okhttp3.RequestBody
 import org.jetbrains.anko.*
+import retrofit2.HttpException
 
 class ReadSetPasswordActivity : AppCompatActivity() {
     private var runningDownTimer: Boolean = false
     lateinit var timeButton: TextView
     lateinit var telephone: EditText
     lateinit var myCode: EditText
+    lateinit var password: EditText
     lateinit var phoneNumber: TextView
     private lateinit var toolbar1: Toolbar
+    private var sendBool = false
+    var thisDialog: MyDialog? = null
+    var mHandler = Handler()
+    var r: Runnable = Runnable {
+        //do something
+        if (thisDialog?.isShowing!!) {
+            val toast = Toast.makeText(
+                this@ReadSetPasswordActivity,
+                "ネットワークエラー",
+                Toast.LENGTH_SHORT
+            )//网路出现问题
+            toast.setGravity(Gravity.CENTER, 0, 0)
+            toast.show()
+        }
+        DialogUtils.hideLoading(thisDialog)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,7 +124,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
 
                 linearLayout {
                     backgroundResource = R.drawable.border
-                    orientation=HORIZONTAL
+                    orientation = LinearLayout.HORIZONTAL
 
                     phoneNumber = textView {
                         text = "+86"
@@ -113,7 +143,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                             )
                         }
                     }.lparams(height = matchParent, width = wrapContent) {
-                        leftMargin=dip(10)
+                        leftMargin = dip(10)
                         rightMargin = dip(10)
                     }
 
@@ -122,7 +152,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                         backgroundColor = Color.TRANSPARENT
                         setHintTextColor(Color.GRAY)
                         textColor = Color.BLACK
-                        singleLine=true
+                        singleLine = true
                         setOnKeyListener(object : View.OnKeyListener {
                             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                                 if (event != null) {
@@ -144,7 +174,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                             }
                         }
                     }.lparams(width = matchParent, height = matchParent) {
-                        margin=dip(1)
+                        margin = dip(1)
                         weight = 1f
                     }
                 }.lparams(height = dip(50), width = matchParent) {
@@ -159,7 +189,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                         backgroundColor = Color.TRANSPARENT
                         setHintTextColor(Color.GRAY)
                         textColor = Color.BLACK
-                        singleLine=true
+                        singleLine = true
                         setOnKeyListener(object : View.OnKeyListener {
                             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                                 if (event != null) {
@@ -183,7 +213,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                         }
                     }.lparams(width = dip(0), height = matchParent) {
                         weight = 1f
-                        leftMargin=dip(10)
+                        leftMargin = dip(10)
                     }
 
                     timeButton = textView {
@@ -195,9 +225,20 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                     }.lparams(width = dip(60), height = matchParent) {
 
                         setOnClickListener {
+                            thisDialog = DialogUtils.showLoading(this@ReadSetPasswordActivity)
+                            mHandler.postDelayed(r, 12000)
                             val result = determinePhone()
                             if (result) {
-                                onPcode()
+                                GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+                                    sendBool = sendVerificationCode(
+                                        telephone.text.toString().trim(),
+                                        phoneNumber.text.toString().substring(1)
+                                    )
+                                    if (sendBool){
+                                        DialogUtils.hideLoading(thisDialog)
+                                        onPcode()
+                                    }
+                                }
                             } else {
                                 toast("请输入正确的手机号")
                             }
@@ -207,7 +248,43 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                 }.lparams(height = dip(50), width = matchParent) {
                     topMargin = dip(10)
                 }
+                linearLayout {
+                    backgroundResource = R.drawable.border
 
+                    password = editText {
+                        hint = "请输入新密码"
+                        backgroundColor = Color.TRANSPARENT
+                        setHintTextColor(Color.GRAY)
+                        textColor = Color.BLACK
+                        singleLine = true
+                        setOnKeyListener(object : View.OnKeyListener {
+                            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                                if (event != null) {
+                                    if (KeyEvent.KEYCODE_ENTER == keyCode && KeyEvent.ACTION_DOWN == event.action) {
+                                        //处理事件
+                                        clearFocus()
+                                        closeFocusjianpan()
+                                        return true
+                                    }
+                                }
+                                return false
+                            }
+                        })
+
+                        setOnFocusChangeListener { view, b ->
+                            if (b) {
+                                setHintTextColor(Color.BLACK)
+                            } else {
+                                setHintTextColor(Color.GRAY)
+                            }
+                        }
+                    }.lparams(width = dip(0), height = matchParent) {
+                        weight = 1f
+                        leftMargin = dip(10)
+                    }
+                }.lparams(height = dip(50), width = matchParent) {
+                    topMargin = dip(10)
+                }
 
                 textView {
                     text = "下一步"
@@ -218,7 +295,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                     setOnClickListener {
                         next()
                     }
-                }.lparams(width = matchParent,  height = dip(50)) {
+                }.lparams(width = matchParent, height = dip(50)) {
                     topMargin = dip(50)
                 }
             }.lparams(width = matchParent, height = matchParent) {
@@ -245,7 +322,6 @@ class ReadSetPasswordActivity : AppCompatActivity() {
 
     //发送验证码按钮
     private fun onPcode() {
-
         //如果60秒倒计时没有结束
         if (runningDownTimer) {
             return
@@ -305,17 +381,20 @@ class ReadSetPasswordActivity : AppCompatActivity() {
         //关闭ｅｄｉｔ光标
         telephone.clearFocus()
         myCode.clearFocus()
+        password.clearFocus()
         //关闭键盘事件
         val phone = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         phone.hideSoftInputFromWindow(telephone.windowToken, 0)
         val code = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         code.hideSoftInputFromWindow(myCode.windowToken, 0)
+        val mypassword = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        mypassword.hideSoftInputFromWindow(password.windowToken, 0)
     }
 
     fun determinePhone(): Boolean {
         val countryCode = phoneNumber.text.toString().trim()
         val phone = telephone.text.toString().trim()
-        val country = countryCode.substring(1, 3)
+        val country = countryCode.substring(1)
         val myPhone = countryCode + phone
         val result = isPhoneNumberValid(myPhone, country)
 
@@ -346,9 +425,12 @@ class ReadSetPasswordActivity : AppCompatActivity() {
     }
 
     fun next() {
+        thisDialog = DialogUtils.showLoading(this@ReadSetPasswordActivity)
+        mHandler.postDelayed(r, 12000)
         val res = determinePhone()
         val phone = telephone.text.toString().trim()
         val code = myCode.text.toString().trim()
+        val mypassword = password.text.toString().trim()
 
         if (phone.isNullOrEmpty()) {
             toast("请输入手机号码")
@@ -359,18 +441,157 @@ class ReadSetPasswordActivity : AppCompatActivity() {
             toast("请输入验证码")
             return
         }
+        if (mypassword.isNullOrEmpty()) {
+            toast("请输入新密码")
+            return
+        }
 
         if (!res) {
             toast("请输入正确的手机号码")
             return
         }
-
-        startActivity<RsetPasswordActivity>()
-        this@ReadSetPasswordActivity.overridePendingTransition(R.anim.right_in, R.anim.left_out)
+        GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+            //更新密码
+            updatePassword(phoneNumber.text.toString().substring(1), phone, code, mypassword)
+        }
     }
+
+    //发送验证码
+    private suspend fun sendVerificationCode(phoneNum: String, country: String): Boolean {
+        try {
+            val deviceModel: String = Build.MODEL
+            val manufacturer: String = Build.BRAND
+            val params = mapOf(
+                "phone" to phoneNum,
+                "country" to country,
+                "deviceType" to "ANDROID",
+                "codeType" to "LOGIN",
+                "manufacturer" to manufacturer,
+                "deviceModel" to deviceModel
+            )
+            val userJson = JSON.toJSONString(params)
+            val body = RequestBody.create(MimeType.APPLICATION_JSON, userJson)
+
+            val retrofitUils =
+                RetrofitUtils(this@ReadSetPasswordActivity, "https://apass.sklife.jp/")
+            val it = retrofitUils.create(LoginApi::class.java)
+                .sendvCode(body)
+                .subscribeOn(Schedulers.io())
+                .awaitSingle()
+            if (it.code() in 200..299) {
+//                DialogUtils.hideLoading(thisDialog)
+                val toast =
+                    Toast.makeText(applicationContext, "認証コードは既に送信されました。", Toast.LENGTH_SHORT)
+                toast.setGravity(Gravity.CENTER, 0, 0)
+                toast.show()
+                return true
+            }
+            if (it.code() == 409) {
+//                DialogUtils.hideLoading(thisDialog)
+                val toast =
+                    Toast.makeText(applicationContext, "この携帯番号は既に登録されました。", Toast.LENGTH_SHORT)
+                toast.setGravity(Gravity.CENTER, 0, 0)
+                toast.show()
+                return false
+            }
+            return false
+        } catch (throwable: Throwable) {
+            if (throwable is HttpException) {
+                println("throwable ------------ ${throwable.code()}")
+            }
+//            DialogUtils.hideLoading(thisDialog)
+            return false
+        }
+    }
+
+    //校验验证码
+//    private suspend fun validateVerificationCode(phoneNum: String, country: String, verifyCode: String): Boolean {
+//        try {
+//            val params = mapOf(
+//                "phone" to phoneNum,
+//                "country" to country,
+//                "code" to verifyCode
+//            )
+//            val userJson = JSON.toJSONString(params)
+//            val body = RequestBody.create(MimeType.APPLICATION_JSON, userJson)
+//
+//            val retrofitUils = RetrofitUtils(this@ReadSetPasswordActivity, "https://apass.sklife.jp/")
+//            val it = retrofitUils.create(LoginApi::class.java)
+//                .validateCode(body)
+//                .subscribeOn(Schedulers.io())
+//                .awaitSingle()
+//
+//            if (it.code() in 200..299) {
+//                val toast = Toast.makeText(applicationContext, "認証コード確認成功", Toast.LENGTH_SHORT)
+//                toast.setGravity(Gravity.CENTER, 0, 0)
+//                toast.show()
+//                return true
+//            }
+//            if (it.code() == 406) {
+////                DialogUtils.hideLoading(thisDialog)
+//                val toast = Toast.makeText(applicationContext, "認証コード取得失敗", Toast.LENGTH_SHORT)
+//                toast.setGravity(Gravity.CENTER, 0, 0)
+//                toast.show()
+//                return false
+//            }
+//            return false
+//        } catch (throwable: Throwable) {
+//            if (throwable is HttpException) {
+//                println("throwable ------------ ${throwable.code()}")
+//            }
+//            return false
+//        }
+//    }
+
+    private suspend fun updatePassword(
+        country: String,
+        phone: String,
+        code: String,
+        password: String
+    ) {
+        try {
+            val params = mapOf(
+                "country" to country,
+                "phone" to phone,
+                "code" to code,
+                "password" to password
+            )
+
+
+            val userJson = JSON.toJSONString(params)
+
+            val body = RequestBody.create(MimeType.APPLICATION_JSON, userJson)
+
+            var retrofitUils = RetrofitUtils(this@ReadSetPasswordActivity, "https://apass.sklife.jp/")
+
+            val it = retrofitUils.create(LoginApi::class.java)
+                .findPassword(body)
+                .subscribeOn(Schedulers.io()) //观察者 切换到主线程
+                .awaitSingle()
+
+            if (it.code() in 200..299) {
+                DialogUtils.hideLoading(thisDialog)
+
+                startActivity<StartActivity>()
+                this@ReadSetPasswordActivity.overridePendingTransition(
+                    R.anim.right_in,
+                    R.anim.left_out
+                )
+            }
+
+            DialogUtils.hideLoading(thisDialog)
+        } catch (throwable: Throwable) {
+            if (throwable is HttpException) {
+                println("throwable ------------ ${throwable.code()}")
+            }
+
+            DialogUtils.hideLoading(thisDialog)
+        }
+    }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (event != null) {
-            if(keyCode == KeyEvent.KEYCODE_BACK ){
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
                 finish()
                 overridePendingTransition(
                     R.anim.left_in,
