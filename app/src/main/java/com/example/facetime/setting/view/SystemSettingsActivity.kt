@@ -2,8 +2,11 @@ package com.example.facetime.setting.view
 
 
 import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
 import android.view.Gravity
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -13,16 +16,46 @@ import org.jetbrains.anko.*
 import android.preference.PreferenceManager
 import android.widget.*
 import com.example.facetime.R
+import com.example.facetime.api.LoginApi
 import com.example.facetime.conference.view.MenuActivity
+import com.example.facetime.login.view.StartActivity
+import com.example.facetime.util.DialogUtils
+import com.example.facetime.util.MyDialog
+import com.example.facetime.util.RetrofitUtils
+import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx2.awaitSingle
+import retrofit2.HttpException
 
 
 open class SystemSettingsActivity : AppCompatActivity() {
 
 
     private lateinit var toolbar1: Toolbar
+    var thisDialog: MyDialog? = null
+    var mHandler = Handler()
+    var r: Runnable = Runnable {
+        //do something
+        if (thisDialog?.isShowing!!) {
+            val toast = Toast.makeText(
+                this@SystemSettingsActivity,
+                "ネットワークエラー",
+                Toast.LENGTH_SHORT
+            )//网路出现问题
+            toast.setGravity(Gravity.CENTER, 0, 0)
+            toast.show()
+        }
+        DialogUtils.hideLoading(thisDialog)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val mPerferences = PreferenceManager.getDefaultSharedPreferences(this@SystemSettingsActivity)
+        val token = mPerferences.getString("token","")
 
         verticalLayout {
             backgroundColor = Color.parseColor("#f2f2f2")
@@ -77,11 +110,22 @@ open class SystemSettingsActivity : AppCompatActivity() {
                     backgroundResource = R.drawable.bottonbg
                     gravity = Gravity.CENTER
                     setOnClickListener {
-                        startActivity<UpdateNickName>()
-                        overridePendingTransition(
-                            R.anim.right_in,
-                            R.anim.left_out
-                        )
+                        if(token != ""){
+                            startActivity<UpdateNickName>()
+                            overridePendingTransition(
+                                R.anim.right_in,
+                                R.anim.left_out
+                            )
+                        }else{
+                            val toast = Toast.makeText(applicationContext, "请先登录账号", Toast.LENGTH_SHORT)
+                            toast.setGravity(Gravity.CENTER, 0, 0)
+                            toast.show()
+                            startActivity<StartActivity>()
+                            overridePendingTransition(
+                                R.anim.right_in,
+                                R.anim.left_out
+                            )
+                        }
                     }
                 }.lparams() {
                     height = dip(60)
@@ -102,11 +146,22 @@ open class SystemSettingsActivity : AppCompatActivity() {
                     backgroundResource = R.drawable.bottonbg
                     gravity = Gravity.CENTER
                     setOnClickListener {
-                        startActivity<UpdatePassword>()
-                        overridePendingTransition(
-                                    R.anim.right_in,
-                                    R.anim.left_out
-                                )
+                        if(token != ""){
+                            startActivity<UpdatePassword>()
+                            overridePendingTransition(
+                                R.anim.right_in,
+                                R.anim.left_out
+                            )
+                        }else{
+                            val toast = Toast.makeText(applicationContext, "请先登录账号", Toast.LENGTH_SHORT)
+                            toast.setGravity(Gravity.CENTER, 0, 0)
+                            toast.show()
+                            startActivity<StartActivity>()
+                            overridePendingTransition(
+                                R.anim.right_in,
+                                R.anim.left_out
+                            )
+                        }
                     }
                 }.lparams() {
                     height = dip(60)
@@ -154,18 +209,23 @@ open class SystemSettingsActivity : AppCompatActivity() {
                     backgroundResource = R.drawable.bottonbg
                     gravity = Gravity.CENTER
                     setOnClickListener {
+                        thisDialog = DialogUtils.showLoading(this@SystemSettingsActivity)
+                        mHandler.postDelayed(r, 12000)
 
-                        val sp = PreferenceManager.getDefaultSharedPreferences(this@SystemSettingsActivity).edit()
-                        sp.remove("token")
-                        sp.remove("userName")
-                        sp.remove("MyRoomNum")
-                        sp.remove("MyRoomName")
-                        sp.commit()
-                        startActivity<MenuActivity>()
-                        overridePendingTransition(
-                            R.anim.fade_in_out,
-                            R.anim.fade_in_out
-                        )
+                        if(token != ""){
+                            GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+                                loginout()
+                            }
+                        }else{
+                            val toast = Toast.makeText(applicationContext, "请先登录账号", Toast.LENGTH_SHORT)
+                            toast.setGravity(Gravity.CENTER, 0, 0)
+                            toast.show()
+                            startActivity<StartActivity>()
+                            overridePendingTransition(
+                                R.anim.right_in,
+                                R.anim.left_out
+                            )
+                        }
                     }
                 }.lparams() {
                     height = dip(60)
@@ -198,6 +258,37 @@ open class SystemSettingsActivity : AppCompatActivity() {
         }
     }
 
+    private suspend fun loginout(){
+        try {
+            val retrofitUils = RetrofitUtils(this@SystemSettingsActivity, "https://apass.sklife.jp/")
+            val it = retrofitUils.create(LoginApi::class.java)
+                .logout("MOBILE")
+                .subscribeOn(Schedulers.io())
+                .awaitSingle()
+
+            if (it.code() in 200..299) {
+
+//                DialogUtils.hideLoading(thisDialog)
+                val sp = PreferenceManager.getDefaultSharedPreferences(this@SystemSettingsActivity).edit()
+                sp.remove("token")
+                sp.remove("userName")
+                sp.remove("MyRoomNum")
+                sp.remove("MyRoomName")
+                sp.commit()
+
+                DialogUtils.hideLoading(thisDialog)
+                startActivity<MenuActivity>()
+                overridePendingTransition(
+                    R.anim.fade_in_out,
+                    R.anim.fade_in_out
+                )
+            }
+        } catch (throwable: Throwable) {
+            if (throwable is HttpException) {
+                println("throwable ------------ ${throwable.code()}")
+            }
+        }
+    }
 
     fun getStatusBarHeight(context: Context): Int {
         var result = 0
