@@ -225,6 +225,8 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                     }.lparams(width = dip(60), height = matchParent) {
 
                         setOnClickListener {
+                            thisDialog = DialogUtils.showLoading(this@ReadSetPasswordActivity)
+                            mHandler.postDelayed(r, 12000)
                             val result = determinePhone()
                             if (result) {
                                 GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
@@ -232,8 +234,10 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                                         telephone.text.toString().trim(),
                                         phoneNumber.text.toString().substring(1)
                                     )
-                                    if (sendBool)
+                                    if (sendBool){
+                                        DialogUtils.hideLoading(thisDialog)
                                         onPcode()
+                                    }
                                 }
                             } else {
                                 toast("请输入正确的手机号")
@@ -390,7 +394,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
     fun determinePhone(): Boolean {
         val countryCode = phoneNumber.text.toString().trim()
         val phone = telephone.text.toString().trim()
-        val country = countryCode.substring(1, 3)
+        val country = countryCode.substring(1)
         val myPhone = countryCode + phone
         val result = isPhoneNumberValid(myPhone, country)
 

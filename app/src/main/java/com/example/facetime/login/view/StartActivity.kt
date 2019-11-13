@@ -81,24 +81,24 @@ class StartActivity : AppCompatActivity() {
                         height= matchParent
                         width= wrapContent
                     }
-                    relativeLayout {
-                        textView {
-                            text = "注册"
-                            gravity = Gravity.RIGHT
-                            textSize = 16f
-                            textColor = Color.parseColor("#7F7F7F")
-                            setOnClickListener {
-                                startActivity<RegisterActivity>()
-                                overridePendingTransition(R.anim.right_in, R.anim.left_out)
-                            }
-                        }.lparams(height = wrapContent, width = matchParent){
-                            centerVertically()
-                            alignParentRight()
-                            rightMargin = dip(20)
-                        }
-                    }.lparams(dip(0),matchParent){
-                        weight = 1f
-                    }
+//                    relativeLayout {
+////                        textView {
+////                            text = "注册"
+////                            gravity = Gravity.RIGHT
+////                            textSize = 16f
+////                            textColor = Color.parseColor("#7F7F7F")
+////                            setOnClickListener {
+////                                startActivity<RegisterActivity>()
+////                                overridePendingTransition(R.anim.right_in, R.anim.left_out)
+////                            }
+////                        }.lparams(height = wrapContent, width = matchParent){
+////                            centerVertically()
+////                            alignParentRight()
+////                            rightMargin = dip(20)
+////                        }
+////                    }.lparams(dip(0),matchParent){
+////                        weight = 1f
+////                    }
                 }.lparams() {
                     weight = 1f
                     width = dip(0)
@@ -451,11 +451,10 @@ class StartActivity : AppCompatActivity() {
                 .subscribeOn(Schedulers.io()) //被观察者 开子线程请求网络
                 .awaitSingle()
             if(it.code() in 200..299){
-                val model = it.body()
+                val token = it.body()!!.get("token").asString
 
                 val mEditor: SharedPreferences.Editor = saveTool.edit()
-                mEditor.putString("token", "login")
-                mEditor.putString("userName", "testName")
+                mEditor.putString("token", token)
 
                 var str=getNum()
                 mEditor.putString("MyRoomNum", str)
@@ -464,10 +463,6 @@ class StartActivity : AppCompatActivity() {
                 startActivity(i)
                 overridePendingTransition(R.anim.fade_in_out, R.anim.fade_in_out)
                 mEditor.apply()
-//                val mEditor: SharedPreferences.Editor =
-//                    PreferenceManager.getDefaultSharedPreferences(this@StartActivity).edit()
-//
-//                mEditor.commit()
             }
         }catch (throwable: Throwable){
             if (throwable is HttpException) {
