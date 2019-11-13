@@ -11,14 +11,28 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.Toast
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
+import com.alibaba.fastjson.JSON
 import com.example.facetime.R
+import com.example.facetime.api.LoginApi
+import com.example.facetime.util.MimeType
+import com.example.facetime.util.RetrofitUtils
 import com.jaeger.library.StatusBarUtil
+import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx2.awaitSingle
+import okhttp3.RequestBody
 import org.jetbrains.anko.*
+import retrofit2.HttpException
 
 class UpdatePassword : AppCompatActivity() {
 
+    private lateinit var passwordOld: EditText
     private lateinit var passwordFirst: EditText
     private lateinit var passwordAgain: EditText
     private lateinit var toolbar1: Toolbar
@@ -75,6 +89,21 @@ class UpdatePassword : AppCompatActivity() {
                     textColor = Color.BLACK
                 }.lparams(wrapContent, wrapContent) {
                     gravity = Gravity.CENTER_HORIZONTAL
+                }
+                relativeLayout {
+                    backgroundResource = R.drawable.border
+                    passwordOld = editText {
+                        hint = "请输入旧密码"
+                        singleLine = true
+                        setHintTextColor(Color.GRAY)
+                        textColor = Color.BLACK
+                        padding = dip(5)
+                        backgroundColor = Color.TRANSPARENT
+                        inputType =
+                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                    }.lparams(matchParent, matchParent)
+                }.lparams(matchParent, dip(55)) {
+                    topMargin = dip(15)
                 }
                 relativeLayout {
                     backgroundResource = R.drawable.border
@@ -136,11 +165,10 @@ class UpdatePassword : AppCompatActivity() {
                                 if (passwordAgain.text.toString() != passwordFirst.text.toString()) {
                                     toast("两次密码不匹配")
                                 } else {
-                                    finish()
-                                    overridePendingTransition(
-                                        R.anim.left_in,
-                                        R.anim.right_out
-                                    )
+                                    GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+                                        updatePassword(passwordOld.text.toString(), passwordFirst.text.toString(), passwordAgain.text.toString())
+                                    }
+
                                 }
                             }
                         }
@@ -166,6 +194,42 @@ class UpdatePassword : AppCompatActivity() {
                 R.anim.left_in,
                 R.anim.right_out
             )
+        }
+    }
+
+    //　更新密码
+    private suspend fun updatePassword(old: String, now: String, second: String) {
+        try {
+            val params = mapOf(
+                "oldPwd" to old,
+                "newPwd" to now,
+                "confirmPwd" to second
+            )
+            val userJson = JSON.toJSONString(params)
+            val body = RequestBody.create(MimeType.APPLICATION_JSON, userJson)
+
+            val retrofitUils = RetrofitUtils(this@UpdatePassword, "")
+            val it = retrofitUils.create(LoginApi::class.java)
+                .updatePassword(body)
+                .subscribeOn(Schedulers.io())
+                .awaitSingle()
+
+            if (it.code() in 200..299) {
+//                DialogUtils.hideLoading(thisDialog)
+                val toast = Toast.makeText(applicationContext, "パスワードを変更しました。", Toast.LENGTH_SHORT)
+                toast.setGravity(Gravity.CENTER,0,0)
+                toast.show()
+
+                finish()
+                overridePendingTransition(
+                    R.anim.left_in,
+                    R.anim.right_out
+                )
+            }
+        } catch (throwable: Throwable) {
+            if (throwable is HttpException) {
+                println("throwable ------------ ${throwable.code()}")
+            }
         }
     }
 

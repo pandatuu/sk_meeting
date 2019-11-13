@@ -134,14 +134,14 @@ android:windowSoftInputMode="adjustPan"
         </activity>
 
         <!--准备更改密码-->
-        <activity android:name="com.example.facetime.setting.view.ReadSetPasswordActivity"
+        <activity android:name="com.example.facetime.login.view.ReadSetPasswordActivity"
             android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme.Black"
             >
         </activity>
 
         <!--更改密码-->
-        <activity android:name="com.example.facetime.setting.view.RsetPasswordActivity"
+        <activity android:name="com.example.facetime.login.view.RsetPasswordActivity"
             android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme.Black"
             >

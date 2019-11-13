@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Typeface
+import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.text.InputType
@@ -16,9 +17,11 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.alibaba.fastjson.JSON
 import com.example.facetime.R
+import com.example.facetime.api.LoginApi
+import com.example.facetime.util.RetrofitUtils
 import com.example.facetime.conference.view.MenuActivity
-import com.example.facetime.setting.view.ReadSetPasswordActivity
 import com.example.facetime.login.fragment.UserAgreement
 import com.example.facetime.register.view.RegisterActivity
 import com.google.i18n.phonenumbers.NumberParseException
@@ -26,7 +29,16 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.jaeger.library.StatusBarUtil
 import com.sahooz.library.Country
 import com.sahooz.library.PickActivity
+import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx2.awaitSingle
+import okhttp3.MediaType
+import okhttp3.RequestBody
 import org.jetbrains.anko.*
+import retrofit2.HttpException
 
 
 class StartActivity : AppCompatActivity() {
@@ -69,24 +81,24 @@ class StartActivity : AppCompatActivity() {
                         height= matchParent
                         width= wrapContent
                     }
-                    relativeLayout {
-                        textView {
-                            text = "注册"
-                            gravity = Gravity.RIGHT
-                            textSize = 16f
-                            textColor = Color.parseColor("#7F7F7F")
-                            setOnClickListener {
-                                startActivity<RegisterActivity>()
-                                overridePendingTransition(R.anim.right_in, R.anim.left_out)
-                            }
-                        }.lparams(height = wrapContent, width = matchParent){
-                            centerVertically()
-                            alignParentRight()
-                            rightMargin = dip(20)
-                        }
-                    }.lparams(dip(0),matchParent){
-                        weight = 1f
-                    }
+//                    relativeLayout {
+////                        textView {
+////                            text = "注册"
+////                            gravity = Gravity.RIGHT
+////                            textSize = 16f
+////                            textColor = Color.parseColor("#7F7F7F")
+////                            setOnClickListener {
+////                                startActivity<RegisterActivity>()
+////                                overridePendingTransition(R.anim.right_in, R.anim.left_out)
+////                            }
+////                        }.lparams(height = wrapContent, width = matchParent){
+////                            centerVertically()
+////                            alignParentRight()
+////                            rightMargin = dip(20)
+////                        }
+////                    }.lparams(dip(0),matchParent){
+////                        weight = 1f
+////                    }
                 }.lparams() {
                     weight = 1f
                     width = dip(0)
@@ -369,18 +381,9 @@ class StartActivity : AppCompatActivity() {
 
         toast("$phone,$myPassword")
 
-
-        val mEditor: SharedPreferences.Editor = saveTool.edit()
-        mEditor.putString("token", "login")
-        mEditor.putString("userName", "testName")
-
-        var str=getNum()
-        mEditor.putString("MyRoomNum", str)
-
-        val i = Intent(this, MenuActivity::class.java)
-        startActivity(i)
-        overridePendingTransition(R.anim.fade_in_out, R.anim.fade_in_out)
-        mEditor.apply()
+        GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+            login(phone, myPassword, countryCode)
+        }
     }
 
     fun getNum():String{
@@ -407,6 +410,65 @@ class StartActivity : AppCompatActivity() {
         }
 
         return result
+    }
+
+    private suspend fun login(
+        phone: String,
+        myPassword: String,
+        countryCode: String
+    ) {
+        try {
+            val system = "SK"
+            val deviceType = "ANDROID"
+            val deviceToken = Build.FINGERPRINT
+            val loginType = "PASSWORD"
+            val manufacturer = Build.MANUFACTURER
+            val deviceModel = Build.MODEL
+            val scope = "offline_access"
+            val params = mapOf(
+                "username" to phone,
+                "password" to myPassword,
+                "country" to countryCode.substring(1),
+                "deviceToken" to deviceToken,
+                "system" to system,
+                "deviceType" to deviceType,
+                "loginType" to loginType,
+                "manufacturer" to manufacturer,
+                "deviceModel" to deviceModel,
+                "scope" to scope
+            )
+
+            val userJson = JSON.toJSONString(params)
+
+            val body =
+                RequestBody.create(MediaType.parse("application/json; charset=utf-8"), userJson)
+
+            val retrofitUils = RetrofitUtils(this@StartActivity, "https://apass.sklife.jp/")
+
+            //   登录完成,取到token
+            val it = retrofitUils.create(LoginApi::class.java)
+                .userLogin(body)
+                .subscribeOn(Schedulers.io()) //被观察者 开子线程请求网络
+                .awaitSingle()
+            if(it.code() in 200..299){
+                val token = it.body()!!.get("token").asString
+
+                val mEditor: SharedPreferences.Editor = saveTool.edit()
+                mEditor.putString("token", token)
+
+                var str=getNum()
+                mEditor.putString("MyRoomNum", str)
+
+                val i = Intent(this, MenuActivity::class.java)
+                startActivity(i)
+                overridePendingTransition(R.anim.fade_in_out, R.anim.fade_in_out)
+                mEditor.apply()
+            }
+        }catch (throwable: Throwable){
+            if (throwable is HttpException) {
+                println("throwable ------------ ${throwable.code()}")
+            }
+        }
     }
 
     fun getStatusBarHeight(context: Context): Int {
