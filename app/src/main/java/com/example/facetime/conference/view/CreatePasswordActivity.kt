@@ -18,6 +18,16 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.*
 import com.example.facetime.R
+import com.example.facetime.conference.api.RoomApi
+import com.example.facetime.util.RetrofitUtils
+import com.umeng.socialize.utils.DeviceConfigInternal.context
+import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx2.awaitSingle
+import okhttp3.MediaType
+import okhttp3.RequestBody
+import org.json.JSONObject
 
 
 open class CreatePasswordActivity : AppCompatActivity() {
@@ -27,9 +37,16 @@ open class CreatePasswordActivity : AppCompatActivity() {
 
     private lateinit var editText1:EditText
 
+    private lateinit var roomApi: RoomApi
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+        roomApi = RetrofitUtils(this!!, "https://192.168.3.50:9999/")
+            .create(RoomApi::class.java)
+
 
         verticalLayout {
 
@@ -223,11 +240,59 @@ open class CreatePasswordActivity : AppCompatActivity() {
 
     fun creatRoom(){
 
+        val roomName=intent.getStringExtra("RoomName")
+        val password=editText1.text.toString()
+
+
+        val request = JSONObject()
+
+        request.put("name", roomName)
+        request.put("password", password)
+
+        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), request.toString())
+
+
+//
+//        var requestAddress = RetrofitUtils(this!!, "https://192.168.3.50:9999/")
+//        requestAddress.create(RoomApi::class.java)
+//            .createRoom(
+//                body
+//            )
+//            .subscribeOn(Schedulers.io()) //被观察者 开子线程请求网络
+//            .observeOn(AndroidSchedulers.mainThread()) //观察者 切换到主线程
+//            .subscribe({
+//                println("取消搜藏成功")
+//                println(it.toString())
+//
+//            }, {
+//                //失败
+//                println("取消搜藏失败")
+//                println(it)
+//
+//            })
+
+
+        GlobalScope.launch {
+
+
+           var result= roomApi.createRoom(body)
+               .subscribeOn(Schedulers.io())
+               .awaitSingle()
+
+            println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+            println(result)
+
+
+        }
+
+
+
+
         var intentNow =
             Intent(this@CreatePasswordActivity, SuccessActivity::class.java)
 
-        intentNow.putExtra("RoomName",intent.getStringExtra("RoomName"))
-        intentNow.putExtra("Password",editText1.text.toString())
+        intentNow.putExtra("RoomName",roomName)
+        intentNow.putExtra("Password",password)
         startActivity(intentNow)
 
         overridePendingTransition(

@@ -58,11 +58,12 @@ class RetrofitUtils(
                         "Bearer ${accessToken.replace("\"","")}")
                 }
 
-//                if(accessToken.isBlank()){
-//                    request.addHeader(
-//                        "Authorization",
-//                        "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhMjFjMzY2YS0xMDc4LTRhZWItOWRjMC04YmE5MmIzMzZhZDAiLCJ1c2VybmFtZSI6Ijg2MTUxMTAzMTcwMjciLCJ0aW1lc3RhbXAiOjE1NjQwMjI3MDEwNzMsImRldmljZVR5cGUiOiJBTkRST0lEIiwiaWF0IjoxNTY0MDIyNzAxfQ.eUPhccetHnmsJw2b-iP6IZdbJBOogYj43jIiXF8t8kUhmThBpPLmKuM1F_Jdq51vPAH7jogrN9GsXE8IhhcpYwefVCAbNkaKzn-EeF5VmavHCurZhVZ9vvg8fOdcOOkdEncrW3nvfgK9LmpRYONywvxYdzk6TEvJp9v-NnrfqWY2KVRLkur_SwLtaiG_rmrLbvtmfYkkT6Tg_sZl5RZ9gVuwUOu1YHgpFGF09OUJHTRzt_llNtnSXrI23fc1T5FgzxcpOILXsQWZ52G5N3GT7BzVBxOanXVbNTN6LAaY_dzhTeU1NsaRZ48-e3pe0zzohej-rm7zj0YKBrxmtmnDeA")
-////                }
+                if(accessToken!=null && accessToken.isBlank()){
+                    request.addHeader(
+                        "Authorization",
+                        "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI1ZmEyYTYxOC04ZWRhLTQ2MmItOWQ2OC0wYWViM2VlYzc3MWMiLCJ1c2VybmFtZSI6Ijg2MTgwMTE0NTAxNjkiLCJ0aW1lc3RhbXAiOjE1NzMyMDgwNzUxMTcsImRldmljZVR5cGUiOiJBTkRST0lEIiwiaWF0IjoxNTczMjA4MDc1fQ.rO63KA0-Rgr1IUyKA0fGYoi4_cUJ2WSki0iP-XBnswGJVN00_YFeBIaK_53e46YvzJ3Qrt2hwhjEjk2QiUUmfarWKGOVPbNjghkLOTwUTQthyaVAgsGUleXCe3YFn0qzN9UXlq1BP4iXMGjMiVIntMevFiVI-bJMjI7Dyg2OJzSUhYY-82OLP0o3Da9PWmv1ZXw3hLejxcJBu70shirTb5kLlYZ_as3kqflklhO5MUhgBJS8zvG1QVHFb6_MKMhA5jOXikL2JB7nL8DiCZ8XJ0F3sL_hC46iy-ewA9G_33fv-xywPuELt2I1zDQlCKmQTIotRB68bS2RkBXxwFl4Rg"
+                    )
+                }
 
 
 
