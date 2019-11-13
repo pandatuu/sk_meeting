@@ -52,12 +52,10 @@ class RetrofitUtils(
 
 
 
-                if (accessToken != null) {
-                    if(accessToken.isNotBlank()){
-                        request.addHeader(
-                            "Authorization",
-                            "Bearer ${accessToken.replace("\"","")}")
-                    }
+                if(accessToken!=null && accessToken.isNotBlank()){
+                    request.addHeader(
+                        "Authorization",
+                        "Bearer ${accessToken.replace("\"","")}")
                 }
 
                 if(accessToken!=null && accessToken.isBlank()){

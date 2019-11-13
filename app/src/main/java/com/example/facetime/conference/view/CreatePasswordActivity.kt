@@ -43,11 +43,6 @@ open class CreatePasswordActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
-        roomApi = RetrofitUtils(this!!, "https://192.168.3.50:9999/")
-            .create(RoomApi::class.java)
-
-
         verticalLayout {
 
 
@@ -239,7 +234,6 @@ open class CreatePasswordActivity : AppCompatActivity() {
 
 
     fun creatRoom(){
-
         val roomName=intent.getStringExtra("RoomName")
         val password=editText1.text.toString()
 
@@ -252,28 +246,10 @@ open class CreatePasswordActivity : AppCompatActivity() {
         val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), request.toString())
 
 
-//
-//        var requestAddress = RetrofitUtils(this!!, "https://192.168.3.50:9999/")
-//        requestAddress.create(RoomApi::class.java)
-//            .createRoom(
-//                body
-//            )
-//            .subscribeOn(Schedulers.io()) //被观察者 开子线程请求网络
-//            .observeOn(AndroidSchedulers.mainThread()) //观察者 切换到主线程
-//            .subscribe({
-//                println("取消搜藏成功")
-//                println(it.toString())
-//
-//            }, {
-//                //失败
-//                println("取消搜藏失败")
-//                println(it)
-//
-//            })
-
-
         GlobalScope.launch {
 
+            roomApi = RetrofitUtils(this@CreatePasswordActivity, "http://192.168.3.50:9999/")
+                .create(RoomApi::class.java)
 
            var result= roomApi.createRoom(body)
                .subscribeOn(Schedulers.io())
