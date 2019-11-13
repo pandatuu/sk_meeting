@@ -26,8 +26,8 @@ class RetrofitUtils(
 
     }
 
-    fun getToken():String{
-        return mPerferences.getString("token", "").toString()
+    fun getToken():String?{
+        return  mPerferences.getString("token", "")
     }
 
 

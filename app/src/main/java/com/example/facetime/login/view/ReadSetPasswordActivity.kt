@@ -18,7 +18,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.fastjson.JSON
 import com.example.facetime.R
-import com.example.facetime.api.Api
+import com.example.facetime.api.LoginApi
 import com.example.facetime.util.DialogUtils
 import com.example.facetime.util.MimeType
 import com.example.facetime.util.MyDialog
@@ -47,12 +47,16 @@ class ReadSetPasswordActivity : AppCompatActivity() {
     lateinit var phoneNumber: TextView
     private lateinit var toolbar1: Toolbar
     private var sendBool = false
-    var thisDialog: MyDialog?=null
+    var thisDialog: MyDialog? = null
     var mHandler = Handler()
     var r: Runnable = Runnable {
         //do something
-        if (thisDialog?.isShowing!!){
-            val toast = Toast.makeText(this@ReadSetPasswordActivity, "ネットワークエラー", Toast.LENGTH_SHORT)//网路出现问题
+        if (thisDialog?.isShowing!!) {
+            val toast = Toast.makeText(
+                this@ReadSetPasswordActivity,
+                "ネットワークエラー",
+                Toast.LENGTH_SHORT
+            )//网路出现问题
             toast.setGravity(Gravity.CENTER, 0, 0)
             toast.show()
         }
@@ -417,7 +421,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
     }
 
     fun next() {
-        thisDialog=DialogUtils.showLoading(this@ReadSetPasswordActivity)
+        thisDialog = DialogUtils.showLoading(this@ReadSetPasswordActivity)
         mHandler.postDelayed(r, 12000)
         val res = determinePhone()
         val phone = telephone.text.toString().trim()
@@ -442,13 +446,9 @@ class ReadSetPasswordActivity : AppCompatActivity() {
             toast("请输入正确的手机号码")
             return
         }
-        GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT){
-            //校验
-            val bool = validateVerificationCode(phone, phoneNumber.text.toString(), code)
-            if(bool){
-                //更新密码
-                updatePassword(phoneNumber.text.toString(), phone, code, mypassword)
-            }
+        GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+            //更新密码
+            updatePassword(phoneNumber.text.toString().substring(1), phone, code, mypassword)
         }
     }
 
@@ -461,15 +461,16 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                 "phone" to phoneNum,
                 "country" to country,
                 "deviceType" to "ANDROID",
-                "codeType" to "USERNAME",
+                "codeType" to "LOGIN",
                 "manufacturer" to manufacturer,
                 "deviceModel" to deviceModel
             )
             val userJson = JSON.toJSONString(params)
             val body = RequestBody.create(MimeType.APPLICATION_JSON, userJson)
 
-            val retrofitUils = RetrofitUtils(this@ReadSetPasswordActivity, "https://apass.sklife.jp/")
-            val it = retrofitUils.create(Api::class.java)
+            val retrofitUils =
+                RetrofitUtils(this@ReadSetPasswordActivity, "https://apass.sklife.jp/")
+            val it = retrofitUils.create(LoginApi::class.java)
                 .sendvCode(body)
                 .subscribeOn(Schedulers.io())
                 .awaitSingle()
@@ -500,45 +501,50 @@ class ReadSetPasswordActivity : AppCompatActivity() {
     }
 
     //校验验证码
-    private suspend fun validateVerificationCode(phoneNum: String, country: String, verifyCode: String): Boolean {
-        try {
-            val params = mapOf(
-                "phone" to phoneNum,
-                "country" to country,
-                "code" to verifyCode
-            )
-            val userJson = JSON.toJSONString(params)
-            val body = RequestBody.create(MimeType.APPLICATION_JSON, userJson)
+//    private suspend fun validateVerificationCode(phoneNum: String, country: String, verifyCode: String): Boolean {
+//        try {
+//            val params = mapOf(
+//                "phone" to phoneNum,
+//                "country" to country,
+//                "code" to verifyCode
+//            )
+//            val userJson = JSON.toJSONString(params)
+//            val body = RequestBody.create(MimeType.APPLICATION_JSON, userJson)
+//
+//            val retrofitUils = RetrofitUtils(this@ReadSetPasswordActivity, "https://apass.sklife.jp/")
+//            val it = retrofitUils.create(LoginApi::class.java)
+//                .validateCode(body)
+//                .subscribeOn(Schedulers.io())
+//                .awaitSingle()
+//
+//            if (it.code() in 200..299) {
+//                val toast = Toast.makeText(applicationContext, "認証コード確認成功", Toast.LENGTH_SHORT)
+//                toast.setGravity(Gravity.CENTER, 0, 0)
+//                toast.show()
+//                return true
+//            }
+//            if (it.code() == 406) {
+////                DialogUtils.hideLoading(thisDialog)
+//                val toast = Toast.makeText(applicationContext, "認証コード取得失敗", Toast.LENGTH_SHORT)
+//                toast.setGravity(Gravity.CENTER, 0, 0)
+//                toast.show()
+//                return false
+//            }
+//            return false
+//        } catch (throwable: Throwable) {
+//            if (throwable is HttpException) {
+//                println("throwable ------------ ${throwable.code()}")
+//            }
+//            return false
+//        }
+//    }
 
-            val retrofitUils = RetrofitUtils(this@ReadSetPasswordActivity, "https://apass.sklife.jp/")
-            val it = retrofitUils.create(Api::class.java)
-                .validateCode(body)
-                .subscribeOn(Schedulers.io())
-                .awaitSingle()
-
-            if (it.code() in 200..299) {
-                val toast = Toast.makeText(applicationContext, "認証コード確認成功", Toast.LENGTH_SHORT)
-                toast.setGravity(Gravity.CENTER, 0, 0)
-                toast.show()
-                return true
-            }
-            if (it.code() == 406) {
-//                DialogUtils.hideLoading(thisDialog)
-                val toast = Toast.makeText(applicationContext, "認証コード取得失敗", Toast.LENGTH_SHORT)
-                toast.setGravity(Gravity.CENTER, 0, 0)
-                toast.show()
-                return false
-            }
-            return false
-        } catch (throwable: Throwable) {
-            if (throwable is HttpException) {
-                println("throwable ------------ ${throwable.code()}")
-            }
-            return false
-        }
-    }
-
-    private suspend fun updatePassword(country: String,phone: String, code: String, password: String){
+    private suspend fun updatePassword(
+        country: String,
+        phone: String,
+        code: String,
+        password: String
+    ) {
         try {
             val params = mapOf(
                 "country" to country,
@@ -550,31 +556,35 @@ class ReadSetPasswordActivity : AppCompatActivity() {
 
             val userJson = JSON.toJSONString(params)
 
-            val body = RequestBody.create(MimeType.APPLICATION_JSON,userJson)
+            val body = RequestBody.create(MimeType.APPLICATION_JSON, userJson)
 
-            var retrofitUils = RetrofitUtils(this@ReadSetPasswordActivity, "")
+            var retrofitUils = RetrofitUtils(this@ReadSetPasswordActivity, "https://apass.sklife.jp/")
 
-            val it = retrofitUils.create(Api::class.java)
+            val it = retrofitUils.create(LoginApi::class.java)
                 .findPassword(body)
                 .subscribeOn(Schedulers.io()) //观察者 切换到主线程
                 .awaitSingle()
 
-            if(it.code() in 200..299){
+            if (it.code() in 200..299) {
                 DialogUtils.hideLoading(thisDialog)
 
                 startActivity<StartActivity>()
-                this@ReadSetPasswordActivity.overridePendingTransition(R.anim.right_in, R.anim.left_out)
+                this@ReadSetPasswordActivity.overridePendingTransition(
+                    R.anim.right_in,
+                    R.anim.left_out
+                )
             }
 
             DialogUtils.hideLoading(thisDialog)
-        }catch (throwable: Throwable){
-            if(throwable is HttpException){
+        } catch (throwable: Throwable) {
+            if (throwable is HttpException) {
                 println("throwable ------------ ${throwable.code()}")
             }
 
             DialogUtils.hideLoading(thisDialog)
         }
     }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (event != null) {
             if (keyCode == KeyEvent.KEYCODE_BACK) {

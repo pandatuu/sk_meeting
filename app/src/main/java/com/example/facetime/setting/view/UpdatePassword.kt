@@ -1,11 +1,9 @@
 package com.example.facetime.setting.view
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.text.InputType
 import android.view.Gravity
 import android.view.KeyEvent
@@ -18,7 +16,7 @@ import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.fastjson.JSON
 import com.example.facetime.R
-import com.example.facetime.api.Api
+import com.example.facetime.api.LoginApi
 import com.example.facetime.util.MimeType
 import com.example.facetime.util.RetrofitUtils
 import com.jaeger.library.StatusBarUtil
@@ -211,7 +209,7 @@ class UpdatePassword : AppCompatActivity() {
             val body = RequestBody.create(MimeType.APPLICATION_JSON, userJson)
 
             val retrofitUils = RetrofitUtils(this@UpdatePassword, "")
-            val it = retrofitUils.create(Api::class.java)
+            val it = retrofitUils.create(LoginApi::class.java)
                 .updatePassword(body)
                 .subscribeOn(Schedulers.io())
                 .awaitSingle()

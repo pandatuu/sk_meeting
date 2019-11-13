@@ -197,12 +197,13 @@ open class CreateRoomNameActivity : AppCompatActivity() {
 
                         }else{
 
-//                          var intent =
-//                                Intent(this@CreateRoomNameActivity, CreatePasswordActivity::class.java)
+                          var intent =
+                                Intent(this@CreateRoomNameActivity, CreatePasswordActivity::class.java)
+
                             createRoom()
 
-                            var intent =
-                                Intent(this@CreateRoomNameActivity, SuccessActivity::class.java)
+//                            var intent =
+//                                Intent(this@CreateRoomNameActivity, SuccessActivity::class.java)
 
 
                             intent.putExtra("RoomName",editText.text.toString())
@@ -270,13 +271,9 @@ open class CreateRoomNameActivity : AppCompatActivity() {
 
         val RoomName = editText.text.toString()
 
-        println("RoomName")
-        println(RoomName)
         var mEditor: SharedPreferences.Editor = ms.edit()
         mEditor.putString("MyRoomName", RoomName)
         mEditor.commit()
-
-        toast("xxxxxxxxxxxxxxxxxxxxx")
     }
 
 

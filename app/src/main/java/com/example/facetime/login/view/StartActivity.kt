@@ -19,9 +19,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.fastjson.JSON
 import com.example.facetime.R
-import com.example.facetime.api.Api
-import com.example.facetime.conference.MenuActivity
-import com.example.facetime.conference.RegisterActivity
+import com.example.facetime.api.LoginApi
 import com.example.facetime.util.RetrofitUtils
 import com.example.facetime.conference.view.MenuActivity
 import com.example.facetime.login.fragment.UserAgreement
@@ -448,7 +446,7 @@ class StartActivity : AppCompatActivity() {
             val retrofitUils = RetrofitUtils(this@StartActivity, "https://apass.sklife.jp/")
 
             //   登录完成,取到token
-            val it = retrofitUils.create(Api::class.java)
+            val it = retrofitUils.create(LoginApi::class.java)
                 .userLogin(body)
                 .subscribeOn(Schedulers.io()) //被观察者 开子线程请求网络
                 .awaitSingle()
