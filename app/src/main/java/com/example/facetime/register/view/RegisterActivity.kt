@@ -1,4 +1,4 @@
-package com.example.facetime.conference
+package com.example.facetime.register.view
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -15,7 +15,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
-import com.example.facetime.login.StartActivity
 import com.google.i18n.phonenumbers.NumberParseException
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.jaeger.library.StatusBarUtil

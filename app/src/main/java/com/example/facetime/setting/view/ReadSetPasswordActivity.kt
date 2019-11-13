@@ -1,4 +1,4 @@
-package com.example.facetime.login
+package com.example.facetime.setting.view
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -13,7 +13,6 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.LinearLayout.HORIZONTAL
 import android.widget.TextView
 import android.widget.Toolbar
@@ -25,7 +24,6 @@ import com.jaeger.library.StatusBarUtil
 import com.sahooz.library.Country
 import com.sahooz.library.PickActivity
 import org.jetbrains.anko.*
-import org.jetbrains.anko.sdk25.coroutines.onClick
 
 class ReadSetPasswordActivity : AppCompatActivity() {
     private var runningDownTimer: Boolean = false

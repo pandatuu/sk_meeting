@@ -1,4 +1,4 @@
-package com.example.facetime.login
+package com.example.facetime.login.view
 
 import android.app.Activity
 import android.content.Context
@@ -7,7 +7,6 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
-import android.os.Handler
 import android.preference.PreferenceManager
 import android.text.InputType
 import android.text.method.PasswordTransformationMethod
@@ -18,17 +17,16 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
-import com.example.facetime.conference.MenuActivity
-import com.example.facetime.conference.RegisterActivity
-import com.example.facetime.util.DialogUtils
-import com.example.facetime.util.MyDialog
+import com.example.facetime.conference.view.MenuActivity
+import com.example.facetime.setting.view.ReadSetPasswordActivity
+import com.example.facetime.login.fragment.UserAgreement
+import com.example.facetime.register.view.RegisterActivity
 import com.google.i18n.phonenumbers.NumberParseException
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.jaeger.library.StatusBarUtil
 import com.sahooz.library.Country
 import com.sahooz.library.PickActivity
 import org.jetbrains.anko.*
-import java.lang.Thread.sleep
 
 
 class StartActivity : AppCompatActivity() {

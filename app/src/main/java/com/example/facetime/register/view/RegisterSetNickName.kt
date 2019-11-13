@@ -1,4 +1,4 @@
-package com.example.facetime.conference
+package com.example.facetime.register.view
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -15,19 +15,19 @@ import android.widget.LinearLayout
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
+import com.example.facetime.login.view.StartActivity
 import com.jaeger.library.StatusBarUtil
 import org.jetbrains.anko.*
 
-class SetServiceAddr : AppCompatActivity() {
+class RegisterSetNickName : AppCompatActivity() {
 
-    lateinit var address: EditText
-    private lateinit var toolbar1: Toolbar
+    private lateinit var nickName: EditText
     lateinit var saveTool: SharedPreferences
+    private lateinit var toolbar1: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        saveTool = PreferenceManager.getDefaultSharedPreferences(this@SetServiceAddr)
+        saveTool = PreferenceManager.getDefaultSharedPreferences(this@RegisterSetNickName)
 
         frameLayout {
             backgroundColor = Color.TRANSPARENT
@@ -62,8 +62,8 @@ class SetServiceAddr : AppCompatActivity() {
                 }.lparams() {
                     weight = 1f
                     width = dip(0)
-                    height = dip(65 - getStatusBarHeight(this@SetServiceAddr))
-                    topMargin = dip(getStatusBarHeight(this@SetServiceAddr))
+                    height = dip(65 - getStatusBarHeight(this@RegisterSetNickName))
+                    topMargin = dip(getStatusBarHeight(this@RegisterSetNickName))
                 }
             }.lparams() {
                 width = matchParent
@@ -72,7 +72,7 @@ class SetServiceAddr : AppCompatActivity() {
             linearLayout {
                 orientation = LinearLayout.VERTICAL
                 textView {
-                    text = "设置服务器地址"
+                    text = "设置昵称"
                     textSize = 21f
                     typeface = Typeface.DEFAULT_BOLD
                     textColor = Color.BLACK
@@ -81,8 +81,8 @@ class SetServiceAddr : AppCompatActivity() {
                 }
                 relativeLayout {
                     backgroundResource = R.drawable.border
-                    address = editText {
-                        hint = "请输入地址"
+                    nickName = editText {
+                        hint = "请输入昵称"
                         singleLine = true
                         padding = dip(5)
                         setHintTextColor(Color.GRAY)
@@ -107,23 +107,24 @@ class SetServiceAddr : AppCompatActivity() {
                 }
                 button {
                     gravity = Gravity.CENTER
-                    text = "完成"
+                    text = "完成注册"
                     textSize = 16f
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
                     setOnClickListener {
                         closeFocusjianpan()
-                        if (address.text.toString() != "") {
-                            val mEditor: SharedPreferences.Editor = saveTool.edit()
-                            mEditor.putString("serviceAdd", address.text.toString())
-                            mEditor.commit()
-                            finish()
-                            overridePendingTransition(
-                                R.anim.left_in,
-                                R.anim.right_out
-                            )
+                        if (nickName.text.toString() != "") {
+                            if (nickName.text.length < 10) {
+                                startActivity<StartActivity>()
+                                overridePendingTransition(
+                                    R.anim.right_in,
+                                    R.anim.left_out
+                                )
+                            } else {
+                                toast("限制字数长度10以内")
+                            }
                         } else {
-                            toast("请输入地址")
+                            toast("请输入名字")
                         }
                     }
                 }.lparams(matchParent, dip(50)) {
@@ -138,7 +139,7 @@ class SetServiceAddr : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         setActionBar(toolbar1)
-        StatusBarUtil.setTranslucentForImageView(this@SetServiceAddr, 0, toolbar1)
+        StatusBarUtil.setTranslucentForImageView(this@RegisterSetNickName, 0, toolbar1)
         getWindow().getDecorView()
             .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
         toolbar1.setNavigationOnClickListener {
@@ -164,9 +165,23 @@ class SetServiceAddr : AppCompatActivity() {
 
     private fun closeFocusjianpan() {
         //关闭ｅｄｉｔ光标
-        address.clearFocus()
+        nickName.clearFocus()
         //关闭键盘事件
         val phone = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        phone.hideSoftInputFromWindow(address.windowToken, 0)
+        phone.hideSoftInputFromWindow(nickName.windowToken, 0)
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (event != null) {
+            if(keyCode == KeyEvent.KEYCODE_BACK ){
+                finish()
+                overridePendingTransition(
+                    R.anim.left_in,
+                    R.anim.right_out
+                )
+                return true
+            }
+        }
+        return super.onKeyDown(keyCode, event)
     }
 }

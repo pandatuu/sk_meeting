@@ -1,8 +1,7 @@
-package com.example.facetime.conference
+package com.example.facetime.conference.view
 
 
 import android.Manifest
-import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
@@ -14,30 +13,28 @@ import androidx.appcompat.app.AppCompatActivity
 import com.jaeger.library.StatusBarUtil
 import org.jetbrains.anko.*
 
-import com.facebook.react.modules.core.PermissionListener
 import org.jitsi.meet.sdk.*
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.Typeface
 import android.os.Build
 import android.preference.PreferenceManager
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.KeyEvent
 import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentTransaction
 import com.example.facetime.R
+import com.example.facetime.conference.fragment.BackgroundFragment
+import com.example.facetime.conference.fragment.ShareFragment
 import com.twitter.sdk.android.tweetcomposer.TweetComposer
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.socialize.ShareAction
 import com.umeng.socialize.bean.SHARE_MEDIA
-import org.jetbrains.anko.sdk25.coroutines.onClick
-import java.net.MalformedURLException
 import java.net.URL
 
 
-open class SuccessActivity : AppCompatActivity(),ShareFragment.SharetDialogSelect,BackgroundFragment.ClickBack {
+open class SuccessActivity : AppCompatActivity(),
+    ShareFragment.SharetDialogSelect,
+    BackgroundFragment.ClickBack {
 
 
     private lateinit var toolbar1: Toolbar

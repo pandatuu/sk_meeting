@@ -1,4 +1,4 @@
-package com.example.facetime.conference
+package com.example.facetime.setting.view
 
 import android.content.Context
 import android.graphics.Color
@@ -17,7 +17,7 @@ import com.example.facetime.R
 import com.jaeger.library.StatusBarUtil
 import org.jetbrains.anko.*
 
-class RegisterSetPassword : AppCompatActivity() {
+class UpdatePassword : AppCompatActivity() {
 
     private lateinit var passwordFirst: EditText
     private lateinit var passwordAgain: EditText
@@ -59,8 +59,8 @@ class RegisterSetPassword : AppCompatActivity() {
                 }.lparams() {
                     weight = 1f
                     width = dip(0)
-                    height = dip(65 - getStatusBarHeight(this@RegisterSetPassword))
-                    topMargin = dip(getStatusBarHeight(this@RegisterSetPassword))
+                    height = dip(65 - getStatusBarHeight(this@UpdatePassword))
+                    topMargin = dip(getStatusBarHeight(this@UpdatePassword))
                 }
             }.lparams() {
                 width = matchParent
@@ -69,7 +69,7 @@ class RegisterSetPassword : AppCompatActivity() {
             linearLayout {
                 orientation = LinearLayout.VERTICAL
                 textView {
-                    text = "设置密码"
+                    text = "修改密码"
                     textSize = 21f
                     typeface = Typeface.DEFAULT_BOLD
                     textColor = Color.BLACK
@@ -81,9 +81,9 @@ class RegisterSetPassword : AppCompatActivity() {
                     passwordFirst = editText {
                         hint = "请输入密码"
                         singleLine = true
-                        padding = dip(5)
                         setHintTextColor(Color.GRAY)
                         textColor = Color.BLACK
+                        padding = dip(5)
                         backgroundColor = Color.TRANSPARENT
                         inputType =
                             InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
@@ -121,7 +121,7 @@ class RegisterSetPassword : AppCompatActivity() {
                 }
                 button {
                     gravity = Gravity.CENTER
-                    text = "下一步"
+                    text = "完成"
                     textSize = 16f
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
@@ -136,10 +136,10 @@ class RegisterSetPassword : AppCompatActivity() {
                                 if (passwordAgain.text.toString() != passwordFirst.text.toString()) {
                                     toast("两次密码不匹配")
                                 } else {
-                                    startActivity<RegisterSetNickName>()
+                                    finish()
                                     overridePendingTransition(
-                                        R.anim.right_in,
-                                        R.anim.left_out
+                                        R.anim.left_in,
+                                        R.anim.right_out
                                     )
                                 }
                             }
@@ -157,7 +157,7 @@ class RegisterSetPassword : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         setActionBar(toolbar1)
-        StatusBarUtil.setTranslucentForImageView(this@RegisterSetPassword, 0, toolbar1)
+        StatusBarUtil.setTranslucentForImageView(this@UpdatePassword, 0, toolbar1)
         getWindow().getDecorView()
             .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
         toolbar1.setNavigationOnClickListener {
@@ -188,21 +188,6 @@ class RegisterSetPassword : AppCompatActivity() {
         //关闭键盘事件
         val phone = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         phone.hideSoftInputFromWindow(passwordFirst.windowToken, 0)
-        val code = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        code.hideSoftInputFromWindow(passwordAgain.windowToken, 0)
-    }
-
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (event != null) {
-            if(keyCode == KeyEvent.KEYCODE_BACK ){
-                finish()
-                overridePendingTransition(
-                    R.anim.left_in,
-                    R.anim.right_out
-                )
-                return true
-            }
-        }
-        return super.onKeyDown(keyCode, event)
+        phone.hideSoftInputFromWindow(passwordAgain.windowToken, 0)
     }
 }

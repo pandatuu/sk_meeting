@@ -1,4 +1,4 @@
-package com.example.facetime.login
+package com.example.facetime.setting.view
 
 import android.content.Context
 import android.graphics.Color
@@ -9,10 +9,10 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
+import com.example.facetime.login.view.StartActivity
 import com.jaeger.library.StatusBarUtil
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick

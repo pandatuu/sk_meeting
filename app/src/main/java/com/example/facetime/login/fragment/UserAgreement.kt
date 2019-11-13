@@ -1,4 +1,4 @@
-package com.example.facetime.login
+package com.example.facetime.login.fragment
 
 import android.graphics.Bitmap
 import android.os.Bundle

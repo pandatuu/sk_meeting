@@ -1,7 +1,6 @@
-package com.example.facetime.conference
+package com.example.facetime.conference.view
 
 
-import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
@@ -13,38 +12,32 @@ import androidx.appcompat.app.AppCompatActivity
 import com.jaeger.library.StatusBarUtil
 import org.jetbrains.anko.*
 
-import com.facebook.react.modules.core.PermissionListener
-import org.jitsi.meet.sdk.*
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.Typeface
-import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.KeyEvent
 import android.widget.*
 import com.example.facetime.R
 
 
-open class CreateRoomNameActivity : AppCompatActivity() {
+open class CreatePasswordActivity : AppCompatActivity() {
 
 
     private lateinit var toolbar1: Toolbar
-    private lateinit var editText: EditText
 
-    lateinit var ms: SharedPreferences
+    private lateinit var editText1:EditText
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        ms = PreferenceManager.getDefaultSharedPreferences(this)
-
         verticalLayout {
 
+
             setOnClickListener {
-                closeSoftKeyboard(editText)
+                closeSoftKeyboard(editText1)
             }
+
 
 
             backgroundColor = Color.parseColor("#f2f2f2")
@@ -67,18 +60,18 @@ open class CreateRoomNameActivity : AppCompatActivity() {
                                 R.anim.right_out
                             )
                         }
-                        text = "返回"
-                        gravity = Gravity.CENTER
+                        text="返回"
+                        gravity=Gravity.CENTER
 
-                    }.lparams() {
-                        height = matchParent
-                        width = wrapContent
+                    }.lparams(){
+                        height= matchParent
+                        width= wrapContent
                     }
                 }.lparams() {
                     weight = 1f
                     width = dip(0)
-                    height = dip(65 - getStatusBarHeight(this@CreateRoomNameActivity))
-                    topMargin = dip(getStatusBarHeight(this@CreateRoomNameActivity))
+                    height = dip(65 - getStatusBarHeight(this@CreatePasswordActivity))
+                    topMargin=dip(getStatusBarHeight(this@CreatePasswordActivity))
                 }
             }.lparams() {
                 width = matchParent
@@ -92,7 +85,8 @@ open class CreateRoomNameActivity : AppCompatActivity() {
             verticalLayout {
                 gravity = Gravity.CENTER_HORIZONTAL
                 textView {
-                    text = "为您的会议室取一个别致的名称吧，同事们可以通过查找会议室名称来加入哦~"
+                    text =
+                           "需要为您的会议室设置一个密码吗？这样您在会议时可以防止别人的打扰！如不需要，可直接点击创建"
                     textSize = 20f
                     textColor = Color.BLACK
                     typeface = Typeface.DEFAULT_BOLD
@@ -107,22 +101,22 @@ open class CreateRoomNameActivity : AppCompatActivity() {
                 linearLayout() {
 
                     setOnClickListener {
-                        editText.requestFocus()
-                        showSoftKeyboard(editText)
+                        editText1.requestFocus()
+                        showSoftKeyboard(editText1)
 
                     }
 
                     gravity = Gravity.CENTER
-                    backgroundResource = R.drawable.border
+                    backgroundResource=R.drawable.border
 
 
-                    editText = editText() {
+                    editText1 = editText() {
 
                         textColor = Color.BLACK
                         setHintTextColor(Color.GRAY)
-                        hint = "请输入会议名称"
+                        hint = "请输入会议密码"
                         imeOptions = IME_ACTION_DONE
-                        backgroundColor = Color.TRANSPARENT
+                        backgroundColor=Color.TRANSPARENT
                         singleLine = true
 
                         addTextChangedListener(object : TextWatcher {
@@ -146,7 +140,7 @@ open class CreateRoomNameActivity : AppCompatActivity() {
 
                             override fun afterTextChanged(s: Editable?) {
                                 if (text.toString() == "") {
-                                    hint = "请输入会议名称"
+                                    hint = "请输入会议密码"
                                 } else {
                                     hint = ""
                                 }
@@ -177,45 +171,37 @@ open class CreateRoomNameActivity : AppCompatActivity() {
 
 
 
+
+
+
+
+
+
+
                 textView {
-                    text = "下一步"
+                    text = "创建"
                     textSize = 16f
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
                     gravity = Gravity.CENTER
 
-
                     setOnClickListener {
 
-                        if(editText.text.toString()==""){
-
-                            val toast = Toast.makeText(
-                                applicationContext,
-                                "请输入会议名称",
-                                Toast.LENGTH_SHORT
-                            )
-
-                            toast.setGravity(Gravity.CENTER, 0, 0)
-                            toast.show()
-
-                        }else{
-
-//                          var intent =
-//                                Intent(this@CreateRoomNameActivity, CreatePasswordActivity::class.java)
-                            createRoom()
-
-                            var intent =
-                                Intent(this@CreateRoomNameActivity, SuccessActivity::class.java)
+                        var intentNow =
+                            Intent(this@CreatePasswordActivity, SuccessActivity::class.java)
 
 
-                            intent.putExtra("RoomName",editText.text.toString())
-                            startActivityForResult(intent, 4)
-                            overridePendingTransition(
-                                R.anim.right_in,
-                                R.anim.left_out
-                            )
-                        }
+                        intentNow.putExtra("RoomName",intent.getStringExtra("RoomName"))
+                        intentNow.putExtra("Password",editText1.text.toString())
+                        startActivityForResult(intentNow, 5)
+                        overridePendingTransition(
+                            R.anim.right_in,
+                            R.anim.left_out
+                        )
                     }
+
+
+
 
                 }.lparams() {
                     height = dip(50)
@@ -227,10 +213,13 @@ open class CreateRoomNameActivity : AppCompatActivity() {
                 }
 
 
+
+
+
             }.lparams() {
                 topMargin = dip(20)
-                rightMargin = dip(15)
-                leftMargin = dip(15)
+                rightMargin=dip(15)
+                leftMargin=dip(15)
                 height = wrapContent
                 width = matchParent
             }
@@ -241,7 +230,7 @@ open class CreateRoomNameActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         setActionBar(toolbar1)
-        StatusBarUtil.setTranslucentForImageView(this@CreateRoomNameActivity, 0, toolbar1)
+        StatusBarUtil.setTranslucentForImageView(this@CreatePasswordActivity, 0, toolbar1)
         getWindow().getDecorView()
             .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
         toolbar1.setNavigationOnClickListener {
@@ -251,35 +240,6 @@ open class CreateRoomNameActivity : AppCompatActivity() {
                 R.anim.right_out
             )
         }
-    }
-
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-
-        if (event != null) {
-            if(keyCode == KeyEvent.KEYCODE_BACK ){
-                finish()
-                overridePendingTransition(
-                    R.anim.left_in,
-                    R.anim.right_out
-                )
-                return true
-            }
-        }
-        return super.onKeyDown(keyCode, event)
-    }
-
-
-    fun createRoom(){
-
-        val RoomName = editText.text.toString()
-
-        println("RoomName")
-        println(RoomName)
-        var mEditor: SharedPreferences.Editor = ms.edit()
-        mEditor.putString("MyRoomName", RoomName)
-        mEditor.commit()
-
-        toast("xxxxxxxxxxxxxxxxxxxxx")
     }
 
 
