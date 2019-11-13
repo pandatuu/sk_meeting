@@ -187,17 +187,10 @@ open class CreatePasswordActivity : AppCompatActivity() {
 
                     setOnClickListener {
 
-                        var intentNow =
-                            Intent(this@CreatePasswordActivity, SuccessActivity::class.java)
+
+                        creatRoom()
 
 
-                        intentNow.putExtra("RoomName",intent.getStringExtra("RoomName"))
-                        intentNow.putExtra("Password",editText1.text.toString())
-                        startActivityForResult(intentNow, 5)
-                        overridePendingTransition(
-                            R.anim.right_in,
-                            R.anim.left_out
-                        )
                     }
 
 
@@ -226,6 +219,26 @@ open class CreatePasswordActivity : AppCompatActivity() {
         }
     }
 
+
+
+    fun creatRoom(){
+
+        var intentNow =
+            Intent(this@CreatePasswordActivity, SuccessActivity::class.java)
+
+        intentNow.putExtra("RoomName",intent.getStringExtra("RoomName"))
+        intentNow.putExtra("Password",editText1.text.toString())
+        startActivity(intentNow)
+
+        overridePendingTransition(
+            R.anim.right_in,
+            R.anim.left_out
+        )
+
+
+
+
+    }
 
     override fun onStart() {
         super.onStart()
