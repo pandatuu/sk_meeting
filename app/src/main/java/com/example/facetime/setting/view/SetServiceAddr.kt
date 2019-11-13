@@ -82,7 +82,7 @@ class SetServiceAddr : AppCompatActivity() {
                 relativeLayout {
                     backgroundResource = R.drawable.border
                     address = editText {
-                        hint = "请输入地址"
+                        hint = "https://meet.skjob.jp/"
                         singleLine = true
                         padding = dip(5)
                         setHintTextColor(Color.GRAY)
