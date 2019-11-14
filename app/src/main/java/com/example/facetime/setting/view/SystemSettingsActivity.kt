@@ -208,10 +208,9 @@ open class SystemSettingsActivity : AppCompatActivity() {
                     backgroundResource = R.drawable.bottonbg
                     gravity = Gravity.CENTER
                     setOnClickListener {
-                        thisDialog = DialogUtils.showLoading(this@SystemSettingsActivity)
-                        mHandler.postDelayed(r, 12000)
-
                         if(token != ""){
+                            thisDialog = DialogUtils.showLoading(this@SystemSettingsActivity)
+                            mHandler.postDelayed(r, 12000)
                             GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
                                 loginout()
                             }
