@@ -1,28 +1,65 @@
 package com.example.facetime.setting.view
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.os.Handler
+import android.preference.PreferenceManager
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.Toast
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
+import com.alibaba.fastjson.JSON
 import com.example.facetime.R
+import com.example.facetime.login.api.LoginApi
+import com.example.facetime.setting.api.SettingApi
+import com.example.facetime.util.DialogUtils
+import com.example.facetime.util.MimeType
+import com.example.facetime.util.MyDialog
+import com.example.facetime.util.RetrofitUtils
 import com.jaeger.library.StatusBarUtil
+import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx2.awaitSingle
+import okhttp3.RequestBody
 import org.jetbrains.anko.*
+import retrofit2.HttpException
 
 class UpdateNickName : AppCompatActivity() {
 
     lateinit var nickName: EditText
     private lateinit var toolbar1: Toolbar
+    lateinit var saveTool: SharedPreferences
+    var thisDialog: MyDialog? = null
+    var mHandler = Handler()
+    var r: Runnable = Runnable {
+        //do something
+        if (thisDialog?.isShowing!!) {
+            val toast = Toast.makeText(
+                this@UpdateNickName,
+                "ネットワークエラー",
+                Toast.LENGTH_SHORT
+            )//网路出现问题
+            toast.setGravity(Gravity.CENTER, 0, 0)
+            toast.show()
+        }
+        DialogUtils.hideLoading(thisDialog)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        saveTool = PreferenceManager.getDefaultSharedPreferences(this@UpdateNickName)
 
         frameLayout {
             backgroundColor = Color.TRANSPARENT
@@ -110,11 +147,11 @@ class UpdateNickName : AppCompatActivity() {
                         closeFocusjianpan()
                         if (nickName.text.toString() != "") {
                             if (nickName.text.length < 10) {
-                                finish()
-                                overridePendingTransition(
-                                    R.anim.left_in,
-                                    R.anim.right_out
-                                )
+                                thisDialog = DialogUtils.showLoading(this@UpdateNickName)
+                                mHandler.postDelayed(r, 12000)
+                                GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+                                    updateNickName(nickName.text.toString())
+                                }
                             } else {
                                 toast("限制字数长度10以内")
                             }
@@ -143,6 +180,47 @@ class UpdateNickName : AppCompatActivity() {
                 R.anim.left_in,
                 R.anim.right_out
             )
+        }
+    }
+
+    //　更新昵称
+    private suspend fun updateNickName(nickName: String) {
+        try {
+            val params = mapOf(
+                "nickName" to nickName
+            )
+            val userJson = JSON.toJSONString(params)
+            val body = RequestBody.create(MimeType.APPLICATION_JSON, userJson)
+
+            val retrofitUils = RetrofitUtils(this@UpdateNickName, "http://192.168.3.50:9999/")
+            val it = retrofitUils.create(SettingApi::class.java)
+                .updateNickName(body)
+                .subscribeOn(Schedulers.io())
+                .awaitSingle()
+
+            if (it.code() in 200..299) {
+//                DialogUtils.hideLoading(thisDialog)
+//                val toast = Toast.makeText(applicationContext, "パスワードを変更しました。", Toast.LENGTH_SHORT)
+//                toast.setGravity(Gravity.CENTER,0,0)
+//                toast.show()
+
+                val mEditor: SharedPreferences.Editor = saveTool.edit()
+                mEditor.putString("userName", nickName)
+                mEditor.commit()
+
+                DialogUtils.hideLoading(thisDialog)
+                finish()
+                overridePendingTransition(
+                    R.anim.left_in,
+                    R.anim.right_out
+                )
+            }
+            DialogUtils.hideLoading(thisDialog)
+        } catch (throwable: Throwable) {
+            if (throwable is HttpException) {
+                println("throwable ------------ ${throwable.code()}")
+            }
+            DialogUtils.hideLoading(thisDialog)
         }
     }
 

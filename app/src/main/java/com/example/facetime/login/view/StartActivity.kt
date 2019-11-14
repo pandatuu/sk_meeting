@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.preference.PreferenceManager
 import android.text.InputType
 import android.text.method.PasswordTransformationMethod
@@ -19,11 +20,12 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.fastjson.JSON
 import com.example.facetime.R
-import com.example.facetime.api.LoginApi
+import com.example.facetime.login.api.LoginApi
 import com.example.facetime.util.RetrofitUtils
 import com.example.facetime.conference.view.MenuActivity
 import com.example.facetime.login.fragment.UserAgreement
-import com.example.facetime.register.view.RegisterActivity
+import com.example.facetime.util.DialogUtils
+import com.example.facetime.util.MyDialog
 import com.google.i18n.phonenumbers.NumberParseException
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.jaeger.library.StatusBarUtil
@@ -49,6 +51,21 @@ class StartActivity : AppCompatActivity() {
     lateinit var saveTool: SharedPreferences
     private var exitTime: Long = 0
     private lateinit var toolbar1: Toolbar
+    var thisDialog: MyDialog? = null
+    var mHandler = Handler()
+    var r: Runnable = Runnable {
+        //do something
+        if (thisDialog?.isShowing!!) {
+            val toast = Toast.makeText(
+                this@StartActivity,
+                "ネットワークエラー",
+                Toast.LENGTH_SHORT
+            )//网路出现问题
+            toast.setGravity(Gravity.CENTER, 0, 0)
+            toast.show()
+        }
+        DialogUtils.hideLoading(thisDialog)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,8 +87,8 @@ class StartActivity : AppCompatActivity() {
                         setOnClickListener {
                             finish()//返回
                             overridePendingTransition(
-                                R.anim.fade_in_out,
-                                R.anim.fade_in_out
+                                R.anim.left_in,
+                                R.anim.right_out
                             )
                         }
                         text="返回"
@@ -299,11 +316,12 @@ class StartActivity : AppCompatActivity() {
         StatusBarUtil.setTranslucentForImageView(this@StartActivity, 0, toolbar1)
         getWindow().getDecorView()
             .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
+
         toolbar1.setNavigationOnClickListener {
-            startActivity<MenuActivity>()
+            finish()//返回
             overridePendingTransition(
-                R.anim.fade_in_out,
-                R.anim.fade_in_out
+                R.anim.left_in,
+                R.anim.right_out
             )
         }
     }
@@ -379,8 +397,8 @@ class StartActivity : AppCompatActivity() {
             return
         }
 
-        toast("$phone,$myPassword")
-
+        thisDialog = DialogUtils.showLoading(this@StartActivity)
+        mHandler.postDelayed(r, 12000)
         GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
             login(phone, myPassword, countryCode)
         }
@@ -456,18 +474,27 @@ class StartActivity : AppCompatActivity() {
                 val mEditor: SharedPreferences.Editor = saveTool.edit()
                 mEditor.putString("token", token)
 
-                var str=getNum()
+                val str=getNum()
                 mEditor.putString("MyRoomNum", str)
+
+                DialogUtils.hideLoading(thisDialog)
 
                 val i = Intent(this, MenuActivity::class.java)
                 startActivity(i)
                 overridePendingTransition(R.anim.fade_in_out, R.anim.fade_in_out)
                 mEditor.apply()
             }
+            if(it.code() == 406){
+                val toast = Toast.makeText(applicationContext, "账户名或密码错误", Toast.LENGTH_SHORT)
+                toast.setGravity(Gravity.CENTER, 0, 0)
+                toast.show()
+            }
+            DialogUtils.hideLoading(thisDialog)
         }catch (throwable: Throwable){
             if (throwable is HttpException) {
                 println("throwable ------------ ${throwable.code()}")
             }
+            DialogUtils.hideLoading(thisDialog)
         }
     }
 
