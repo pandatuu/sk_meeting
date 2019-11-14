@@ -11,15 +11,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.example.facetime.R
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.*
-import org.jetbrains.anko.sdk25.coroutines.onClick
 
 class ShareFragment : androidx.fragment.app.Fragment() {
 
     private var mContext: Context? = null
-
-    lateinit var layout: LinearLayout
-
     lateinit var sharetDialogSelect: SharetDialogSelect
 
 
@@ -53,13 +53,8 @@ class ShareFragment : androidx.fragment.app.Fragment() {
         val view = with(mContext!!) {
             linearLayout {
                 gravity = Gravity.BOTTOM
-
                 verticalLayout {
-
-                    setOnClickListener ( object :View.OnClickListener{
-                        override fun onClick(v: View?) {
-                        }
-                    } )
+                    setOnClickListener {  }
                     backgroundColor= Color.WHITE
                     textView {
                         text = "共有"
@@ -76,12 +71,16 @@ class ShareFragment : androidx.fragment.app.Fragment() {
                     linearLayout(){
 
                         verticalLayout {
-                            onClick { sharetDialogSelect.getSelectedItem(0) }
                             gravity=Gravity.CENTER_HORIZONTAL
 
                             imageView {
                                 setImageResource(R.mipmap.line)
 
+                                setOnClickListener {
+                                    GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT){
+                                        sharetDialogSelect.getSelectedItem(0)
+                                    }
+                                }
                             }.lparams {
                                 height=dip(60)
                                 width=dip(60)
@@ -103,12 +102,16 @@ class ShareFragment : androidx.fragment.app.Fragment() {
                         }
 
                         verticalLayout {
-                            onClick { sharetDialogSelect.getSelectedItem(1) }
                             gravity=Gravity.CENTER_HORIZONTAL
 
                             imageView {
                                 setImageResource(R.mipmap.twitter)
 
+                                setOnClickListener {
+                                    GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT){
+                                        sharetDialogSelect.getSelectedItem(1)
+                                    }
+                                }
                             }.lparams {
                                 height=dip(60)
                                 width=dip(60)
@@ -151,14 +154,15 @@ class ShareFragment : androidx.fragment.app.Fragment() {
                         textSize = 15f
                         textColorResource = R.color.gray5c
 
-                        onClick { sharetDialogSelect.getSelectedItem(-1) }
+                        setOnClickListener {
+                            GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT){
+                                sharetDialogSelect.getSelectedItem(-1)
+                            }
+                        }
                     }.lparams(width = matchParent, height = dip(60)) {
 
                     }
-                }.lparams(width = matchParent, height = wrapContent) {
-
-
-                }
+                }.lparams(width = matchParent, height = wrapContent)
             }
         }
 

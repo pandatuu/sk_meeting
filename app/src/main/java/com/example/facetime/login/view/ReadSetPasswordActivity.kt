@@ -222,13 +222,11 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                         textSize = 14f
                         typeface = Typeface.DEFAULT_BOLD
                         textColor = Color.BLACK
-                    }.lparams(width = dip(60), height = matchParent) {
-
                         setOnClickListener {
-                            thisDialog = DialogUtils.showLoading(this@ReadSetPasswordActivity)
-                            mHandler.postDelayed(r, 12000)
                             val result = determinePhone()
                             if (result) {
+                                thisDialog = DialogUtils.showLoading(this@ReadSetPasswordActivity)
+                                mHandler.postDelayed(r, 12000)
                                 GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
                                     sendBool = sendVerificationCode(
                                         telephone.text.toString().trim(),
@@ -243,7 +241,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                                 toast("请输入正确的手机号")
                             }
                         }
-                    }
+                    }.lparams(width = dip(60), height = matchParent)
 
                 }.lparams(height = dip(50), width = matchParent) {
                     topMargin = dip(10)
@@ -328,19 +326,6 @@ class ReadSetPasswordActivity : AppCompatActivity() {
         }
 
         downTimer.start()  // 倒计时开始
-
-    }
-
-    fun getStatusBarHeight(context: Context): Int {
-        var result = 0
-        val resourceId =
-            context.getResources().getIdentifier("status_bar_height", "dimen", "android")
-        if (resourceId > 0) {
-            result = context.getResources().getDimensionPixelSize(resourceId)
-            var scale = context.getResources().getDisplayMetrics().density;
-            result = ((result / scale + 0.5f).toInt());
-        }
-        return result
     }
 
     /**
@@ -349,23 +334,30 @@ class ReadSetPasswordActivity : AppCompatActivity() {
     private val downTimer = object : CountDownTimer((60 * 1000).toLong(), 1000) {
         @SuppressLint("SetTextI18n")
         override fun onTick(l: Long) {
-            val result = determinePhone()
-            if (result) {
-                runningDownTimer = true
-                timeButton.text = (l / 1000).toString() + "s"
-                timeButton.setOnClickListener { null }
-            } else {
-                toast("请输入正确的手机号")
-                return
-            }
-
+            runningDownTimer = true
+            timeButton.text = (l / 1000).toString() + "s"
+            timeButton.setOnClickListener { toast("冷却中...") }
         }
 
         override fun onFinish() {
             runningDownTimer = false
             timeButton.text = "发送"
+            timeButton.setOnClickListener {
+                onPcode()
+            }
         }
+    }
 
+    fun getStatusBarHeight(context: Context): Int {
+        var result = 0
+        val resourceId =
+            context.getResources().getIdentifier("status_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            result = context.getResources().getDimensionPixelSize(resourceId)
+            val scale = context.getResources().getDisplayMetrics().density;
+            result = ((result / scale + 0.5f).toInt());
+        }
+        return result
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -503,45 +495,6 @@ class ReadSetPasswordActivity : AppCompatActivity() {
             return false
         }
     }
-
-    //校验验证码
-//    private suspend fun validateVerificationCode(phoneNum: String, country: String, verifyCode: String): Boolean {
-//        try {
-//            val params = mapOf(
-//                "phone" to phoneNum,
-//                "country" to country,
-//                "code" to verifyCode
-//            )
-//            val userJson = JSON.toJSONString(params)
-//            val body = RequestBody.create(MimeType.APPLICATION_JSON, userJson)
-//
-//            val retrofitUils = RetrofitUtils(this@ReadSetPasswordActivity, "https://apass.sklife.jp/")
-//            val it = retrofitUils.create(LoginApi::class.java)
-//                .validateCode(body)
-//                .subscribeOn(Schedulers.io())
-//                .awaitSingle()
-//
-//            if (it.code() in 200..299) {
-//                val toast = Toast.makeText(applicationContext, "認証コード確認成功", Toast.LENGTH_SHORT)
-//                toast.setGravity(Gravity.CENTER, 0, 0)
-//                toast.show()
-//                return true
-//            }
-//            if (it.code() == 406) {
-////                DialogUtils.hideLoading(thisDialog)
-//                val toast = Toast.makeText(applicationContext, "認証コード取得失敗", Toast.LENGTH_SHORT)
-//                toast.setGravity(Gravity.CENTER, 0, 0)
-//                toast.show()
-//                return false
-//            }
-//            return false
-//        } catch (throwable: Throwable) {
-//            if (throwable is HttpException) {
-//                println("throwable ------------ ${throwable.code()}")
-//            }
-//            return false
-//        }
-//    }
 
     private suspend fun updatePassword(
         country: String,
