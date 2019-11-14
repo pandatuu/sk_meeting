@@ -145,8 +145,8 @@ open class MenuActivity : AppCompatActivity(),
                             if (token.isNullOrEmpty()) {
                                 startActivity<StartActivity>()
                                 overridePendingTransition(
-                                    R.anim.fade_in_out,
-                                    R.anim.fade_in_out
+                                    R.anim.right_in,
+                                    R.anim.left_out
                                 )
                             } else {
                                 startActivity<CreateRoomNameActivity>()

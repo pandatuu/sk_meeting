@@ -18,7 +18,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.fastjson.JSON
 import com.example.facetime.R
-import com.example.facetime.api.LoginApi
+import com.example.facetime.login.api.LoginApi
 import com.example.facetime.util.DialogUtils
 import com.example.facetime.util.MimeType
 import com.example.facetime.util.MyDialog
@@ -578,7 +578,9 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                     R.anim.left_out
                 )
             }
-
+            if(it.code() == 406){
+                println("参数错误")
+            }
             DialogUtils.hideLoading(thisDialog)
         } catch (throwable: Throwable) {
             if (throwable is HttpException) {

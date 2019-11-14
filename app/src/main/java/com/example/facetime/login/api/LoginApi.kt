@@ -1,4 +1,4 @@
-package com.example.facetime.api
+package com.example.facetime.login.api
 
 import com.google.gson.JsonObject
 import io.reactivex.Observable
@@ -18,18 +18,9 @@ interface LoginApi {
     @POST("/api/users/verify-code")
     fun sendvCode(@Body array: RequestBody): Observable<Response<String>>
 
-    //校验验证码
-    @Headers("Content-Type: application/json")
-    @POST("/api/users/validate-verify-code")
-    fun validateCode(@Body array: RequestBody): Observable<Response<String>>
-
-    //忘记密码
+    //校验验证码，更新密码
     @Headers("Content-Type: application/json")
     @PATCH("/api/users/find-password")
     fun findPassword(@Body array: RequestBody): Observable<Response<String>>
 
-    //更新密码
-    @Headers("Content-Type: application/json")
-    @PATCH("api/users/change-password")
-    fun updatePassword(@Body array: RequestBody): Observable<Response<String>>
 }

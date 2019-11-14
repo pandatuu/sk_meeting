@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.os.Handler
 import android.text.InputType
 import android.view.Gravity
 import android.view.KeyEvent
@@ -16,8 +17,11 @@ import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.fastjson.JSON
 import com.example.facetime.R
-import com.example.facetime.api.LoginApi
+import com.example.facetime.login.api.LoginApi
+import com.example.facetime.setting.api.SettingApi
+import com.example.facetime.util.DialogUtils
 import com.example.facetime.util.MimeType
+import com.example.facetime.util.MyDialog
 import com.example.facetime.util.RetrofitUtils
 import com.jaeger.library.StatusBarUtil
 import io.reactivex.schedulers.Schedulers
@@ -36,6 +40,21 @@ class UpdatePassword : AppCompatActivity() {
     private lateinit var passwordFirst: EditText
     private lateinit var passwordAgain: EditText
     private lateinit var toolbar1: Toolbar
+    var thisDialog: MyDialog? = null
+    var mHandler = Handler()
+    var r: Runnable = Runnable {
+        //do something
+        if (thisDialog?.isShowing!!) {
+            val toast = Toast.makeText(
+                this@UpdatePassword,
+                "ネットワークエラー",
+                Toast.LENGTH_SHORT
+            )//网路出现问题
+            toast.setGravity(Gravity.CENTER, 0, 0)
+            toast.show()
+        }
+        DialogUtils.hideLoading(thisDialog)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -165,10 +184,11 @@ class UpdatePassword : AppCompatActivity() {
                                 if (passwordAgain.text.toString() != passwordFirst.text.toString()) {
                                     toast("两次密码不匹配")
                                 } else {
+                                    thisDialog = DialogUtils.showLoading(this@UpdatePassword)
+                                    mHandler.postDelayed(r, 12000)
                                     GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
                                         updatePassword(passwordOld.text.toString(), passwordFirst.text.toString(), passwordAgain.text.toString())
                                     }
-
                                 }
                             }
                         }
@@ -208,8 +228,8 @@ class UpdatePassword : AppCompatActivity() {
             val userJson = JSON.toJSONString(params)
             val body = RequestBody.create(MimeType.APPLICATION_JSON, userJson)
 
-            val retrofitUils = RetrofitUtils(this@UpdatePassword, "")
-            val it = retrofitUils.create(LoginApi::class.java)
+            val retrofitUils = RetrofitUtils(this@UpdatePassword, "https://apass.sklife.jp/")
+            val it = retrofitUils.create(SettingApi::class.java)
                 .updatePassword(body)
                 .subscribeOn(Schedulers.io())
                 .awaitSingle()
@@ -220,16 +240,19 @@ class UpdatePassword : AppCompatActivity() {
                 toast.setGravity(Gravity.CENTER,0,0)
                 toast.show()
 
+                DialogUtils.hideLoading(thisDialog)
                 finish()
                 overridePendingTransition(
                     R.anim.left_in,
                     R.anim.right_out
                 )
             }
+            DialogUtils.hideLoading(thisDialog)
         } catch (throwable: Throwable) {
             if (throwable is HttpException) {
                 println("throwable ------------ ${throwable.code()}")
             }
+            DialogUtils.hideLoading(thisDialog)
         }
     }
 
