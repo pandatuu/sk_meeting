@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.facetime.R
 import org.jetbrains.anko.*
-import org.jetbrains.anko.sdk25.coroutines.onClick
 
 class UpdateTipsFrag : Fragment() {
 
@@ -80,7 +79,7 @@ class UpdateTipsFrag : Fragment() {
                             textSize = 16f
                             textColor = Color.WHITE
                             backgroundResource = R.drawable.button_shape_grey
-                            onClick {
+                            setOnClickListener {
                                 buttomCLick.cancelUpdateClick()
                             }
                         }.lparams(dip(120),dip(40)){
@@ -92,7 +91,7 @@ class UpdateTipsFrag : Fragment() {
                             textSize = 16f
                             textColor = Color.WHITE
                             backgroundResource = R.drawable.yellow_background
-                           onClick {
+                            setOnClickListener {
                                 buttomCLick.defineClick("https://www.baidu.com")
                             }
                         }.lparams(dip(120),dip(40)){
