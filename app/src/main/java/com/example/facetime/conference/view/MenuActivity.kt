@@ -178,17 +178,23 @@ open class MenuActivity : AppCompatActivity(),
 
                         setOnClickListener {
 
-                            var intentNow =
+                            val intentNow =
                                 Intent(this@MenuActivity, SuccessActivity::class.java)
 
+                            val c=PreferenceManager.getDefaultSharedPreferences(this@MenuActivity)
 
 
-                            var MyRoomName =
-                                PreferenceManager.getDefaultSharedPreferences(this@MenuActivity)
-                                    .getString("MyRoomName", "").toString()
+                            val MyRoomName =c.getString("MyRoomName", "").toString()
+
+                            val myRoomPassword = c.getString("MyRoomPassword", "").toString()
+
+                            val myRoomNum = c.getString("MyRoomNum", "").toString()
 
 
                             intentNow.putExtra("RoomName",MyRoomName)
+                            intentNow.putExtra("Password",myRoomPassword)
+                            intentNow.putExtra("MyRoomNum",myRoomNum)
+
                             startActivityForResult(intentNow, 50)
                             overridePendingTransition(
                                 R.anim.right_in,
