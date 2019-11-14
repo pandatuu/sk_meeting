@@ -20,10 +20,20 @@ import android.text.TextWatcher
 import android.view.KeyEvent
 import android.widget.*
 import com.example.facetime.R
+import com.example.facetime.conference.api.RoomApi
 import com.example.facetime.conference.fragment.ChooseRoomIdFragment
+import com.example.facetime.util.RetrofitUtils
+import com.facebook.react.bridge.UiThreadUtil
+import com.umeng.commonsdk.stateless.UMSLEnvelopeBuild.mContext
+import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx2.awaitSingle
 import org.jitsi.meet.sdk.JitsiMeet
 import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
 import org.jitsi.meet.sdk.JitsiMeetUserInfo
+import org.json.JSONArray
+import org.json.JSONObject
 import java.net.MalformedURLException
 import java.net.URL
 
@@ -37,6 +47,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
     private lateinit var frameLayout: FrameLayout
     private lateinit var triangle: LinearLayout
 
+    private lateinit var roomApi: RoomApi
 
     private lateinit var switch_video: Switch
     private lateinit var switch_audio: Switch
@@ -320,13 +331,6 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
 
                             setOnClickListener {
 
-                                //                                var intent =
-//                                    Intent(this@EnteRoomByIdActivity, EnteRoomByPasswordActivity::class.java)
-//                                startActivityForResult(intent, 9)
-//                                overridePendingTransition(
-//                                    R.anim.right_in,
-//                                    R.anim.left_out
-//                                )
                                 if (editText1.text.toString() == "") {
 
                                     val toast = Toast.makeText(
@@ -339,7 +343,8 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                                     toast.show()
 
                                 } else {
-                                    gotoVideoInterview(editText1.text.toString())
+                                    findTheRoom()
+                                    //gotoVideoInterview(editText1.text.toString())
                                 }
                             }
                         }.lparams() {
@@ -375,6 +380,100 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
     }
 
 
+    fun findTheRoom() {
+
+
+        GlobalScope.launch {
+
+            roomApi = RetrofitUtils(this@EnteRoomByIdActivity, getString(R.string.roomrUrl))
+                .create(RoomApi::class.java)
+
+            val result = roomApi.searchRoom(editText1.text.toString(), null)
+                .subscribeOn(Schedulers.io())
+                .awaitSingle()
+
+            println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+            println(result)
+            println(result.body())
+
+            UiThreadUtil.runOnUiThread(Runnable {
+
+                if (result.code() in 200..299) {
+
+                    val num=JSONObject(result.body()?.toString()).get("id").toString()
+                    val name=JSONObject(result.body()?.toString()).get("name").toString()
+
+                    //得到缓存里面的值
+                    var usedRoom =
+                        PreferenceManager.getDefaultSharedPreferences(this@EnteRoomByIdActivity)
+                            .getString("usedRoom","[]")
+                    val array= JSONArray(usedRoom)
+
+                    //判断缓存里面是否已经有值
+                    var addFlag=false
+                    if(array.length()==0){
+                        addFlag=true
+                    }else{
+                        for(i in 0 until array.length()){
+                            if((array[i] as JSONObject).getString("num")!=num){
+                                if(i==array.length()-1){
+                                    addFlag=true
+                                }
+                            }else{
+                                break
+                            }
+                        }
+                    }
+
+                    //如果没有的话就添加
+                    if(addFlag){
+
+                        if(array.length()>=5){
+                            array.remove(array.length()-1)
+                        }
+
+                        val ob= JSONObject()
+                        ob.put("num",num)
+                        ob.put("name",name)
+
+                        array.put(ob)
+
+                        var mEditor: SharedPreferences.Editor = ms.edit()
+                        mEditor.putString("usedRoom", array.toString())
+                        mEditor.commit()
+                    }
+
+
+                    var intent =
+                        Intent(this@EnteRoomByIdActivity, EnteRoomByPasswordActivity::class.java)
+
+                    intent.putExtra("roomNum", num)
+                    intent.putExtra("roomName",name )
+                    intent.putExtra("switch_audio",switch_audio.isChecked)
+                    intent.putExtra("switch_video",switch_video.isChecked)
+
+                    startActivity(intent)
+                    overridePendingTransition(
+                        R.anim.right_in,
+                        R.anim.left_out
+                    )
+
+                } else if (result.code() == 406) {
+                    val toast = Toast.makeText(getApplicationContext(), "房间不存在", Toast.LENGTH_SHORT)
+                    toast.setGravity(Gravity.CENTER, 0, 0)
+                    toast.show()
+                } else {
+                    val toast = Toast.makeText(getApplicationContext(), "出错了!", Toast.LENGTH_SHORT)
+                    toast.setGravity(Gravity.CENTER, 0, 0)
+                    toast.show()
+                    finish();
+
+
+                }
+            })
+        }
+    }
+
     override fun onStart() {
         super.onStart()
         setActionBar(toolbar1)
@@ -394,7 +493,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
 
         if (event != null) {
-            if(keyCode == KeyEvent.KEYCODE_BACK ){
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
                 finish()
                 overridePendingTransition(
                     R.anim.left_in,
@@ -508,15 +607,14 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
             PreferenceManager.getDefaultSharedPreferences(this)
                 .getStringSet("usedRoomNum", hashSetOf())
 
-        var newRoomSet=setOf<String>()
+        var newRoomSet = setOf<String>()
 
 
         usedRoomNum?.add(roomNum)
 
         var mEditor: SharedPreferences.Editor = ms.edit()
-        mEditor.putStringSet("usedRoomNum",usedRoomNum)
+        mEditor.putStringSet("usedRoomNum", usedRoomNum)
         mEditor.commit()
-
 
 
         var userName =
@@ -524,7 +622,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                 .getString("userName", "").toString()
 
         try {
-            var user=JitsiMeetUserInfo()
+            var user = JitsiMeetUserInfo()
             user.setDisplayName(userName)
 
             //链接视频

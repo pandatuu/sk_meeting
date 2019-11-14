@@ -3,6 +3,7 @@ package com.example.facetime.conference.view
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
@@ -17,11 +18,22 @@ import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
+import android.view.KeyEvent
 import android.widget.*
 import com.example.facetime.R
+import com.example.facetime.conference.api.RoomApi
+import com.example.facetime.util.RetrofitUtils
+import com.facebook.react.bridge.UiThreadUtil
+import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx2.awaitSingle
+import okhttp3.MediaType
+import okhttp3.RequestBody
 import org.jitsi.meet.sdk.JitsiMeet
 import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
 import org.jitsi.meet.sdk.JitsiMeetUserInfo
+import org.json.JSONObject
 import java.net.MalformedURLException
 import java.net.URL
 
@@ -29,6 +41,10 @@ import java.net.URL
 open class EnteRoomByPasswordActivity : AppCompatActivity() {
     private lateinit var toolbar1: Toolbar
     private lateinit var editText1: EditText
+
+    private lateinit var roomApi: RoomApi
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         verticalLayout {
@@ -84,7 +100,7 @@ open class EnteRoomByPasswordActivity : AppCompatActivity() {
                 }
                 textView {
                     gravity = Gravity.CENTER_VERTICAL or Gravity.LEFT
-                    text = "会议室ID  303006"
+                    text = "会议室ID  "+intent.getStringExtra("roomNum")
                     textColorResource = R.color.black20
                 }.lparams() {
                     height = dip(30)
@@ -95,7 +111,7 @@ open class EnteRoomByPasswordActivity : AppCompatActivity() {
                 }
                 textView {
                     gravity = Gravity.CENTER_VERTICAL or Gravity.LEFT
-                    text = "会议室名称  动画谷世界第一"
+                    text = "会议室名称  "+intent.getStringExtra("roomName")
                     textColorResource = R.color.black20
                 }.lparams() {
                     height = dip(30)
@@ -213,6 +229,24 @@ open class EnteRoomByPasswordActivity : AppCompatActivity() {
             )
         }
     }
+
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+
+        if (event != null) {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                finish()
+                overridePendingTransition(
+                    R.anim.left_in,
+                    R.anim.right_out
+                )
+                return true
+            }
+        }
+        return super.onKeyDown(keyCode, event)
+    }
+
+
     fun getStatusBarHeight(context: Context): Int {
         var result = 0
         val resourceId =
@@ -266,26 +300,79 @@ open class EnteRoomByPasswordActivity : AppCompatActivity() {
     }
     //转向视频界面
     private fun gotoVideoInterview(roomNum: String) {
-        try {
-            //链接视频
-            val options = JitsiMeetConferenceOptions.Builder()
-                .setRoom(roomNum)
-                .setUserInfo(JitsiMeetUserInfo())
-                .build()
 
-            val intent = Intent(this, JitsiMeetActivitySon::class.java)
-            intent.action = "org.jitsi.meet.CONFERENCE"
-            intent.putExtra("JitsiMeetConferenceOptions", options)
-            startActivity(intent)
 
-            overridePendingTransition(
-                R.anim.right_in,
-                R.anim.left_out
-            )
 
-        } catch (e: Exception) {
-            e.printStackTrace()
-            System.out.println("错了")
+        val request = JSONObject()
+
+        request.put("id", intent.getStringExtra("roomNum"))
+        request.put("password", editText1.text.toString())
+
+        val body = RequestBody.create(
+            MediaType.parse("application/json; charset=utf-8"),
+            request.toString()
+        )
+
+        GlobalScope.launch {
+
+            roomApi = RetrofitUtils(this@EnteRoomByPasswordActivity, getString(R.string.roomrUrl))
+                .create(RoomApi::class.java)
+
+            val result = roomApi.joinRoom(body)
+                .subscribeOn(Schedulers.io())
+                .awaitSingle()
+
+            println("消息xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+            println(result)
+            println(result.body())
+
+            UiThreadUtil.runOnUiThread(Runnable {
+                if (result.code() in 200..299) {
+
+                    val toast = Toast.makeText(
+                        applicationContext,
+                        "视频会议最多持续半个小时",
+                        Toast.LENGTH_SHORT
+                    )
+
+                    toast.setGravity(Gravity.CENTER, 0, 0)
+                    toast.show()
+
+                    try {
+                        //链接视频
+                        val options = JitsiMeetConferenceOptions.Builder()
+                            .setRoom(roomNum)
+                            .setAudioMuted(!intent.getBooleanExtra("switch_audio",false))
+                            .setVideoMuted(!intent.getBooleanExtra("switch_video",false))
+                            .setUserInfo(JitsiMeetUserInfo())
+                            .build()
+
+                        val intent = Intent(this@EnteRoomByPasswordActivity, JitsiMeetActivitySon::class.java)
+                        intent.action = "org.jitsi.meet.CONFERENCE"
+                        intent.putExtra("JitsiMeetConferenceOptions", options)
+                        startActivity(intent)
+
+                        overridePendingTransition(
+                            R.anim.right_in,
+                            R.anim.left_out
+                        )
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        System.out.println("错了")
+                    }
+
+                } else {
+                    val toast = Toast.makeText(getApplicationContext(), "密码错误!", Toast.LENGTH_SHORT)
+                    toast.setGravity(Gravity.CENTER, 0, 0)
+                    toast.show()
+                }
+
+
+            })
         }
+
+
+
     }
 }

@@ -1,6 +1,7 @@
 package com.example.facetime.conference.view
 
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
@@ -13,13 +14,16 @@ import com.jaeger.library.StatusBarUtil
 import org.jetbrains.anko.*
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Typeface
+import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.*
 import com.example.facetime.R
 import com.example.facetime.conference.api.RoomApi
 import com.example.facetime.util.RetrofitUtils
+import com.facebook.react.bridge.UiThreadUtil
 import com.umeng.socialize.utils.DeviceConfigInternal.context
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.GlobalScope
@@ -35,13 +39,15 @@ open class CreatePasswordActivity : AppCompatActivity() {
 
     private lateinit var toolbar1: Toolbar
 
-    private lateinit var editText1:EditText
+    private lateinit var editText1: EditText
 
     private lateinit var roomApi: RoomApi
+    lateinit var ms: SharedPreferences
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ms = PreferenceManager.getDefaultSharedPreferences(this)
 
         verticalLayout {
 
@@ -72,18 +78,18 @@ open class CreatePasswordActivity : AppCompatActivity() {
                                 R.anim.right_out
                             )
                         }
-                        text="返回"
-                        gravity=Gravity.CENTER
+                        text = "返回"
+                        gravity = Gravity.CENTER
 
-                    }.lparams(){
-                        height= matchParent
-                        width= wrapContent
+                    }.lparams() {
+                        height = matchParent
+                        width = wrapContent
                     }
                 }.lparams() {
                     weight = 1f
                     width = dip(0)
                     height = dip(65 - getStatusBarHeight(this@CreatePasswordActivity))
-                    topMargin=dip(getStatusBarHeight(this@CreatePasswordActivity))
+                    topMargin = dip(getStatusBarHeight(this@CreatePasswordActivity))
                 }
             }.lparams() {
                 width = matchParent
@@ -98,7 +104,7 @@ open class CreatePasswordActivity : AppCompatActivity() {
                 gravity = Gravity.CENTER_HORIZONTAL
                 textView {
                     text =
-                           "需要为您的会议室设置一个密码吗？这样您在会议时可以防止别人的打扰！如不需要，可直接点击创建"
+                        "需要为您的会议室设置一个密码吗？这样您在会议时可以防止别人的打扰！如不需要，可直接点击创建"
                     textSize = 20f
                     textColor = Color.BLACK
                     typeface = Typeface.DEFAULT_BOLD
@@ -119,7 +125,7 @@ open class CreatePasswordActivity : AppCompatActivity() {
                     }
 
                     gravity = Gravity.CENTER
-                    backgroundResource=R.drawable.border
+                    backgroundResource = R.drawable.border
 
 
                     editText1 = editText() {
@@ -128,7 +134,7 @@ open class CreatePasswordActivity : AppCompatActivity() {
                         setHintTextColor(Color.GRAY)
                         hint = "请输入会议密码"
                         imeOptions = IME_ACTION_DONE
-                        backgroundColor=Color.TRANSPARENT
+                        backgroundColor = Color.TRANSPARENT
                         singleLine = true
 
                         addTextChangedListener(object : TextWatcher {
@@ -206,8 +212,6 @@ open class CreatePasswordActivity : AppCompatActivity() {
                     }
 
 
-
-
                 }.lparams() {
                     height = dip(50)
                     width = matchParent
@@ -218,13 +222,10 @@ open class CreatePasswordActivity : AppCompatActivity() {
                 }
 
 
-
-
-
             }.lparams() {
                 topMargin = dip(20)
-                rightMargin=dip(15)
-                leftMargin=dip(15)
+                rightMargin = dip(15)
+                leftMargin = dip(15)
                 height = wrapContent
                 width = matchParent
             }
@@ -232,10 +233,9 @@ open class CreatePasswordActivity : AppCompatActivity() {
     }
 
 
-
-    fun creatRoom(){
-        val roomName=intent.getStringExtra("RoomName")
-        val password=editText1.text.toString()
+    fun creatRoom() {
+        val roomName = intent.getStringExtra("RoomName")
+        val password = editText1.text.toString()
 
 
         val request = JSONObject()
@@ -243,42 +243,64 @@ open class CreatePasswordActivity : AppCompatActivity() {
         request.put("name", roomName)
         request.put("password", password)
 
-        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), request.toString())
+        val body = RequestBody.create(
+            MediaType.parse("application/json; charset=utf-8"),
+            request.toString()
+        )
 
 
         GlobalScope.launch {
 
-            roomApi = RetrofitUtils(this@CreatePasswordActivity, "http://192.168.3.50:9999/")
+            roomApi = RetrofitUtils(this@CreatePasswordActivity, getString(R.string.roomrUrl))
                 .create(RoomApi::class.java)
 
-           var result= roomApi.createRoom(body)
-               .subscribeOn(Schedulers.io())
-               .awaitSingle()
+            val result = roomApi.createRoom(body)
+                .subscribeOn(Schedulers.io())
+                .awaitSingle()
 
             println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
             println(result)
+            println(result.body())
 
+            UiThreadUtil.runOnUiThread(Runnable {
 
+                if (result.code() in 200..299) {
+
+                    val id = JSONObject(result.body()?.toString()).get("id")
+
+                    var mEditor: SharedPreferences.Editor = ms.edit()
+                    mEditor.putString("MyRoomNum", id.toString())
+                    mEditor.putString("MyRoomPassword", password)
+                    mEditor.commit()
+
+                    var intentNow =
+                        Intent(this@CreatePasswordActivity, SuccessActivity::class.java)
+
+                    intentNow.putExtra("RoomName", roomName)
+                    intentNow.putExtra("Password", password)
+                    intentNow.putExtra("MyRoomNum", id.toString())
+
+                    startActivity(intentNow)
+
+                    overridePendingTransition(
+                        R.anim.right_in,
+                        R.anim.left_out
+                    )
+                    finish()
+
+                } else if (result.code() == 406) {
+                    val toast = Toast.makeText(getApplicationContext(), "房间已存在", Toast.LENGTH_SHORT)
+                    toast.setGravity(Gravity.CENTER, 0, 0)
+                    toast.show()
+                    finish();
+                } else {
+                    val toast = Toast.makeText(getApplicationContext(), "出错了!", Toast.LENGTH_SHORT)
+                    toast.setGravity(Gravity.CENTER, 0, 0)
+                    toast.show()
+                    finish();
+                }
+            })
         }
-
-
-
-
-        var intentNow =
-            Intent(this@CreatePasswordActivity, SuccessActivity::class.java)
-
-        intentNow.putExtra("RoomName",roomName)
-        intentNow.putExtra("Password",password)
-        startActivity(intentNow)
-
-        overridePendingTransition(
-            R.anim.right_in,
-            R.anim.left_out
-        )
-
-
-
-
     }
 
     override fun onStart() {

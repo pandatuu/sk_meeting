@@ -52,9 +52,9 @@ open class SuccessActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        var myRoomNum =
-            PreferenceManager.getDefaultSharedPreferences(this)
-                .getString("MyRoomNum", "").toString()
+//        var myRoomNum =
+//            PreferenceManager.getDefaultSharedPreferences(this)
+//                .getString("MyRoomNum", "").toString()
 
         val mainId = 1
         vertical  = frameLayout {
@@ -152,7 +152,7 @@ open class SuccessActivity : AppCompatActivity(),
 
                         textColor = Color.BLACK
                         setHintTextColor(Color.BLACK)
-                        text = myRoomNum
+                        text =  intent.getStringExtra("MyRoomNum")
                         imeOptions = IME_ACTION_DONE
                         backgroundColor=Color.TRANSPARENT
                         singleLine = true
@@ -330,6 +330,9 @@ open class SuccessActivity : AppCompatActivity(),
         getWindow().getDecorView()
             .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
         toolbar1.setNavigationOnClickListener {
+            var intentNow =
+                Intent(this@SuccessActivity, MenuActivity::class.java)
+            startActivity(intentNow)
             finish()//返回
             overridePendingTransition(
                 R.anim.left_in,

@@ -1,0 +1,26 @@
+<resources>
+    <!-- 测试地址 -->
+<!--    <string name="userUrl" translatable="false">https://user.sk.cgland.top/</string>-->
+<!--    <string name="interUrl" translatable="false">https://interview.sk.cgland.top/</string>-->
+<!--    <string name="jobUrl" translatable="false">https://job.sk.cgland.top/</string>-->
+<!--    <string name="storageUrl" translatable="false">https://storage.sk.cgland.top/</string>-->
+<!--    <string name="authUrl" translatable="false">https://auth.sk.cgland.top/</string>-->
+<!--    <string name="baseUrl" translatable="false">https://basic-info.sk.cgland.top/</string>-->
+<!--    <string name="industryUrl" translatable="false">https://industry.sk.cgland.top/</string>-->
+<!--    <string name="orgUrl" translatable="false">https://org.sk.cgland.top/</string>-->
+<!--    <string name="organizationUrl" translatable="false">https://organization-position.sk.cgland.top/</string>-->
+<!--    <string name="mailUrl" translatable="false">https://mail.sk.cgland.top/</string>-->
+<!--    <string name="pushUrl" translatable="false">https://push.sk.cgland.top/</string>-->
+<!--    <string name="reportUrl" translatable="false">https://report.sk.cgland.top/</string>-->
+<!--    <string name="helpUrl" translatable="false">https://help.sk.cgland.top/</string>-->
+<!--    <string name="praiseUrl" translatable="false">https://praise.sk.cgland.top/</string>-->
+<!--    <string name="appVersionUrl" translatable="false">https://app-version.sk.cgland.top/</string>-->
+<!--    <string name="imUrl" translatable="false">https://im.sk.cgland.top/</string>-->
+<!--    <string name="jitsiUrl" translatable="false">https://jitsi.sk.cgland.top/</string>-->
+<!--    <string name="shareUrl" translatable="false">https://sk.cgland.top/</string>-->
+<!--    <string name="positionView" translatable="false">https://position-view-histories.sk.cgland.top/</string>-->
+
+    <!-- 正式地址 -->
+    <string name="roomrUrl" translatable="false">http://192.168.3.48:9999/</string>
+
+</resources>

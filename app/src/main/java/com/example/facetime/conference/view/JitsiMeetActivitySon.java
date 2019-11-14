@@ -198,13 +198,12 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
         JitsiMeetActivityDelegate.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    int count = 0;
+    int count = 60;
     int min = 0;
     int second = 0;
     String minStr="";
     String secStr="";
 
-    int max=600;
     public void onConferenceJoined(Map<String, Object> data) {
         Log.d(TAG, "Conference joined: " + data);
 
@@ -269,7 +268,7 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
                     }
 
 
-                    if(count>max-5){
+                    if(count<5){
                         mainHandler.postDelayed( new Runnable() {
                             @Override
                             public void run() {
@@ -285,14 +284,14 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
 
                     }
 
-                    if (count > max-1) {
+                    if (count <=0) {
 
 
                         finishVideo(1);
 
                         break;
                     }
-                    count = count + 1;
+                    count = count- 1;
                 }
             }
         }).start();

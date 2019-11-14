@@ -456,8 +456,8 @@ class StartActivity : AppCompatActivity() {
                 val mEditor: SharedPreferences.Editor = saveTool.edit()
                 mEditor.putString("token", token)
 
-                var str=getNum()
-                mEditor.putString("MyRoomNum", str)
+//                var str=getNum()
+//                mEditor.putString("MyRoomNum", str)
 
                 val i = Intent(this, MenuActivity::class.java)
                 startActivity(i)

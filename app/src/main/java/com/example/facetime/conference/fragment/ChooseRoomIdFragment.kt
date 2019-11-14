@@ -13,6 +13,8 @@ import androidx.fragment.app.Fragment
 import com.example.facetime.R
 import com.example.facetime.conference.view.EnteRoomByIdActivity
 import org.jetbrains.anko.*
+import org.json.JSONArray
+import org.json.JSONObject
 
 class ChooseRoomIdFragment : Fragment() {
 
@@ -62,12 +64,14 @@ class ChooseRoomIdFragment : Fragment() {
             }
         }
 
-        var usedRoomNum =
+        var usedRoom =
             PreferenceManager.getDefaultSharedPreferences(mContext)
-                .getStringSet("usedRoomNum",setOf<String>())
-        var it=usedRoomNum?.iterator()
-        for(i in 0 until  usedRoomNum!!.size){
-            verticalLayout.addView(addMyChild(it!!.next(),""))
+                .getString("usedRoom","[]")
+        println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+        val array= JSONArray(usedRoom)
+
+        for(i in 0 until  array!!.length()){
+            verticalLayout.addView(addMyChild((array[i] as JSONObject).getString("num"),(array[i] as JSONObject).getString("name")))
 
         }
 
@@ -77,6 +81,9 @@ class ChooseRoomIdFragment : Fragment() {
 
 
     fun addMyChild(t:String,name:String): View {
+
+        println(name)
+
 
         val view = with(mContext!!) {
             verticalLayout {
@@ -93,13 +100,12 @@ class ChooseRoomIdFragment : Fragment() {
                     backgroundResource=R.drawable.border_bottom
 
                     textView {
-                        gravity = Gravity.CENTER
-
+                        gravity = Gravity.CENTER or Gravity.LEFT
                         text = t
                         textColor=Color.BLACK
                         textSize=14f
                     }.lparams() {
-                        width = matchParent
+                        width = wrapContent
                         height = matchParent
                     }
 
