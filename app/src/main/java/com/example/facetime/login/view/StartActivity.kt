@@ -98,24 +98,24 @@ class StartActivity : AppCompatActivity() {
                         height= matchParent
                         width= wrapContent
                     }
-//                    relativeLayout {
-////                        textView {
-////                            text = "注册"
-////                            gravity = Gravity.RIGHT
-////                            textSize = 16f
-////                            textColor = Color.parseColor("#7F7F7F")
-////                            setOnClickListener {
-////                                startActivity<RegisterActivity>()
-////                                overridePendingTransition(R.anim.right_in, R.anim.left_out)
-////                            }
-////                        }.lparams(height = wrapContent, width = matchParent){
-////                            centerVertically()
-////                            alignParentRight()
-////                            rightMargin = dip(20)
-////                        }
-////                    }.lparams(dip(0),matchParent){
-////                        weight = 1f
-////                    }
+                    relativeLayout {
+                        textView {
+                            text = "注册"
+                            gravity = Gravity.RIGHT
+                            textSize = 16f
+                            textColor = Color.parseColor("#7F7F7F")
+                            setOnClickListener {
+                                startActivity<RegisterActivity>()
+                                overridePendingTransition(R.anim.right_in, R.anim.left_out)
+                            }
+                        }.lparams(height = wrapContent, width = matchParent){
+                            centerVertically()
+                            alignParentRight()
+                            rightMargin = dip(20)
+                        }
+                    }.lparams(dip(0),matchParent){
+                        weight = 1f
+                    }
                 }.lparams() {
                     weight = 1f
                     width = dip(0)
@@ -517,8 +517,10 @@ class StartActivity : AppCompatActivity() {
         }
         //用户没创建个人信息 默认传入手机号
         if(user.code() == 404){
+            val mPerferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+            val name = mPerferences.getString("nickName", phone)
             val params = mapOf(
-                "nickName" to phone
+                "nickName" to name
             )
             val userJson = JSON.toJSONString(params)
             val body =

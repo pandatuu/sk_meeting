@@ -1,4 +1,4 @@
-package com.example.facetime.register.view
+package com.example.facetime.login.view
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.Gravity
@@ -14,13 +15,27 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.alibaba.fastjson.JSON
 import com.example.facetime.R
+import com.example.facetime.login.api.LoginApi
+import com.example.facetime.login.api.RegisterApi
+import com.example.facetime.util.DialogUtils
+import com.example.facetime.util.MimeType
+import com.example.facetime.util.RetrofitUtils
 import com.google.i18n.phonenumbers.NumberParseException
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.jaeger.library.StatusBarUtil
 import com.sahooz.library.Country
 import com.sahooz.library.PickActivity
+import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx2.awaitSingle
+import okhttp3.RequestBody
 import org.jetbrains.anko.*
+import retrofit2.HttpException
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -161,7 +176,16 @@ class RegisterActivity : AppCompatActivity() {
                                         countryCode.text.toString().substring(1)
                                     )
                                 if (isPhoneFormat) {
-                                    onPcode()
+                                    GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+                                        val sendBool = sendVerificationCode(
+                                            countryCode.text.toString().trim(),
+                                            phoneNum.text.toString().substring(1)
+                                        )
+                                        if (sendBool){
+//                                            DialogUtils.hideLoading(thisDialog)
+                                            onPcode()
+                                        }
+                                    }
                                 } else {
                                     toast("手机号格式错误")
                                 }
@@ -225,11 +249,9 @@ class RegisterActivity : AppCompatActivity() {
                                 toast("验证码为空")
                             } else {
                                 if (isChoose.isChecked) {
-                                    startActivity<RegisterSetPassword>()
-                                    overridePendingTransition(
-                                        R.anim.right_in,
-                                        R.anim.left_out
-                                    )
+                                    GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+                                        validateVerificationCode(phoneNum.text.toString(), vcodeNum.text.toString())
+                                    }
                                 } else {
                                     toast("请勾选协议")
                                 }
@@ -319,6 +341,95 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         return false
+    }
+
+
+    //发送验证码
+    private suspend fun sendVerificationCode(phoneNum: String, country: String): Boolean {
+        try {
+            val deviceModel: String = Build.MODEL
+            val manufacturer: String = Build.BRAND
+            val params = mapOf(
+                "phone" to phoneNum,
+                "country" to country,
+                "deviceType" to "ANDROID",
+                "codeType" to "LOGIN",
+                "manufacturer" to manufacturer,
+                "deviceModel" to deviceModel
+            )
+            val userJson = JSON.toJSONString(params)
+            val body = RequestBody.create(MimeType.APPLICATION_JSON, userJson)
+
+            val retrofitUils =
+                RetrofitUtils(this@RegisterActivity, "https://apass.sklife.jp/")
+            val it = retrofitUils.create(RegisterApi::class.java)
+                .sendvCode(body)
+                .subscribeOn(Schedulers.io())
+                .awaitSingle()
+            if (it.code() in 200..299) {
+//                DialogUtils.hideLoading(thisDialog)
+                val toast =
+                    Toast.makeText(applicationContext, "認証コードは既に送信されました。", Toast.LENGTH_SHORT)
+                toast.setGravity(Gravity.CENTER, 0, 0)
+                toast.show()
+                return true
+            }
+            if (it.code() == 409) {
+//                DialogUtils.hideLoading(thisDialog)
+                val toast =
+                    Toast.makeText(applicationContext, "この携帯番号は既に登録されました。", Toast.LENGTH_SHORT)
+                toast.setGravity(Gravity.CENTER, 0, 0)
+                toast.show()
+                return false
+            }
+            return false
+        } catch (throwable: Throwable) {
+            if (throwable is HttpException) {
+                println("throwable ------------ ${throwable.code()}")
+            }
+//            DialogUtils.hideLoading(thisDialog)
+            return false
+        }
+    }
+
+    //　校验验证码
+    private suspend fun validateVerificationCode(phoneNum: String, verifyCode: String): Boolean {
+        val country =  countryCode.text.toString().substring(1, 3)
+        try {
+            val params = mapOf(
+                "phone" to phoneNum,
+                "country" to country,
+                "code" to verifyCode
+            )
+            val userJson = JSON.toJSONString(params)
+            val body = RequestBody.create(MimeType.APPLICATION_JSON, userJson)
+
+            val retrofitUils = RetrofitUtils(this@RegisterActivity, "https://apass.sklife.jp/")
+            val it = retrofitUils.create(RegisterApi::class.java)
+                .validateCode(body)
+                .subscribeOn(Schedulers.io())
+                .awaitSingle()
+
+            if (it.code() in 200..299) {
+                startActivity<RegisterSetPassword>("phone" to phoneNum, "country" to country, "verifyCode" to verifyCode)
+                overridePendingTransition(
+                    R.anim.right_in,
+                    R.anim.left_out
+                )
+            }
+            if (it.code() == 406) {
+//                DialogUtils.hideLoading(thisDialog)
+                val toast = Toast.makeText(applicationContext, "認証コード取得失敗", Toast.LENGTH_SHORT)
+                toast.setGravity(Gravity.CENTER, 0, 0)
+                toast.show()
+            }
+            return false
+        } catch (throwable: Throwable) {
+            if (throwable is HttpException) {
+                println("throwable ------------ ${throwable.code()}")
+            }
+            return false
+        }
     }
 
     fun getStatusBarHeight(context: Context): Int {

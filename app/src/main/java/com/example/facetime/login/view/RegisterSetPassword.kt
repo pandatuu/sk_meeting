@@ -1,33 +1,57 @@
-package com.example.facetime.register.view
+package com.example.facetime.login.view
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
-import android.preference.PreferenceManager
+import android.text.InputType
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.Toast
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
+import com.alibaba.fastjson.JSON
 import com.example.facetime.R
-import com.example.facetime.login.view.StartActivity
+import com.example.facetime.login.api.RegisterApi
+import com.example.facetime.util.MimeType
+import com.example.facetime.util.RetrofitUtils
 import com.jaeger.library.StatusBarUtil
+import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx2.awaitSingle
+import okhttp3.MediaType
+import okhttp3.RequestBody
 import org.jetbrains.anko.*
+import retrofit2.HttpException
 
-class RegisterSetNickName : AppCompatActivity() {
+class RegisterSetPassword : AppCompatActivity() {
 
-    private lateinit var nickName: EditText
-    lateinit var saveTool: SharedPreferences
+    private lateinit var passwordFirst: EditText
+    private lateinit var passwordAgain: EditText
     private lateinit var toolbar1: Toolbar
+    var phone = ""
+    var country = ""
+    var verifyCode = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        saveTool = PreferenceManager.getDefaultSharedPreferences(this@RegisterSetNickName)
+
+        if(intent.getStringExtra("phone")!=null){
+            phone = intent.getStringExtra("phone") as String
+        }
+        if(intent.getStringExtra("country")!=null){
+            country = intent.getStringExtra("country") as String
+        }
+        if(intent.getStringExtra("verifyCode")!=null){
+            verifyCode = intent.getStringExtra("verifyCode") as String
+        }
 
         frameLayout {
             backgroundColor = Color.TRANSPARENT
@@ -62,8 +86,8 @@ class RegisterSetNickName : AppCompatActivity() {
                 }.lparams() {
                     weight = 1f
                     width = dip(0)
-                    height = dip(65 - getStatusBarHeight(this@RegisterSetNickName))
-                    topMargin = dip(getStatusBarHeight(this@RegisterSetNickName))
+                    height = dip(65 - getStatusBarHeight(this@RegisterSetPassword))
+                    topMargin = dip(getStatusBarHeight(this@RegisterSetPassword))
                 }
             }.lparams() {
                 width = matchParent
@@ -72,22 +96,39 @@ class RegisterSetNickName : AppCompatActivity() {
             linearLayout {
                 orientation = LinearLayout.VERTICAL
                 textView {
-                    text = "设置昵称"
+                    text = "设置密码"
                     textSize = 21f
                     typeface = Typeface.DEFAULT_BOLD
                     textColor = Color.BLACK
-                }.lparams {
+                }.lparams(wrapContent, wrapContent) {
                     gravity = Gravity.CENTER_HORIZONTAL
                 }
                 relativeLayout {
                     backgroundResource = R.drawable.border
-                    nickName = editText {
-                        hint = "请输入昵称"
+                    passwordFirst = editText {
+                        hint = "请输入密码"
                         singleLine = true
                         padding = dip(5)
                         setHintTextColor(Color.GRAY)
                         textColor = Color.BLACK
                         backgroundColor = Color.TRANSPARENT
+                        inputType =
+                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                    }.lparams(matchParent, matchParent)
+                }.lparams(matchParent, dip(55)) {
+                    topMargin = dip(15)
+                }
+                relativeLayout {
+                    backgroundResource = R.drawable.border
+                    passwordAgain = editText {
+                        hint = "请再次输入密码"
+                        singleLine = true
+                        padding = dip(5)
+                        backgroundColor = Color.TRANSPARENT
+                        setHintTextColor(Color.GRAY)
+                        textColor = Color.BLACK
+                        inputType =
+                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
                         setOnKeyListener(object : View.OnKeyListener {
                             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                                 if (event != null) {
@@ -107,28 +148,30 @@ class RegisterSetNickName : AppCompatActivity() {
                 }
                 button {
                     gravity = Gravity.CENTER
-                    text = "完成注册"
+                    text = "下一步"
                     textSize = 16f
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
                     setOnClickListener {
                         closeFocusjianpan()
-                        if (nickName.text.toString() != "") {
-                            if (nickName.text.length < 10) {
-                                startActivity<StartActivity>()
-                                overridePendingTransition(
-                                    R.anim.right_in,
-                                    R.anim.left_out
-                                )
-                            } else {
-                                toast("限制字数长度10以内")
-                            }
+                        if (passwordFirst.text.toString() == "") {
+                            toast("请输入密码")
                         } else {
-                            toast("请输入名字")
+                            if (passwordAgain.text.toString() == "") {
+                                toast("请再次输入密码")
+                            } else {
+                                if (passwordAgain.text.toString() != passwordFirst.text.toString()) {
+                                    toast("两次密码不匹配")
+                                } else {
+                                    GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+                                        registerUser()
+                                    }
+                                }
+                            }
                         }
                     }
                 }.lparams(matchParent, dip(50)) {
-                    topMargin = dip(30)
+                    topMargin = dip(40)
                 }
             }.lparams(matchParent, wrapContent) {
                 setMargins(dip(15), dip(150), dip(15), 0)
@@ -139,7 +182,7 @@ class RegisterSetNickName : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         setActionBar(toolbar1)
-        StatusBarUtil.setTranslucentForImageView(this@RegisterSetNickName, 0, toolbar1)
+        StatusBarUtil.setTranslucentForImageView(this@RegisterSetPassword, 0, toolbar1)
         getWindow().getDecorView()
             .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
         toolbar1.setNavigationOnClickListener {
@@ -148,6 +191,46 @@ class RegisterSetNickName : AppCompatActivity() {
                 R.anim.left_in,
                 R.anim.right_out
             )
+        }
+    }
+
+    private suspend fun registerUser(){
+        try{
+            val params = HashMap<String, String>()
+            params["country"] = country
+            params["username"] = phone
+            params["code"] = verifyCode
+            params["password"] = passwordFirst.text.toString()
+            params["system"] = "SK"
+            params["deviceType"] = "ANDROID"
+
+
+            val userJson = JSON.toJSONString(params)
+
+            val body = RequestBody.create(MimeType.APPLICATION_JSON,userJson)
+            val retrofitUils =
+                RetrofitUtils(this@RegisterSetPassword, "https://apass.sklife.jp/")
+            val it = retrofitUils.create(RegisterApi::class.java)
+                .userRegister(body)
+                .subscribeOn(Schedulers.io())
+                .awaitSingle()
+            if (it.code() in 200..299) {
+//                DialogUtils.hideLoading(thisDialog)
+                val toast =
+                    Toast.makeText(applicationContext, "認証コードは既に送信されました。", Toast.LENGTH_SHORT)
+                toast.setGravity(Gravity.CENTER, 0, 0)
+                toast.show()
+
+                startActivity<RegisterSetNickName>()
+                overridePendingTransition(
+                    R.anim.right_in,
+                    R.anim.left_out
+                )
+            }
+        }catch (throwable: Throwable){
+            if(throwable is HttpException){
+                println(throwable.message())
+            }
         }
     }
 
@@ -165,10 +248,13 @@ class RegisterSetNickName : AppCompatActivity() {
 
     private fun closeFocusjianpan() {
         //关闭ｅｄｉｔ光标
-        nickName.clearFocus()
+        passwordFirst.clearFocus()
+        passwordAgain.clearFocus()
         //关闭键盘事件
         val phone = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        phone.hideSoftInputFromWindow(nickName.windowToken, 0)
+        phone.hideSoftInputFromWindow(passwordFirst.windowToken, 0)
+        val code = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        code.hideSoftInputFromWindow(passwordAgain.windowToken, 0)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
