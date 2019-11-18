@@ -82,7 +82,7 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
         }
 
 
-        ViewGroup.LayoutParams params = new LinearLayout.LayoutParams(400, 200);
+        ViewGroup.LayoutParams params = new LinearLayout.LayoutParams(1000, 200);
 
 
          view = CommonActivity.Companion.addMyChild(this);
@@ -206,10 +206,12 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
     String minStr="";
     String secStr="";
     Boolean finishFlag=false;
-
+    String showString="";
     public void onConferenceJoined(Map<String, Object> data) {
         Log.d(TAG, "Conference joined: " + data);
         count= (int)getIntent().getLongExtra("time",0)/1000;
+
+
 
 //        AlertDialog dialog = new AlertDialog.Builder(JitsiMeetActivitySon.this).setTitle("警告")
 //                .setIcon(android.R.drawable.ic_dialog_info)
@@ -259,8 +261,10 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
                                 }else{
                                     secStr=second+"";
                                 }
-
-                                text.setText("已经视频："+minStr+":"+secStr);
+                                showString = "已经视频："+minStr+":"+secStr;
+                                System.out.println("已经视频："+minStr+":"+secStr);
+                               // text.setText("已经视频："+minStr+":"+secStr);
+                                text.setText(showString);
 
                             }
                         },0);
