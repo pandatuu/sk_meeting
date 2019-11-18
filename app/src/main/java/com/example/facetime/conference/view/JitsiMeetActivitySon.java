@@ -95,6 +95,8 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
     public void finishVideo(int type) {
         leaveType = type;
         System.out.println("离开视频！！！！！！！！！！！！！！！！！");
+        finishFlag=true;
+
         JitsiMeetActivitySon.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -203,6 +205,7 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
     int second = 0;
     String minStr="";
     String secStr="";
+    Boolean finishFlag=false;
 
     public void onConferenceJoined(Map<String, Object> data) {
         Log.d(TAG, "Conference joined: " + data);
@@ -292,6 +295,10 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
                         break;
                     }
                     count = count- 1;
+
+                    if(finishFlag){
+                        break;
+                    }
                 }
             }
         }).start();
@@ -330,7 +337,7 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
 
-
+            finishFlag=true;
             Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
             startActivityForResult(intent, 12);
             overridePendingTransition(

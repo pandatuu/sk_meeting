@@ -21,6 +21,6 @@
 <!--    <string name="positionView" translatable="false">https://position-view-histories.sk.cgland.top/</string>-->
 
     <!-- 正式地址 -->
-    <string name="roomrUrl" translatable="false">http://192.168.3.48:9999/</string>
+    <string name="roomrUrl" translatable="false">http://192.168.3.213:9999/</string>
 
 </resources>

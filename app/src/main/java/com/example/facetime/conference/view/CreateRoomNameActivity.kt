@@ -21,6 +21,16 @@ import android.text.TextWatcher
 import android.view.KeyEvent
 import android.widget.*
 import com.example.facetime.R
+import com.example.facetime.conference.api.RoomApi
+import com.example.facetime.util.RetrofitUtils
+import com.facebook.react.bridge.UiThreadUtil
+import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx2.awaitSingle
+import okhttp3.MediaType
+import okhttp3.RequestBody
+import org.json.JSONObject
 
 
 open class CreateRoomNameActivity : AppCompatActivity() {
@@ -30,6 +40,7 @@ open class CreateRoomNameActivity : AppCompatActivity() {
     private lateinit var editText: EditText
 
     lateinit var ms: SharedPreferences
+    private lateinit var roomApi: RoomApi
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -175,7 +186,7 @@ open class CreateRoomNameActivity : AppCompatActivity() {
 
 
                 textView {
-                    text = "下一步"
+                    text = "创建"
                     textSize = 16f
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
@@ -196,22 +207,20 @@ open class CreateRoomNameActivity : AppCompatActivity() {
                             toast.show()
 
                         }else{
-
-                          var intent =
-                                Intent(this@CreateRoomNameActivity, CreatePasswordActivity::class.java)
-
                             createRoom()
 
+//                          var intent =
+//                                Intent(this@CreateRoomNameActivity, CreatePasswordActivity::class.java)
+//
 //                            var intent =
 //                                Intent(this@CreateRoomNameActivity, SuccessActivity::class.java)
-
-
-                            intent.putExtra("RoomName",editText.text.toString())
-                            startActivityForResult(intent, 4)
-                            overridePendingTransition(
-                                R.anim.right_in,
-                                R.anim.left_out
-                            )
+//
+//                            intent.putExtra("RoomName",editText.text.toString())
+//                            startActivityForResult(intent, 4)
+//                            overridePendingTransition(
+//                                R.anim.right_in,
+//                                R.anim.left_out
+//                            )
                         }
                     }
 
@@ -267,13 +276,78 @@ open class CreateRoomNameActivity : AppCompatActivity() {
     }
 
 
-    fun createRoom(){
 
-        val RoomName = editText.text.toString()
 
-        var mEditor: SharedPreferences.Editor = ms.edit()
-        mEditor.putString("MyRoomName", RoomName)
-        mEditor.commit()
+    fun createRoom() {
+
+        val roomName = editText.text.toString()
+
+
+        val request = JSONObject()
+
+        request.put("name", roomName)
+        request.put("password", "")
+
+        val body = RequestBody.create(
+            MediaType.parse("application/json; charset=utf-8"),
+            request.toString()
+        )
+
+
+        GlobalScope.launch {
+
+            roomApi = RetrofitUtils(this@CreateRoomNameActivity, getString(R.string.roomrUrl))
+                .create(RoomApi::class.java)
+
+            val result = roomApi.createRoom(body)
+                .subscribeOn(Schedulers.io())
+                .awaitSingle()
+
+            println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+            println(result)
+            println(result.body())
+
+            UiThreadUtil.runOnUiThread(Runnable {
+
+                if (result.code() in 200..299) {
+
+                    val id = JSONObject(result.body()?.toString()).get("id")
+
+                    var mEditor: SharedPreferences.Editor = ms.edit()
+
+                    mEditor.putString("MyRoomName", roomName)
+                    mEditor.putString("MyRoomNum", id.toString())
+                    mEditor.putString("MyRoomPassword", "")
+                    mEditor.commit()
+
+                    var intentNow =
+                        Intent(this@CreateRoomNameActivity, SuccessActivity::class.java)
+
+                    intentNow.putExtra("RoomName", roomName)
+                    intentNow.putExtra("Password", "")
+                    intentNow.putExtra("MyRoomNum", id.toString())
+
+                    startActivity(intentNow)
+
+                    overridePendingTransition(
+                        R.anim.right_in,
+                        R.anim.left_out
+                    )
+                    finish()
+
+                } else if (result.code() == 406) {
+                    val toast = Toast.makeText(getApplicationContext(), "房间已存在", Toast.LENGTH_SHORT)
+                    toast.setGravity(Gravity.CENTER, 0, 0)
+                    toast.show()
+                    finish();
+                } else {
+                    val toast = Toast.makeText(getApplicationContext(), "出错了!", Toast.LENGTH_SHORT)
+                    toast.setGravity(Gravity.CENTER, 0, 0)
+                    toast.show()
+                    finish();
+                }
+            })
+        }
     }
 
 
