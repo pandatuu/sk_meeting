@@ -278,7 +278,7 @@ open class EnteRoomByPasswordActivity : AppCompatActivity() {
         var add = ""
         add =
             PreferenceManager.getDefaultSharedPreferences(this)
-                .getString("selected", "https://meet.skjob.jp/").toString()
+                .getString("selected", getString(R.string.videoUrl)).toString()
         lateinit var serverURL: URL
         try {
             serverURL = URL(add)

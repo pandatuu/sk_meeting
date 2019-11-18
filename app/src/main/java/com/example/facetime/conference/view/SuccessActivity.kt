@@ -431,7 +431,7 @@ open class SuccessActivity : AppCompatActivity(),
         var add = ""
         add =
             PreferenceManager.getDefaultSharedPreferences(this)
-                .getString("serviceAdd", "https://meet.guanxinqiao.com/").toString()
+                .getString("serviceAdd", getString(R.string.videoUrl)).toString()
         lateinit var serverURL: URL
         try {
             serverURL = URL(add)

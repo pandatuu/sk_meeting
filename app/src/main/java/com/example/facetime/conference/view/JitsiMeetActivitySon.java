@@ -209,7 +209,7 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
 
     public void onConferenceJoined(Map<String, Object> data) {
         Log.d(TAG, "Conference joined: " + data);
-
+        count= (int)getIntent().getLongExtra("time",0)/1000;
 
 //        AlertDialog dialog = new AlertDialog.Builder(JitsiMeetActivitySon.this).setTitle("警告")
 //                .setIcon(android.R.drawable.ic_dialog_info)

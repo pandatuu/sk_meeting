@@ -123,10 +123,9 @@ open class BaseActivity : AppCompatActivity(),
     var videoChatControllerListener: VideoChatControllerListener =
         JitsiMeetActivitySon()
     private lateinit var toolbar1: Toolbar
-    var jitsiMeetActivitySon = JitsiMeetActivitySon()
     var cont = this
     lateinit var editText: EditText
-    var defaultValue = "https://meet.skjob.jp/"
+    var defaultValue =getString(R.string.videoUrl)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

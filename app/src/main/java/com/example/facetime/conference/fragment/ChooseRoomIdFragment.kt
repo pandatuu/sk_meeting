@@ -60,6 +60,8 @@ class ChooseRoomIdFragment : Fragment() {
                 }.lparams() {
                     height = dip(150)
                     width = matchParent
+                    rightMargin = dip(15)
+                    leftMargin = dip(15)
                 }
             }
         }
@@ -71,7 +73,7 @@ class ChooseRoomIdFragment : Fragment() {
         val array= JSONArray(usedRoom)
 
         for(i in 0 until  array!!.length()){
-            verticalLayout.addView(addMyChild((array[i] as JSONObject).getString("num"),(array[i] as JSONObject).getString("name")))
+            verticalLayout.addView(addMyChild((array[array!!.length()-1-i] as JSONObject).getString("num"),(array[array!!.length()-1-i] as JSONObject).getString("name")))
 
         }
 

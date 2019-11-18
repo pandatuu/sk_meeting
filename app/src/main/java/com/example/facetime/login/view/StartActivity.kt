@@ -498,9 +498,16 @@ class StartActivity : AppCompatActivity() {
             .subscribeOn(Schedulers.io()) //被观察者 开子线程请求网络
             .awaitSingle()
         if(user.code() in 200..299){
-            val str = user.body()!!["myRoomId"].asString
+             println("xxxxxxxxxxxxxxxxxx")
+             println(user.body())
+
+            val myRoomId = user.body()!!["myRoomId"].asString
+            val myRoomName = user.body()!!["myRoomName"].asString
+
             val mEditor1: SharedPreferences.Editor = saveTool.edit()
-            mEditor1.putString("MyRoomNum", str)
+            mEditor1.putString("MyRoomNum", myRoomId)
+            mEditor1.putString("MyRoomName", myRoomName)
+
             mEditor1.apply()
 
             DialogUtils.hideLoading(thisDialog)

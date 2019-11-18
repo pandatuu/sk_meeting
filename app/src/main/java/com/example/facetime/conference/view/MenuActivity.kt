@@ -261,11 +261,11 @@ open class MenuActivity : AppCompatActivity(),
 
     fun isRoomCreated(){
 
-        var MyRoomName =
+        var MyRoomNum =
             PreferenceManager.getDefaultSharedPreferences(this@MenuActivity)
-                .getString("MyRoomName", "").toString()
+                .getString("MyRoomNum", "").toString()
 
-        if(MyRoomName==""){
+        if(MyRoomNum==""){
 
             createMy.visibility=View.VISIBLE
             enterMy.visibility=View.GONE
@@ -275,11 +275,6 @@ open class MenuActivity : AppCompatActivity(),
             enterMy.visibility=View.VISIBLE
 
         }
-
-
-
-
-
     }
 
     override fun onStart() {

@@ -14,14 +14,14 @@ import com.example.facetime.util.DialogUtils
 import com.example.facetime.util.MyDialog
 import org.jetbrains.anko.*
 
-class ServiceStatement: AppCompatActivity() {
-    lateinit var statement:WebView
-    var thisDialog: MyDialog?=null
+class ServiceStatement : AppCompatActivity() {
+    lateinit var statement: WebView
+    var thisDialog: MyDialog? = null
     var mHandler = Handler()
     var r: Runnable = Runnable {
         //do something
 
-        if (thisDialog!=null && thisDialog?.isShowing!!){
+        if (thisDialog != null && thisDialog?.isShowing!!) {
             val toast = Toast.makeText(this, "网络出错....", Toast.LENGTH_SHORT)//网路出现问题
             toast.setGravity(Gravity.CENTER, 0, 0)
             toast.show()
@@ -40,14 +40,17 @@ class ServiceStatement: AppCompatActivity() {
 
                     //系统默认会通过手机浏览器打开网页，为了能够直接通过WebView显示网页，则必须设置
                     this.webViewClient = object : WebViewClient() {
-                        override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+                        override fun shouldOverrideUrlLoading(
+                            view: WebView?,
+                            request: WebResourceRequest?
+                        ): Boolean {
                             view?.loadUrl(request?.url.toString())
                             return true
                         }
 
                         // 请求发送，等待过程
                         override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                            thisDialog= DialogUtils.showLoading(this@ServiceStatement)
+                            thisDialog = DialogUtils.showLoading(this@ServiceStatement)
                             mHandler.postDelayed(r, 20000)
                         }
 
@@ -57,8 +60,8 @@ class ServiceStatement: AppCompatActivity() {
                         }
                     }
                     this.loadUrl(this@ServiceStatement.getString(R.string.serviceStatementUrl))
-                }.lparams(width = matchParent,height = matchParent){}
-            }.lparams(width = matchParent,height = wrapContent){
+                }.lparams(width = matchParent, height = matchParent) {}
+            }.lparams(width = matchParent, height = wrapContent) {
                 weight = 1f
             }
         }

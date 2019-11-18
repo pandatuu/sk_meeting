@@ -339,11 +339,28 @@ open class CreateRoomNameActivity : AppCompatActivity() {
                     val toast = Toast.makeText(getApplicationContext(), "房间已存在", Toast.LENGTH_SHORT)
                     toast.setGravity(Gravity.CENTER, 0, 0)
                     toast.show()
+                    overridePendingTransition(
+                        R.anim.fade_in_out,
+                        R.anim.fade_in_out
+                    )
+                    finish();
+                } else if (result.code() == 400) {
+                    val toast = Toast.makeText(getApplicationContext(), "一个账户只能创建一个房间", Toast.LENGTH_SHORT)
+                    toast.setGravity(Gravity.CENTER, 0, 0)
+                    toast.show()
+                    overridePendingTransition(
+                        R.anim.fade_in_out,
+                        R.anim.fade_in_out
+                    )
                     finish();
                 } else {
                     val toast = Toast.makeText(getApplicationContext(), "出错了!", Toast.LENGTH_SHORT)
                     toast.setGravity(Gravity.CENTER, 0, 0)
                     toast.show()
+                    overridePendingTransition(
+                        R.anim.fade_in_out,
+                        R.anim.fade_in_out
+                    )
                     finish();
                 }
             })

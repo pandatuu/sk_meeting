@@ -33,7 +33,7 @@ open class SettingsActivity : AppCompatActivity(), JitsiMeetActivityInterface {
 
     var useNew=false
 
-    var defaultValue = "https://meet.skjob.jp/"
+    var defaultValue =getString(R.string.videoUrl)
 
     private lateinit var toolbar1: Toolbar
     lateinit var verticalLayout: LinearLayout

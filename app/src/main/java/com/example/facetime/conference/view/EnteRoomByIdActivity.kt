@@ -242,90 +242,92 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
 
 
 
-
-
-                relativeLayout() {
-
-                    setOnClickListener {
-                        editTextName.requestFocus()
-                        showSoftKeyboard(editTextName)
-
-                    }
-
-                    backgroundResource = R.drawable.border
-
-
-                    linearLayout {
-                        gravity = Gravity.CENTER
-                        editTextName = editText() {
-                            textColor = Color.BLACK
-                            setHintTextColor(Color.GRAY)
-                            hint = "请输入会议室名"
-                            imeOptions = IME_ACTION_DONE
-                            backgroundColor = Color.TRANSPARENT
-                            singleLine = true
-                            addTextChangedListener(object : TextWatcher {
-                                override fun beforeTextChanged(
-                                    s: CharSequence?,
-                                    start: Int,
-                                    count: Int,
-                                    after: Int
-                                ) {
-                                }
-
-                                override fun onTextChanged(
-                                    s: CharSequence?,
-                                    start: Int,
-                                    before: Int,
-                                    count: Int
-                                ) {
-                                }
-
-                                override fun afterTextChanged(s: Editable?) {
-                                    if (text.toString() == "") {
-                                        hint = "请输入会议室名"
-                                    } else {
-                                        hint = ""
-                                    }
-                                }
-                            })
-                            setOnFocusChangeListener { view, b ->
-                                if (b) {
-                                    setHintTextColor(Color.BLACK)
-                                    closeSelector()
-                                } else {
-                                    setHintTextColor(Color.GRAY)
-                                }
-                            }
-                        }.lparams() {
-                            width = wrapContent
-                            height = matchParent
-                            leftMargin = dip(20)
-                            rightMargin = dip(20)
-                        }
-
-                    }.lparams() {
-                        centerInParent()
-                        width = matchParent
-                        height = matchParent
-                    }
-
-
-
-                }.lparams() {
-                    topMargin = dip(40)
-                    rightMargin = dip(15)
-                    leftMargin = dip(15)
-                    height = dip(50)
-                    width = matchParent
-                }
-
-
                 val fId = 1
                 frameLayout = frameLayout {
                     id = fId
 
+
+
+
                     verticalLayout {
+
+
+                        relativeLayout() {
+
+                            setOnClickListener {
+                                editTextName.requestFocus()
+                                showSoftKeyboard(editTextName)
+
+                            }
+
+                            backgroundResource = R.drawable.border
+
+
+                            linearLayout {
+                                gravity = Gravity.CENTER
+                                editTextName = editText() {
+                                    textColor = Color.BLACK
+                                    setHintTextColor(Color.GRAY)
+                                    hint = "请输入会议室名"
+                                    imeOptions = IME_ACTION_DONE
+                                    backgroundColor = Color.TRANSPARENT
+                                    singleLine = true
+                                    addTextChangedListener(object : TextWatcher {
+                                        override fun beforeTextChanged(
+                                            s: CharSequence?,
+                                            start: Int,
+                                            count: Int,
+                                            after: Int
+                                        ) {
+                                        }
+
+                                        override fun onTextChanged(
+                                            s: CharSequence?,
+                                            start: Int,
+                                            before: Int,
+                                            count: Int
+                                        ) {
+                                        }
+
+                                        override fun afterTextChanged(s: Editable?) {
+                                            if (text.toString() == "") {
+                                                hint = "请输入会议室名"
+                                            } else {
+                                                hint = ""
+                                            }
+                                        }
+                                    })
+                                    setOnFocusChangeListener { view, b ->
+                                        if (b) {
+                                            setHintTextColor(Color.BLACK)
+                                            closeSelector()
+                                        } else {
+                                            setHintTextColor(Color.GRAY)
+                                        }
+                                    }
+                                }.lparams() {
+                                    width = wrapContent
+                                    height = matchParent
+                                    leftMargin = dip(20)
+                                    rightMargin = dip(20)
+                                }
+
+                            }.lparams() {
+                                centerInParent()
+                                width = matchParent
+                                height = matchParent
+                            }
+
+
+
+                        }.lparams() {
+                            topMargin = dip(40)
+                            rightMargin = dip(15)
+                            leftMargin = dip(15)
+                            height = dip(50)
+                            width = matchParent
+                        }
+
 
 
                         linearLayout() {
@@ -361,6 +363,8 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                             topMargin = dip(30)
                             height = dip(50)
                             width = matchParent
+                            rightMargin = dip(15)
+                            leftMargin = dip(15)
                         }
 
 
@@ -397,7 +401,8 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
 
                         }.lparams() {
                             topMargin = dip(0)
-
+                            rightMargin = dip(15)
+                            leftMargin = dip(15)
                             height = dip(50)
                             width = matchParent
                         }
@@ -435,7 +440,8 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                             width = matchParent
                             topMargin = dip(50)
 
-
+                            rightMargin = dip(15)
+                            leftMargin = dip(15)
                         }
 
                     }.lparams() {
@@ -443,8 +449,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                         width = matchParent
                     }
                 }.lparams() {
-                    rightMargin = dip(15)
-                    leftMargin = dip(15)
+
                     height = wrapContent
                     width = matchParent
                 }
@@ -774,6 +779,14 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
             UiThreadUtil.runOnUiThread(Runnable {
                 if (result.code() in 200..299) {
 
+
+
+
+
+                    val endTime=JSONObject(result.body()?.toString()).get("endTime").toString().toLong()
+                    val startTime=JSONObject(result.body()?.toString()).get("startTime").toString().toLong()
+                    val time=endTime-startTime
+
                     val toast = Toast.makeText(
                         applicationContext,
                         "视频会议最多持续半个小时",
@@ -795,6 +808,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                         val intent = Intent(this@EnteRoomByIdActivity, JitsiMeetActivitySon::class.java)
                         intent.action = "org.jitsi.meet.CONFERENCE"
                         intent.putExtra("JitsiMeetConferenceOptions", options)
+                        intent.putExtra("time",time)
                         startActivity(intent)
 
                         overridePendingTransition(
@@ -829,7 +843,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
         var add = ""
         add =
             PreferenceManager.getDefaultSharedPreferences(this)
-                .getString("serviceAdd", "https://meet.guanxinqiao.com/").toString()
+                .getString("serviceAdd", getString(R.string.videoUrl)).toString()
         lateinit var serverURL: URL
         try {
             serverURL = URL(add)
