@@ -470,20 +470,26 @@ class StartActivity : AppCompatActivity() {
                 .awaitSingle()
             if(it.code() in 200..299){
                 val token = it.body()!!.get("token").asString
-
                 val mEditor: SharedPreferences.Editor = saveTool.edit()
                 mEditor.putString("token", token)
-
-
-//                var str=getNum()
-//                mEditor.putString("MyRoomNum", str)
-
-                DialogUtils.hideLoading(thisDialog)
-
-                val i = Intent(this, MenuActivity::class.java)
-                startActivity(i)
-                overridePendingTransition(R.anim.fade_in_out, R.anim.fade_in_out)
                 mEditor.apply()
+                // 获取用户房间号
+                val retrofitUils = RetrofitUtils(this@StartActivity, resources.getString(R.string.roomrUrl))
+                val user = retrofitUils.create(LoginApi::class.java)
+                    .getUserInfo()
+                    .subscribeOn(Schedulers.io()) //被观察者 开子线程请求网络
+                    .awaitSingle()
+                if(user.code() in 200..299){
+                    val str = user.body()!!["myRoomId"].asString
+                    val mEditor1: SharedPreferences.Editor = saveTool.edit()
+                    mEditor1.putString("MyRoomNum", str)
+                    mEditor1.apply()
+
+                    DialogUtils.hideLoading(thisDialog)
+                    val i = Intent(this, MenuActivity::class.java)
+                    startActivity(i)
+                    overridePendingTransition(R.anim.fade_in_out, R.anim.fade_in_out)
+                }
             }
             if(it.code() == 406){
                 val toast = Toast.makeText(applicationContext, "账户名或密码错误", Toast.LENGTH_SHORT)

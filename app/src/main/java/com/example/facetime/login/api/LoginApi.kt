@@ -23,4 +23,8 @@ interface LoginApi {
     @PATCH("/api/users/find-password")
     fun findPassword(@Body array: RequestBody): Observable<Response<String>>
 
+    //获取用户信息
+    @Headers("Content-Type: application/json")
+    @GET("/api/v1/user/self")
+    fun getUserInfo(): Observable<Response<JsonObject>>
 }
