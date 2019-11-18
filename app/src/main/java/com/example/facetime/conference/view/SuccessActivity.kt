@@ -227,51 +227,51 @@ open class SuccessActivity : AppCompatActivity(),
 
 
 
-                textView{
-                    text="会议室密码"
-                }.lparams() {
-                    topMargin = dip(35)
-                    rightMargin = dip(15)
-                    leftMargin = dip(15)
-                    height = wrapContent
-                    width = matchParent
-                }
-
-                linearLayout() {
-
-
-
-                    gravity = Gravity.CENTER
-                    backgroundResource=R.drawable.border
-
-
-                    textView1 = textView() {
-
-                        textColor = Color.BLACK
-                        setHintTextColor(Color.BLACK)
-                        text = intent.getStringExtra("Password")
-                        imeOptions = IME_ACTION_DONE
-                        backgroundColor=Color.TRANSPARENT
-                        singleLine = true
-                        gravity=Gravity.CENTER
-
-
-                    }.lparams() {
-
-                        width = wrapContent
-                        height = matchParent
-
-                    }
-
-                }.lparams() {
-                    topMargin = dip(5)
-                    rightMargin = dip(15)
-                    leftMargin = dip(15)
-                    height = dip(50)
-                    width = matchParent
-                }
-
-
+//                textView{
+//                    text="会议室密码"
+//                }.lparams() {
+//                    topMargin = dip(35)
+//                    rightMargin = dip(15)
+//                    leftMargin = dip(15)
+//                    height = wrapContent
+//                    width = matchParent
+//                }
+//
+//                linearLayout() {
+//
+//
+//
+//                    gravity = Gravity.CENTER
+//                    backgroundResource=R.drawable.border
+//
+//
+//                    textView1 = textView() {
+//
+//                        textColor = Color.BLACK
+//                        setHintTextColor(Color.BLACK)
+//                        text = intent.getStringExtra("Password")
+//                        imeOptions = IME_ACTION_DONE
+//                        backgroundColor=Color.TRANSPARENT
+//                        singleLine = true
+//                        gravity=Gravity.CENTER
+//
+//
+//                    }.lparams() {
+//
+//                        width = wrapContent
+//                        height = matchParent
+//
+//                    }
+//
+//                }.lparams() {
+//                    topMargin = dip(5)
+//                    rightMargin = dip(15)
+//                    leftMargin = dip(15)
+//                    height = dip(50)
+//                    width = matchParent
+//                }
+//
+//
 
 
 
@@ -287,12 +287,8 @@ open class SuccessActivity : AppCompatActivity(),
                     setOnClickListener {
 
 
-                        var num =
-                            PreferenceManager.getDefaultSharedPreferences(this@SuccessActivity)
-                                .getString("MyRoomNum", "").toString()
 
-
-                        gotoVideoInterview(num)
+                        gotoVideoInterview(intent.getStringExtra("MyRoomNum"))
 
                     }
 

@@ -151,7 +151,7 @@ open class EnteRoomByPasswordActivity : AppCompatActivity() {
                                 println(actionId)
                                 println(IME_ACTION_DONE)
                                 if (IME_ACTION_DONE == actionId) {
-                                    gotoVideoInterview("xx")
+                                    gotoVideoInterview()
 
                                 }
                                 false
@@ -299,10 +299,12 @@ open class EnteRoomByPasswordActivity : AppCompatActivity() {
         }
     }
     //转向视频界面
-    private fun gotoVideoInterview(roomNum: String) {
+    private fun gotoVideoInterview() {
 
 
 
+
+        val roomNum=intent.getStringExtra("roomNum")
         val request = JSONObject()
 
         request.put("id", intent.getStringExtra("roomNum"))

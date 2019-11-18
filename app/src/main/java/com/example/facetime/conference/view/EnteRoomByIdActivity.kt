@@ -29,6 +29,8 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx2.awaitSingle
+import okhttp3.MediaType
+import okhttp3.RequestBody
 import org.jitsi.meet.sdk.JitsiMeet
 import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
 import org.jitsi.meet.sdk.JitsiMeetUserInfo
@@ -44,6 +46,8 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
     private lateinit var toolbar1: Toolbar
 
     private lateinit var editText1: EditText
+    private lateinit var    editTextName: EditText
+
     private lateinit var frameLayout: FrameLayout
     private lateinit var triangle: LinearLayout
 
@@ -114,7 +118,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                 gravity = Gravity.CENTER_HORIZONTAL
                 textView {
                     text =
-                        "请输入要加入的会议室ID"
+                        "请输入要加入的会议室ID和名称"
                     textSize = 20f
                     textColor = Color.BLACK
                     typeface = Typeface.DEFAULT_BOLD
@@ -236,6 +240,87 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                     width = matchParent
                 }
 
+
+
+
+
+                relativeLayout() {
+
+                    setOnClickListener {
+                        editTextName.requestFocus()
+                        showSoftKeyboard(editTextName)
+
+                    }
+
+                    backgroundResource = R.drawable.border
+
+
+                    linearLayout {
+                        gravity = Gravity.CENTER
+                        editTextName = editText() {
+                            textColor = Color.BLACK
+                            setHintTextColor(Color.GRAY)
+                            hint = "请输入会议室名"
+                            imeOptions = IME_ACTION_DONE
+                            backgroundColor = Color.TRANSPARENT
+                            singleLine = true
+                            addTextChangedListener(object : TextWatcher {
+                                override fun beforeTextChanged(
+                                    s: CharSequence?,
+                                    start: Int,
+                                    count: Int,
+                                    after: Int
+                                ) {
+                                }
+
+                                override fun onTextChanged(
+                                    s: CharSequence?,
+                                    start: Int,
+                                    before: Int,
+                                    count: Int
+                                ) {
+                                }
+
+                                override fun afterTextChanged(s: Editable?) {
+                                    if (text.toString() == "") {
+                                        hint = "请输入会议室名"
+                                    } else {
+                                        hint = ""
+                                    }
+                                }
+                            })
+                            setOnFocusChangeListener { view, b ->
+                                if (b) {
+                                    setHintTextColor(Color.BLACK)
+                                    closeSelector()
+                                } else {
+                                    setHintTextColor(Color.GRAY)
+                                }
+                            }
+                        }.lparams() {
+                            width = wrapContent
+                            height = matchParent
+                            leftMargin = dip(20)
+                            rightMargin = dip(20)
+                        }
+
+                    }.lparams() {
+                        centerInParent()
+                        width = matchParent
+                        height = matchParent
+                    }
+
+
+
+                }.lparams() {
+                    topMargin = dip(40)
+                    rightMargin = dip(15)
+                    leftMargin = dip(15)
+                    height = dip(50)
+                    width = matchParent
+                }
+
+
                 val fId = 1
                 frameLayout = frameLayout {
                     id = fId
@@ -331,17 +416,15 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
 
                             setOnClickListener {
 
-                                if (editText1.text.toString() == "") {
 
-                                    val toast = Toast.makeText(
-                                        applicationContext,
-                                        "请输入会议室ID",
-                                        Toast.LENGTH_SHORT
-                                    )
-
+                                if(editText1.text.isNullOrEmpty()){
+                                    val toast = Toast.makeText(getApplicationContext(), "请输入房间ID", Toast.LENGTH_SHORT)
                                     toast.setGravity(Gravity.CENTER, 0, 0)
                                     toast.show()
-
+                                }else if(editTextName.text.isNullOrEmpty()){
+                                    val toast = Toast.makeText(getApplicationContext(), "请输入房间名", Toast.LENGTH_SHORT)
+                                    toast.setGravity(Gravity.CENTER, 0, 0)
+                                    toast.show()
                                 } else {
                                     findTheRoom()
                                     //gotoVideoInterview(editText1.text.toString())
@@ -388,7 +471,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
             roomApi = RetrofitUtils(this@EnteRoomByIdActivity, getString(R.string.roomrUrl))
                 .create(RoomApi::class.java)
 
-            val result = roomApi.searchRoom(editText1.text.toString(), null)
+            val result = roomApi.searchRoom(editText1.text.toString(), editTextName.text.toString())
                 .subscribeOn(Schedulers.io())
                 .awaitSingle()
 
@@ -443,20 +526,21 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                         mEditor.commit()
                     }
 
+                    gotoVideoInterview()
 
-                    var intent =
-                        Intent(this@EnteRoomByIdActivity, EnteRoomByPasswordActivity::class.java)
-
-                    intent.putExtra("roomNum", num)
-                    intent.putExtra("roomName",name )
-                    intent.putExtra("switch_audio",switch_audio.isChecked)
-                    intent.putExtra("switch_video",switch_video.isChecked)
-
-                    startActivity(intent)
-                    overridePendingTransition(
-                        R.anim.right_in,
-                        R.anim.left_out
-                    )
+//                    var intent =
+//                        Intent(this@EnteRoomByIdActivity, EnteRoomByPasswordActivity::class.java)
+//
+//                    intent.putExtra("roomNum", num)
+//                    intent.putExtra("roomName",name )
+//                    intent.putExtra("switch_audio",switch_audio.isChecked)
+//                    intent.putExtra("switch_video",switch_video.isChecked)
+//
+//                    startActivity(intent)
+//                    overridePendingTransition(
+//                        R.anim.right_in,
+//                        R.anim.left_out
+//                    )
 
                 } else if (result.code() == 406) {
                     val toast = Toast.makeText(getApplicationContext(), "房间不存在", Toast.LENGTH_SHORT)
@@ -590,63 +674,151 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
 
     }
 
+    fun selectRoomNameToEditText(text: String) {
+
+
+        editTextName.setText(text)
+        closeSelector()
+
+    }
+
+
+//    //转向视频界面
+//    private fun gotoVideoInterview(roomNum: String) {
+//
+//        val toast = Toast.makeText(
+//            applicationContext,
+//            "视频会议最多持续半个小时",
+//            Toast.LENGTH_SHORT
+//        )
+//        toast.setGravity(Gravity.CENTER, 0, 0)
+//        toast.show()
+//
+//
+//        var usedRoomNum =
+//            PreferenceManager.getDefaultSharedPreferences(this)
+//                .getStringSet("usedRoomNum", hashSetOf())
+//
+//        var newRoomSet = setOf<String>()
+//
+//
+//        usedRoomNum?.add(roomNum)
+//
+//        var mEditor: SharedPreferences.Editor = ms.edit()
+//        mEditor.putStringSet("usedRoomNum", usedRoomNum)
+//        mEditor.commit()
+//
+//
+//        var userName =
+//            PreferenceManager.getDefaultSharedPreferences(this)
+//                .getString("userName", "").toString()
+//
+//        try {
+//            var user = JitsiMeetUserInfo()
+//            user.setDisplayName(userName)
+//
+//            //链接视频
+//            val options = JitsiMeetConferenceOptions.Builder()
+//                .setAudioMuted(!switch_audio.isChecked)
+//                .setVideoMuted(!switch_video.isChecked)
+//                .setRoom(roomNum)
+//                .setUserInfo(user)
+//                .build()
+//
+//            val intent = Intent(this, JitsiMeetActivitySon::class.java)
+//            intent.action = "org.jitsi.meet.CONFERENCE"
+//            intent.putExtra("JitsiMeetConferenceOptions", options)
+//            startActivity(intent)
+//
+//            overridePendingTransition(
+//                R.anim.right_in,
+//                R.anim.left_out
+//            )
+//
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//            System.out.println("错了")
+//        }
+//    }
 
     //转向视频界面
-    private fun gotoVideoInterview(roomNum: String) {
+    private fun gotoVideoInterview() {
 
-        val toast = Toast.makeText(
-            applicationContext,
-            "视频会议最多持续半个小时",
-            Toast.LENGTH_SHORT
+
+
+
+        val roomNum=editText1.text.toString()
+        val request = JSONObject()
+
+        request.put("id",editText1.text.toString())
+        request.put("password", "")
+
+        val body = RequestBody.create(
+            MediaType.parse("application/json; charset=utf-8"),
+            request.toString()
         )
-        toast.setGravity(Gravity.CENTER, 0, 0)
-        toast.show()
+
+        GlobalScope.launch {
+
+            roomApi = RetrofitUtils(this@EnteRoomByIdActivity, getString(R.string.roomrUrl))
+                .create(RoomApi::class.java)
+
+            val result = roomApi.joinRoom(body)
+                .subscribeOn(Schedulers.io())
+                .awaitSingle()
+
+            println("消息xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+            println(result)
+            println(result.body())
+
+            UiThreadUtil.runOnUiThread(Runnable {
+                if (result.code() in 200..299) {
+
+                    val toast = Toast.makeText(
+                        applicationContext,
+                        "视频会议最多持续半个小时",
+                        Toast.LENGTH_SHORT
+                    )
+
+                    toast.setGravity(Gravity.CENTER, 0, 0)
+                    toast.show()
+
+                    try {
+                        //链接视频
+                        val options = JitsiMeetConferenceOptions.Builder()
+                            .setRoom(roomNum)
+                            .setAudioMuted(!switch_audio.isChecked)
+                            .setVideoMuted(!switch_video.isChecked)
+                            .setUserInfo(JitsiMeetUserInfo())
+                            .build()
+
+                        val intent = Intent(this@EnteRoomByIdActivity, JitsiMeetActivitySon::class.java)
+                        intent.action = "org.jitsi.meet.CONFERENCE"
+                        intent.putExtra("JitsiMeetConferenceOptions", options)
+                        startActivity(intent)
+
+                        overridePendingTransition(
+                            R.anim.right_in,
+                            R.anim.left_out
+                        )
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        System.out.println("错了")
+                    }
+
+                } else {
+                    val toast = Toast.makeText(getApplicationContext(), "密码错误!", Toast.LENGTH_SHORT)
+                    toast.setGravity(Gravity.CENTER, 0, 0)
+                    toast.show()
+                }
 
 
-        var usedRoomNum =
-            PreferenceManager.getDefaultSharedPreferences(this)
-                .getStringSet("usedRoomNum", hashSetOf())
-
-        var newRoomSet = setOf<String>()
-
-
-        usedRoomNum?.add(roomNum)
-
-        var mEditor: SharedPreferences.Editor = ms.edit()
-        mEditor.putStringSet("usedRoomNum", usedRoomNum)
-        mEditor.commit()
-
-
-        var userName =
-            PreferenceManager.getDefaultSharedPreferences(this)
-                .getString("userName", "").toString()
-
-        try {
-            var user = JitsiMeetUserInfo()
-            user.setDisplayName(userName)
-
-            //链接视频
-            val options = JitsiMeetConferenceOptions.Builder()
-                .setAudioMuted(!switch_audio.isChecked)
-                .setVideoMuted(!switch_video.isChecked)
-                .setRoom(roomNum)
-                .setUserInfo(user)
-                .build()
-
-            val intent = Intent(this, JitsiMeetActivitySon::class.java)
-            intent.action = "org.jitsi.meet.CONFERENCE"
-            intent.putExtra("JitsiMeetConferenceOptions", options)
-            startActivity(intent)
-
-            overridePendingTransition(
-                R.anim.right_in,
-                R.anim.left_out
-            )
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-            System.out.println("错了")
+            })
         }
+
+
+
     }
 
     //初始化视频面试

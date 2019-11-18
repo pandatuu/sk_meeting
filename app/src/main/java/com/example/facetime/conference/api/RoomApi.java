@@ -14,7 +14,7 @@ import retrofit2.http.Query;
 public interface RoomApi {
 
 
-    @POST("/api/v1/room/")
+    @POST("/api/v1/room-manage/")
     Observable<Response<JsonObject>> createRoom(
                     @Body RequestBody array
             );

@@ -93,7 +93,7 @@ class ChooseRoomIdFragment : Fragment() {
                     setOnClickListener {
 
                         (activity as EnteRoomByIdActivity).selectRoomToEditText(t)
-
+                        (activity as EnteRoomByIdActivity).selectRoomNameToEditText(name)
 
                     }
 
