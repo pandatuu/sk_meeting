@@ -27,4 +27,9 @@ interface LoginApi {
     @Headers("Content-Type: application/json")
     @GET("/api/v1/user/self")
     fun getUserInfo(): Observable<Response<JsonObject>>
+
+    //发送验证码
+    @Headers("Content-Type: application/json")
+    @PUT("/api/v1/user/")
+    fun updateUserInfo(@Body array: RequestBody): Observable<Response<String>>
 }

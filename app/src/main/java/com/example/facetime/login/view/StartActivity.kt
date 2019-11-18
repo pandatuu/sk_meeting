@@ -473,23 +473,8 @@ class StartActivity : AppCompatActivity() {
                 val mEditor: SharedPreferences.Editor = saveTool.edit()
                 mEditor.putString("token", token)
                 mEditor.apply()
-                // 获取用户房间号
-                val retrofitUils = RetrofitUtils(this@StartActivity, resources.getString(R.string.roomrUrl))
-                val user = retrofitUils.create(LoginApi::class.java)
-                    .getUserInfo()
-                    .subscribeOn(Schedulers.io()) //被观察者 开子线程请求网络
-                    .awaitSingle()
-                if(user.code() in 200..299){
-                    val str = user.body()!!["myRoomId"].asString
-                    val mEditor1: SharedPreferences.Editor = saveTool.edit()
-                    mEditor1.putString("MyRoomNum", str)
-                    mEditor1.apply()
 
-                    DialogUtils.hideLoading(thisDialog)
-                    val i = Intent(this, MenuActivity::class.java)
-                    startActivity(i)
-                    overridePendingTransition(R.anim.fade_in_out, R.anim.fade_in_out)
-                }
+                getUserInfo(phone)
             }
             if(it.code() == 406){
                 val toast = Toast.makeText(applicationContext, "账户名或密码错误", Toast.LENGTH_SHORT)
@@ -502,6 +487,44 @@ class StartActivity : AppCompatActivity() {
                 println("throwable ------------ ${throwable.code()}")
             }
             DialogUtils.hideLoading(thisDialog)
+        }
+    }
+
+    private suspend fun getUserInfo(phone: String) {
+        // 获取用户房间号
+        val retrofitUils = RetrofitUtils(this@StartActivity, resources.getString(R.string.roomrUrl))
+        val user = retrofitUils.create(LoginApi::class.java)
+            .getUserInfo()
+            .subscribeOn(Schedulers.io()) //被观察者 开子线程请求网络
+            .awaitSingle()
+        if(user.code() in 200..299){
+            val str = user.body()!!["myRoomId"].asString
+            val mEditor1: SharedPreferences.Editor = saveTool.edit()
+            mEditor1.putString("MyRoomNum", str)
+            mEditor1.apply()
+
+            DialogUtils.hideLoading(thisDialog)
+            val i = Intent(this, MenuActivity::class.java)
+            startActivity(i)
+            overridePendingTransition(R.anim.fade_in_out, R.anim.fade_in_out)
+        }
+        //用户没创建个人信息 默认传入手机号
+        if(user.code() == 404){
+            val params = mapOf(
+                "nickName" to phone
+            )
+            val userJson = JSON.toJSONString(params)
+            val body =
+                RequestBody.create(MediaType.parse("application/json; charset=utf-8"), userJson)
+
+            val retrofitUils = RetrofitUtils(this@StartActivity, resources.getString(R.string.roomrUrl))
+            val result = retrofitUils.create(LoginApi::class.java)
+                .updateUserInfo(body)
+                .subscribeOn(Schedulers.io()) //被观察者 开子线程请求网络
+                .awaitSingle()
+            if(result.code() in 200..299){
+                getUserInfo(phone)
+            }
         }
     }
 
