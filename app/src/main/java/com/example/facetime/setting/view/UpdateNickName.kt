@@ -192,7 +192,7 @@ class UpdateNickName : AppCompatActivity() {
             val userJson = JSON.toJSONString(params)
             val body = RequestBody.create(MimeType.APPLICATION_JSON, userJson)
 
-            val retrofitUils = RetrofitUtils(this@UpdateNickName, "http://192.168.3.48:9999/")
+            val retrofitUils = RetrofitUtils(this@UpdateNickName, getString(R.string.roomrUrl))
             val it = retrofitUils.create(SettingApi::class.java)
                 .updateNickName(body)
                 .subscribeOn(Schedulers.io())
