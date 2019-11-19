@@ -19,6 +19,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
 import android.widget.*
+import androidx.fragment.app.FragmentTransaction
 import com.example.facetime.R
 import com.example.facetime.conference.api.RoomApi
 import com.example.facetime.conference.fragment.ChooseRoomIdFragment
@@ -48,7 +49,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
     private lateinit var editText1: EditText
     private lateinit var    editTextName: EditText
 
-    private lateinit var frameLayout: FrameLayout
+    private lateinit var frame: FrameLayout
     private lateinit var triangle: LinearLayout
 
     private lateinit var roomApi: RoomApi
@@ -127,6 +128,11 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                     width = matchParent
                 }
 
+                var hide =  editText {
+                    requestFocus()
+                }.lparams(){
+                    height=dip(0)
+                }
 
 
 
@@ -198,11 +204,14 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
 
 
                     triangle = linearLayout {
+
                         backgroundColor = Color.WHITE
                         gravity = Gravity.CENTER
 
                         setOnClickListener {
 
+                            triangle.requestFocus()
+                            editText1.clearFocus()
 
                             if (chooseRoomIdFragment == null) {
                                 showSelectort()
@@ -242,8 +251,8 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
 
 
 
-                val fId = 1
-                frameLayout = frameLayout {
+                val fId = 10
+                frame = frameLayout {
                     id = fId
 
 
@@ -636,6 +645,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
         //triangle.visibility=View.INVISIBLE
 
         var mTransaction = supportFragmentManager.beginTransaction()
+        mTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
 
         chooseRoomIdFragment =
             ChooseRoomIdFragment.newInstance()
@@ -644,9 +654,11 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
             R.anim.top_in, R.anim.top_in
         )
 
-        mTransaction.replace(frameLayout.id, chooseRoomIdFragment!!)
+        mTransaction.add(frame.id, chooseRoomIdFragment!!)
 
         mTransaction.commit()
+       // toast("xxxxxxxxxxxx")
+
     }
 
 

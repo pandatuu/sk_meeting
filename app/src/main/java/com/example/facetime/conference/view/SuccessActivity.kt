@@ -23,12 +23,22 @@ import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentTransaction
 import com.example.facetime.R
+import com.example.facetime.conference.api.RoomApi
 import com.example.facetime.conference.fragment.BackgroundFragment
 import com.example.facetime.conference.fragment.ShareFragment
+import com.example.facetime.util.RetrofitUtils
+import com.facebook.react.bridge.UiThreadUtil
 import com.twitter.sdk.android.tweetcomposer.TweetComposer
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.socialize.ShareAction
 import com.umeng.socialize.bean.SHARE_MEDIA
+import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx2.awaitSingle
+import okhttp3.MediaType
+import okhttp3.RequestBody
+import org.json.JSONObject
 import java.net.URL
 
 
@@ -36,11 +46,10 @@ open class SuccessActivity : AppCompatActivity(),
     ShareFragment.SharetDialogSelect,
     BackgroundFragment.ClickBack {
 
+    private lateinit var roomApi: RoomApi
 
     private lateinit var toolbar1: Toolbar
     private lateinit var textView1:TextView
-    private lateinit var textView2:TextView
-    private lateinit var textView3:TextView
 
     private var backgroundFragment: BackgroundFragment? = null
     private var shareFragment: ShareFragment? = null
@@ -379,45 +388,92 @@ open class SuccessActivity : AppCompatActivity(),
 
 
     //转向视频界面
-    private fun gotoVideoInterview(roomNum: String) {
+    private fun gotoVideoInterview(roomNum:String) {
 
-        val toast = Toast.makeText(
-            applicationContext,
-            "视频会议最多持续半个小时",
-            Toast.LENGTH_SHORT
+
+
+
+        val request = JSONObject()
+
+        request.put("id",roomNum)
+        request.put("password", "")
+
+        val body = RequestBody.create(
+            MediaType.parse("application/json; charset=utf-8"),
+            request.toString()
         )
 
-        toast.setGravity(Gravity.CENTER, 0, 0)
-        toast.show()
+        GlobalScope.launch {
 
-        var userName =
-            PreferenceManager.getDefaultSharedPreferences(this)
-                .getString("userName", "").toString()
+            roomApi = RetrofitUtils(this@SuccessActivity, getString(R.string.roomrUrl))
+                .create(RoomApi::class.java)
 
-        try {
-            //链接视频
-            val user=JitsiMeetUserInfo()
-            user.displayName=(userName)
+            val result = roomApi.joinRoom(body)
+                .subscribeOn(Schedulers.io())
+                .awaitSingle()
 
-            val options = JitsiMeetConferenceOptions.Builder()
-                .setRoom(roomNum)
-                .setUserInfo(user)
-                .build()
+            println("消息xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+            println(result)
+            println(result.body())
 
-            val intent = Intent(this, JitsiMeetActivitySon::class.java)
-            intent.action = "org.jitsi.meet.CONFERENCE"
-            intent.putExtra("JitsiMeetConferenceOptions", options)
-            startActivity(intent)
+            UiThreadUtil.runOnUiThread(Runnable {
+                if (result.code() in 200..299) {
 
-            overridePendingTransition(
-                R.anim.right_in,
-                R.anim.left_out
-            )
 
-        } catch (e: Exception) {
-            e.printStackTrace()
-            System.out.println("错了")
+
+
+
+                    val endTime= JSONObject(result.body()?.toString()).get("endTime").toString().toLong()
+                    val startTime=
+                        JSONObject(result.body()?.toString()).get("startTime").toString().toLong()
+                    val time=endTime-startTime
+
+                    val toast = Toast.makeText(
+                        applicationContext,
+                        "视频会议最多持续半个小时",
+                        Toast.LENGTH_SHORT
+                    )
+
+                    toast.setGravity(Gravity.CENTER, 0, 0)
+                    toast.show()
+
+                    try {
+                        //链接视频
+                        val options = JitsiMeetConferenceOptions.Builder()
+                            .setRoom(roomNum)
+                            .setAudioMuted(true)
+                            .setVideoMuted(true)
+                            .setUserInfo(JitsiMeetUserInfo())
+                            .build()
+
+                        val intent = Intent(this@SuccessActivity, JitsiMeetActivitySon::class.java)
+                        intent.action = "org.jitsi.meet.CONFERENCE"
+                        intent.putExtra("JitsiMeetConferenceOptions", options)
+                        intent.putExtra("time",time)
+                        startActivity(intent)
+
+                        overridePendingTransition(
+                            R.anim.right_in,
+                            R.anim.left_out
+                        )
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        System.out.println("错了")
+                    }
+
+                } else {
+                    val toast = Toast.makeText(getApplicationContext(), "密码错误!", Toast.LENGTH_SHORT)
+                    toast.setGravity(Gravity.CENTER, 0, 0)
+                    toast.show()
+                }
+
+
+            })
         }
+
+
+
     }
 
     override fun clickAll() {
