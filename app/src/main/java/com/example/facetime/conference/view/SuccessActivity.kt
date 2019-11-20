@@ -430,7 +430,7 @@ open class SuccessActivity : AppCompatActivity(),
 
                     val toast = Toast.makeText(
                         applicationContext,
-                        "视频会议最多持续半个小时",
+                        "会议将会有时间限制",
                         Toast.LENGTH_SHORT
                     )
 

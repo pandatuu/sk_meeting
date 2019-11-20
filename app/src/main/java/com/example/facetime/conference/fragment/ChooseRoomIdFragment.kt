@@ -20,6 +20,7 @@ class ChooseRoomIdFragment : Fragment() {
 
     private var mContext: Context? = null
     private lateinit var verticalLayout:LinearLayout
+    var flag=0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,8 +28,10 @@ class ChooseRoomIdFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(): ChooseRoomIdFragment {
-            return ChooseRoomIdFragment()
+        fun newInstance( flag:Int): ChooseRoomIdFragment {
+            var f=ChooseRoomIdFragment()
+            f.flag=flag
+            return f
         }
     }
 
@@ -94,25 +97,35 @@ class ChooseRoomIdFragment : Fragment() {
 
                     setOnClickListener {
 
-                        (activity as EnteRoomByIdActivity).selectRoomToEditText(t)
-                        (activity as EnteRoomByIdActivity).selectRoomNameToEditText(name)
+                        if(flag==1){
+                            (activity as EnteRoomByIdActivity).selectRoomToEditText(t)
+                        }else{
+                            (activity as EnteRoomByIdActivity).selectRoomNameToEditText(name)
+                        }
 
                     }
 
                     backgroundResource=R.drawable.border_bottom
 
                     textView {
-                        gravity = Gravity.CENTER or Gravity.LEFT
+                        if(flag==2){
+                            visibility=View.GONE
+                        }
+                        gravity = Gravity.CENTER
                         text = t
                         textColor=Color.BLACK
                         textSize=14f
                     }.lparams() {
-                        width = wrapContent
+                        width = dip(0)
                         height = matchParent
+                        weight = 1f
                     }
 
                     textView {
-                        gravity = Gravity.CENTER or Gravity.RIGHT
+                        if(flag==1){
+                            visibility=View.GONE
+                        }
+                        gravity = Gravity.CENTER
                         text = name
                         textColor=Color.BLACK
                         textSize=14f
