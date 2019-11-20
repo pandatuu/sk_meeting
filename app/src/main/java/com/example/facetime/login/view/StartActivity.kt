@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.preference.PreferenceManager
+import android.text.Editable
 import android.text.InputType
 import android.text.method.PasswordTransformationMethod
 import android.view.Gravity
@@ -167,8 +168,13 @@ class StartActivity : AppCompatActivity() {
                         rightMargin = dip(10)
                     }
 
+                    val savePhone = saveTool.getString("phone","").toString()
+
                     telePhone = editText {
                         hint = "请输入手机号码"
+                        if(savePhone != ""){
+                            setText(savePhone)
+                        }
                         backgroundColor = Color.TRANSPARENT
                         setHintTextColor(Color.GRAY)
                         singleLine=true
@@ -444,6 +450,7 @@ class StartActivity : AppCompatActivity() {
             if(it.code() in 200..299){
                 val token = it.body()!!.get("token").asString
                 val mEditor: SharedPreferences.Editor = saveTool.edit()
+                mEditor.putString("phone", phone)
                 mEditor.putString("token", token)
                 mEditor.apply()
 
