@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
@@ -39,12 +40,14 @@ class MainActivity : AppCompatActivity() {
                 backgroundResource = R.mipmap.bg
                 imageView {
                     imageResource = R.drawable.logo
+                    scaleType = ImageView.ScaleType.FIT_CENTER
                 }.lparams(wrapContent, wrapContent){
                     centerInParent()
                 }
                 imageView {
                     imageResource = R.drawable.bottom
-                }.lparams(){
+                    scaleType = ImageView.ScaleType.FIT_CENTER
+                }.lparams{
                     alignParentBottom()
                     bottomMargin = dip(36)
                 }
