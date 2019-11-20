@@ -376,13 +376,13 @@ class StartActivity : AppCompatActivity() {
         val result = isPhoneNumberValid(myPhone, country)
         val myCheck = isChoose.isChecked
 
-        if (!myCheck) {
-            toast("请勾选协议")
-            return
-        }
-
         if (phone.isEmpty()) {
             toast("请输入手机号")
+            return
+        }
+        // 电话判定,测试阶段屏蔽
+        if (!result) {
+            toast("请输入正确的手机号")
             return
         }
 
@@ -391,9 +391,8 @@ class StartActivity : AppCompatActivity() {
             return
         }
 
-        // 电话判定,测试阶段屏蔽
-        if (!result) {
-            toast("请输入正确的手机号")
+        if (!myCheck) {
+            toast("请勾选协议")
             return
         }
 
@@ -402,32 +401,6 @@ class StartActivity : AppCompatActivity() {
         GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
             login(phone, myPassword, countryCode)
         }
-    }
-
-    fun getNum():String{
-        var result=""
-        var d=0
-        while(true){
-            val random=(Math.random()*1000).toInt()
-            d=random%9
-            if(d>3){
-             break
-            }
-        }
-
-        for(i in 0 until d){
-            var c=""
-            while(true){
-                var r=Math.ceil(Math.random()*1000).toInt()%122
-                if((r>=48 && r<=57)  || (r>=65 && r<=90)  || (r>=97 && r<=122) ){
-                    c= r.toChar().toString()
-                    break
-                }
-            }
-            result=result+c
-        }
-
-        return result
     }
 
     private suspend fun login(

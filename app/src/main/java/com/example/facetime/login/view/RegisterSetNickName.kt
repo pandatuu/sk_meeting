@@ -116,6 +116,7 @@ class RegisterSetNickName : AppCompatActivity() {
                         if (nickName.text.toString() != "") {
                             if (nickName.text.length < 10) {
                                 val mEditor: SharedPreferences.Editor = saveTool.edit()
+                                //如果是新注册的号，登录时会没有用户信息，到时候就用这里的nickname去更新用户信息
                                 mEditor.putString("nickName", nickName.text.toString())
                                 mEditor.commit()
 

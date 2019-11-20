@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.os.Handler
 import android.text.InputType
 import android.view.Gravity
 import android.view.KeyEvent
@@ -17,7 +18,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.fastjson.JSON
 import com.example.facetime.R
 import com.example.facetime.login.api.RegisterApi
+import com.example.facetime.util.DialogUtils
 import com.example.facetime.util.MimeType
+import com.example.facetime.util.MyDialog
 import com.example.facetime.util.RetrofitUtils
 import com.jaeger.library.StatusBarUtil
 import io.reactivex.schedulers.Schedulers
@@ -39,6 +42,21 @@ class RegisterSetPassword : AppCompatActivity() {
     var phone = ""
     var country = ""
     var verifyCode = ""
+    var thisDialog: MyDialog? = null
+    var mHandler = Handler()
+    var r: Runnable = Runnable {
+        //do something
+        if (thisDialog?.isShowing!!) {
+            val toast = Toast.makeText(
+                this@RegisterSetPassword,
+                "ネットワークエラー",
+                Toast.LENGTH_SHORT
+            )//网路出现问题
+            toast.setGravity(Gravity.CENTER, 0, 0)
+            toast.show()
+        }
+        DialogUtils.hideLoading(thisDialog)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -163,6 +181,8 @@ class RegisterSetPassword : AppCompatActivity() {
                                 if (passwordAgain.text.toString() != passwordFirst.text.toString()) {
                                     toast("两次密码不匹配")
                                 } else {
+                                    thisDialog = DialogUtils.showLoading(this@RegisterSetPassword)
+                                    mHandler.postDelayed(r, 12000)
                                     GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
                                         registerUser()
                                     }
@@ -215,9 +235,9 @@ class RegisterSetPassword : AppCompatActivity() {
                 .subscribeOn(Schedulers.io())
                 .awaitSingle()
             if (it.code() in 200..299) {
-//                DialogUtils.hideLoading(thisDialog)
+                DialogUtils.hideLoading(thisDialog)
                 val toast =
-                    Toast.makeText(applicationContext, "認証コードは既に送信されました。", Toast.LENGTH_SHORT)
+                    Toast.makeText(applicationContext, "注册成功", Toast.LENGTH_SHORT)
                 toast.setGravity(Gravity.CENTER, 0, 0)
                 toast.show()
 
@@ -227,10 +247,12 @@ class RegisterSetPassword : AppCompatActivity() {
                     R.anim.left_out
                 )
             }
+            DialogUtils.hideLoading(thisDialog)
         }catch (throwable: Throwable){
             if(throwable is HttpException){
                 println(throwable.message())
             }
+            DialogUtils.hideLoading(thisDialog)
         }
     }
 

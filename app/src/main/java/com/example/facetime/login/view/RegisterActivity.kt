@@ -9,6 +9,7 @@ import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Handler
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
@@ -21,6 +22,7 @@ import com.example.facetime.login.api.LoginApi
 import com.example.facetime.login.api.RegisterApi
 import com.example.facetime.util.DialogUtils
 import com.example.facetime.util.MimeType
+import com.example.facetime.util.MyDialog
 import com.example.facetime.util.RetrofitUtils
 import com.google.i18n.phonenumbers.NumberParseException
 import com.google.i18n.phonenumbers.PhoneNumberUtil
@@ -47,6 +49,21 @@ class RegisterActivity : AppCompatActivity() {
     var isPhoneFormat = false
     lateinit var codeText: TextView
     private var runningDownTimer: Boolean = false
+    var thisDialog: MyDialog? = null
+    var mHandler = Handler()
+    var r: Runnable = Runnable {
+        //do something
+        if (thisDialog?.isShowing!!) {
+            val toast = Toast.makeText(
+                this@RegisterActivity,
+                "ネットワークエラー",
+                Toast.LENGTH_SHORT
+            )//网路出现问题
+            toast.setGravity(Gravity.CENTER, 0, 0)
+            toast.show()
+        }
+        DialogUtils.hideLoading(thisDialog)
+    }
 
     @SuppressLint("RtlHardcoded", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -176,13 +193,15 @@ class RegisterActivity : AppCompatActivity() {
                                         countryCode.text.toString().substring(1)
                                     )
                                 if (isPhoneFormat) {
+                                    thisDialog = DialogUtils.showLoading(this@RegisterActivity)
+                                    mHandler.postDelayed(r, 12000)
                                     GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
                                         val sendBool = sendVerificationCode(
-                                            countryCode.text.toString().trim(),
-                                            phoneNum.text.toString().substring(1)
+                                            phoneNum.text.toString().trim(),
+                                            countryCode.text.toString().substring(1)
                                         )
                                         if (sendBool){
-//                                            DialogUtils.hideLoading(thisDialog)
+                                            DialogUtils.hideLoading(thisDialog)
                                             onPcode()
                                         }
                                     }
@@ -242,6 +261,7 @@ class RegisterActivity : AppCompatActivity() {
                                 phone,
                                 countryCode.text.toString().substring(1)
                             )
+
                         if (phoneNum.text.toString() == "" || !isPhoneFormat) {
                             toast("手机号为空或格式不对")
                         } else {
@@ -249,6 +269,8 @@ class RegisterActivity : AppCompatActivity() {
                                 toast("验证码为空")
                             } else {
                                 if (isChoose.isChecked) {
+                                    thisDialog = DialogUtils.showLoading(this@RegisterActivity)
+                                    mHandler.postDelayed(r, 12000)
                                     GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
                                         validateVerificationCode(phoneNum.text.toString(), vcodeNum.text.toString())
                                     }
@@ -353,7 +375,7 @@ class RegisterActivity : AppCompatActivity() {
                 "phone" to phoneNum,
                 "country" to country,
                 "deviceType" to "ANDROID",
-                "codeType" to "LOGIN",
+                "codeType" to "REG",
                 "manufacturer" to manufacturer,
                 "deviceModel" to deviceModel
             )
@@ -411,6 +433,8 @@ class RegisterActivity : AppCompatActivity() {
                 .awaitSingle()
 
             if (it.code() in 200..299) {
+
+                DialogUtils.hideLoading(thisDialog)
                 startActivity<RegisterSetPassword>("phone" to phoneNum, "country" to country, "verifyCode" to verifyCode)
                 overridePendingTransition(
                     R.anim.right_in,
@@ -418,7 +442,7 @@ class RegisterActivity : AppCompatActivity() {
                 )
             }
             if (it.code() == 406) {
-//                DialogUtils.hideLoading(thisDialog)
+                DialogUtils.hideLoading(thisDialog)
                 val toast = Toast.makeText(applicationContext, "認証コード取得失敗", Toast.LENGTH_SHORT)
                 toast.setGravity(Gravity.CENTER, 0, 0)
                 toast.show()
@@ -428,6 +452,8 @@ class RegisterActivity : AppCompatActivity() {
             if (throwable is HttpException) {
                 println("throwable ------------ ${throwable.code()}")
             }
+
+            DialogUtils.hideLoading(thisDialog)
             return false
         }
     }
