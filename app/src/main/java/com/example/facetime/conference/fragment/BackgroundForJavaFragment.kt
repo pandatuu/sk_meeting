@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.example.facetime.conference.fragment
 
 import android.content.Context
@@ -5,12 +7,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import android.app.Fragment
 import com.example.facetime.R
 import org.jetbrains.anko.backgroundColorResource
 import org.jetbrains.anko.verticalLayout
 
-class BackgroundFragment: Fragment() {
+class BackgroundForJavaFragment: Fragment() {
 
     interface ClickBack{
         fun clickAll()
@@ -25,8 +27,8 @@ class BackgroundFragment: Fragment() {
     }
 
     companion object {
-        fun newInstance(): BackgroundFragment {
-            return BackgroundFragment()
+        fun newInstance(): BackgroundForJavaFragment {
+            return BackgroundForJavaFragment()
         }
     }
 

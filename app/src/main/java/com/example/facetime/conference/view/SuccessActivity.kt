@@ -96,16 +96,16 @@ open class SuccessActivity : AppCompatActivity(),
                         width= wrapContent
                     }
                     relativeLayout {
-                        imageView {
-                            imageResource = R.mipmap.icon_share_zwxq
-                            setOnClickListener {
-                                addListFragment()
-                            }
-                        }.lparams(wrapContent, wrapContent){
-                            alignParentRight()
-                            centerVertically()
-                            rightMargin = dip(15)
-                        }
+//                        imageView {
+//                            imageResource = R.mipmap.icon_share_zwxq
+//                            setOnClickListener {
+//                                addListFragment()
+//                            }
+//                        }.lparams(wrapContent, wrapContent){
+//                            alignParentRight()
+//                            centerVertically()
+//                            rightMargin = dip(15)
+//                        }
                     }.lparams(dip(0),matchParent){
                         weight = 1f
                     }
