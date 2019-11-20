@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.example.facetime.conference.fragment
 
 import android.annotation.SuppressLint
@@ -16,8 +18,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.*
+import android.app.Fragment
 
-class ShareFragment : androidx.fragment.app.Fragment() {
+class ShareForJavaFragment : Fragment() {
 
     private var mContext: Context? = null
     lateinit var sharetDialogSelect: SharetDialogSelect
@@ -30,8 +33,8 @@ class ShareFragment : androidx.fragment.app.Fragment() {
     }
 
     companion object {
-        fun newInstance( ): ShareFragment {
-            var f = ShareFragment()
+        fun newInstance( ): ShareForJavaFragment {
+            var f = ShareForJavaFragment()
             return f
         }
     }

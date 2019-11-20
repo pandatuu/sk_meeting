@@ -1,4 +1,4 @@
-package imui.jiguang.cn.imuisample.fragment.common;
+package com.example.facetime.conference.fragment;
 
 
 import android.app.Fragment;
@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.sk_android.R;
+import com.example.facetime.R;
 
 
 public class ShadowFragment extends Fragment {
