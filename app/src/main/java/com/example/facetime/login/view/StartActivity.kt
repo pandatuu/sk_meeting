@@ -483,10 +483,12 @@ class StartActivity : AppCompatActivity() {
 
             val myRoomId = user.body()!!["myRoomId"].asString
             val myRoomName = user.body()!!["myRoomName"].asString
+            val nickName = user.body()!!["nickName"].asString
 
             val mEditor1: SharedPreferences.Editor = saveTool.edit()
             mEditor1.putString("MyRoomNum", myRoomId)
             mEditor1.putString("MyRoomName", myRoomName)
+            mEditor1.putString("nickName", nickName)
 
             mEditor1.apply()
 
