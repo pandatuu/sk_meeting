@@ -453,8 +453,8 @@ open class SuccessActivity : AppCompatActivity(),
                         //链接视频
                         val options = JitsiMeetConferenceOptions.Builder()
                             .setRoom(roomNum)
-                            .setAudioMuted(true)
-                            .setVideoMuted(true)
+                            .setAudioMuted(false)
+                            .setVideoMuted(false)
                             .setUserInfo(user)
                             .build()
 
