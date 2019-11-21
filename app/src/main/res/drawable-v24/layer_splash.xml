@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <!-- 中间的图片 -->
+        <bitmap
+            android:src="@drawable/bg"/>
+    </item>
+    <item>
+        <!-- 中间的图片 -->
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/logo"
+            android:scaleType="fitCenter" />
+    </item>
+    <item android:bottom="36dp">
+        <!-- 中间的图片 -->
+        <bitmap
+            android:gravity="bottom"
+            android:src="@drawable/bottom"
+            android:scaleType="fitCenter" />
+    </item>
+</layer-list>

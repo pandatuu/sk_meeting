@@ -52,6 +52,10 @@ open class MenuActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        runOnUiThread {
+            Thread.sleep(2000)
+
+        }
         val mainId = 1
         fram = frameLayout {
             id = mainId

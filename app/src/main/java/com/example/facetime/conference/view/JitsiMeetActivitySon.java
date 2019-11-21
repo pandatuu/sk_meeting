@@ -5,11 +5,13 @@ import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -453,6 +455,9 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
                 this, "5cdcc324570df3ffc60009c3"
                 , "umeng", UMConfigure.DEVICE_TYPE_PHONE, ""
         );
+        SharedPreferences saveTool = PreferenceManager.getDefaultSharedPreferences(this);
+        String addr = saveTool.getString("serviceAdd",getString(R.string.videoUrl));
+        String id = saveTool.getString("MyRoomNum","");
         switch (index) {
 
 
@@ -474,7 +479,7 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
                 }
                 new ShareAction(this)
                         .setPlatform(SHARE_MEDIA.LINE)//传入平台
-                        .withText("this is chat App,welcome to try")
+                        .withText("视频地址："+addr+id)
                         .setShareboardclickCallback(new ShareBoardlistener() {
 
                             @Override
@@ -489,7 +494,7 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
 
             case 1: {
                 TweetComposer.Builder builder =new  TweetComposer.Builder(this);
-                builder.text("this is chat App,welcome to try")
+                builder.text("视频地址："+addr+id)
                         .show();
 
                 break;

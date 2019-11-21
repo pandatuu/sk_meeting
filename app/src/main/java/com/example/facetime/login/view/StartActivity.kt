@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.preference.PreferenceManager
+import android.text.Editable
 import android.text.InputType
 import android.text.method.PasswordTransformationMethod
 import android.view.Gravity
@@ -98,24 +99,24 @@ class StartActivity : AppCompatActivity() {
                         height= matchParent
                         width= wrapContent
                     }
-//                    relativeLayout {
-////                        textView {
-////                            text = "注册"
-////                            gravity = Gravity.RIGHT
-////                            textSize = 16f
-////                            textColor = Color.parseColor("#7F7F7F")
-////                            setOnClickListener {
-////                                startActivity<RegisterActivity>()
-////                                overridePendingTransition(R.anim.right_in, R.anim.left_out)
-////                            }
-////                        }.lparams(height = wrapContent, width = matchParent){
-////                            centerVertically()
-////                            alignParentRight()
-////                            rightMargin = dip(20)
-////                        }
-////                    }.lparams(dip(0),matchParent){
-////                        weight = 1f
-////                    }
+                    relativeLayout {
+                        textView {
+                            text = "注册"
+                            gravity = Gravity.RIGHT
+                            textSize = 16f
+                            textColor = Color.parseColor("#7F7F7F")
+                            setOnClickListener {
+                                startActivity<RegisterActivity>()
+                                overridePendingTransition(R.anim.right_in, R.anim.left_out)
+                            }
+                        }.lparams(height = wrapContent, width = matchParent){
+                            centerVertically()
+                            alignParentRight()
+                            rightMargin = dip(20)
+                        }
+                    }.lparams(dip(0),matchParent){
+                        weight = 1f
+                    }
                 }.lparams() {
                     weight = 1f
                     width = dip(0)
@@ -167,8 +168,13 @@ class StartActivity : AppCompatActivity() {
                         rightMargin = dip(10)
                     }
 
+                    val savePhone = saveTool.getString("phone","").toString()
+
                     telePhone = editText {
                         hint = "请输入手机号码"
+                        if(savePhone != ""){
+                            setText(savePhone)
+                        }
                         backgroundColor = Color.TRANSPARENT
                         setHintTextColor(Color.GRAY)
                         singleLine=true
@@ -376,13 +382,13 @@ class StartActivity : AppCompatActivity() {
         val result = isPhoneNumberValid(myPhone, country)
         val myCheck = isChoose.isChecked
 
-        if (!myCheck) {
-            toast("请勾选协议")
-            return
-        }
-
         if (phone.isEmpty()) {
             toast("请输入手机号")
+            return
+        }
+        // 电话判定,测试阶段屏蔽
+        if (!result) {
+            toast("请输入正确的手机号")
             return
         }
 
@@ -391,9 +397,8 @@ class StartActivity : AppCompatActivity() {
             return
         }
 
-        // 电话判定,测试阶段屏蔽
-        if (!result) {
-            toast("请输入正确的手机号")
+        if (!myCheck) {
+            toast("请勾选协议")
             return
         }
 
@@ -402,32 +407,6 @@ class StartActivity : AppCompatActivity() {
         GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
             login(phone, myPassword, countryCode)
         }
-    }
-
-    fun getNum():String{
-        var result=""
-        var d=0
-        while(true){
-            val random=(Math.random()*1000).toInt()
-            d=random%9
-            if(d>3){
-             break
-            }
-        }
-
-        for(i in 0 until d){
-            var c=""
-            while(true){
-                var r=Math.ceil(Math.random()*1000).toInt()%122
-                if((r>=48 && r<=57)  || (r>=65 && r<=90)  || (r>=97 && r<=122) ){
-                    c= r.toChar().toString()
-                    break
-                }
-            }
-            result=result+c
-        }
-
-        return result
     }
 
     private suspend fun login(
@@ -471,6 +450,7 @@ class StartActivity : AppCompatActivity() {
             if(it.code() in 200..299){
                 val token = it.body()!!.get("token").asString
                 val mEditor: SharedPreferences.Editor = saveTool.edit()
+                mEditor.putString("phone", phone)
                 mEditor.putString("token", token)
                 mEditor.apply()
 
@@ -503,10 +483,12 @@ class StartActivity : AppCompatActivity() {
 
             val myRoomId = user.body()!!["myRoomId"].asString
             val myRoomName = user.body()!!["myRoomName"].asString
+            val nickName = user.body()!!["nickName"].asString
 
             val mEditor1: SharedPreferences.Editor = saveTool.edit()
             mEditor1.putString("MyRoomNum", myRoomId)
             mEditor1.putString("MyRoomName", myRoomName)
+            mEditor1.putString("nickName", nickName)
 
             mEditor1.apply()
 
@@ -517,8 +499,10 @@ class StartActivity : AppCompatActivity() {
         }
         //用户没创建个人信息 默认传入手机号
         if(user.code() == 404){
+            val mPerferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+            val name = mPerferences.getString("nickName", phone)
             val params = mapOf(
-                "nickName" to phone
+                "nickName" to name
             )
             val userJson = JSON.toJSONString(params)
             val body =
