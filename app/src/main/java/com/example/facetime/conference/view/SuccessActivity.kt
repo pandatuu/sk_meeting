@@ -158,7 +158,7 @@ open class SuccessActivity : AppCompatActivity(),
 
 
                     textView1 = textView() {
-
+                        setTextIsSelectable(true)
                         textColor = Color.BLACK
                         setHintTextColor(Color.BLACK)
                         text =  intent.getStringExtra("MyRoomNum")
@@ -208,6 +208,7 @@ open class SuccessActivity : AppCompatActivity(),
 
                     textView1 = textView() {
 
+                        setTextIsSelectable(true)
                         textColor = Color.BLACK
                         setHintTextColor(Color.BLACK)
                         text = intent.getStringExtra("RoomName")

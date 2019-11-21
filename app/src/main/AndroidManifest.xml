@@ -69,21 +69,21 @@
         </activity>
 
         <!-- 注册 -->
-        <activity android:name="com.example.facetime.register.view.RegisterActivity"
+        <activity android:name="com.example.facetime.login.view.RegisterActivity"
             android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme.Black"
             >
         </activity>
 
         <!-- 注册-设置密码 -->
-        <activity android:name="com.example.facetime.register.view.RegisterSetPassword"
+        <activity android:name="com.example.facetime.login.view.RegisterSetPassword"
             android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme.Black"
             >
         </activity>
 
         <!-- 设置昵称 -->
-        <activity android:name="com.example.facetime.register.view.RegisterSetNickName"
+        <activity android:name="com.example.facetime.login.view.RegisterSetNickName"
 android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme.Black"
             >

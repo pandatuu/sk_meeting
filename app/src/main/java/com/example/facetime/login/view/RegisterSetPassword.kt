@@ -1,9 +1,10 @@
-package com.example.facetime.register.view
+package com.example.facetime.login.view
 
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.os.Handler
 import android.text.InputType
 import android.view.Gravity
 import android.view.KeyEvent
@@ -11,20 +12,64 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.Toast
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
+import com.alibaba.fastjson.JSON
 import com.example.facetime.R
+import com.example.facetime.login.api.RegisterApi
+import com.example.facetime.util.DialogUtils
+import com.example.facetime.util.MimeType
+import com.example.facetime.util.MyDialog
+import com.example.facetime.util.RetrofitUtils
 import com.jaeger.library.StatusBarUtil
+import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx2.awaitSingle
+import okhttp3.MediaType
+import okhttp3.RequestBody
 import org.jetbrains.anko.*
+import retrofit2.HttpException
 
 class RegisterSetPassword : AppCompatActivity() {
 
     private lateinit var passwordFirst: EditText
     private lateinit var passwordAgain: EditText
     private lateinit var toolbar1: Toolbar
+    var phone = ""
+    var country = ""
+    var verifyCode = ""
+    var thisDialog: MyDialog? = null
+    var mHandler = Handler()
+    var r: Runnable = Runnable {
+        //do something
+        if (thisDialog?.isShowing!!) {
+            val toast = Toast.makeText(
+                this@RegisterSetPassword,
+                "ネットワークエラー",
+                Toast.LENGTH_SHORT
+            )//网路出现问题
+            toast.setGravity(Gravity.CENTER, 0, 0)
+            toast.show()
+        }
+        DialogUtils.hideLoading(thisDialog)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if(intent.getStringExtra("phone")!=null){
+            phone = intent.getStringExtra("phone") as String
+        }
+        if(intent.getStringExtra("country")!=null){
+            country = intent.getStringExtra("country") as String
+        }
+        if(intent.getStringExtra("verifyCode")!=null){
+            verifyCode = intent.getStringExtra("verifyCode") as String
+        }
 
         frameLayout {
             backgroundColor = Color.TRANSPARENT
@@ -136,11 +181,11 @@ class RegisterSetPassword : AppCompatActivity() {
                                 if (passwordAgain.text.toString() != passwordFirst.text.toString()) {
                                     toast("两次密码不匹配")
                                 } else {
-                                    startActivity<RegisterSetNickName>()
-                                    overridePendingTransition(
-                                        R.anim.right_in,
-                                        R.anim.left_out
-                                    )
+                                    thisDialog = DialogUtils.showLoading(this@RegisterSetPassword)
+                                    mHandler.postDelayed(r, 12000)
+                                    GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+                                        registerUser()
+                                    }
                                 }
                             }
                         }
@@ -166,6 +211,48 @@ class RegisterSetPassword : AppCompatActivity() {
                 R.anim.left_in,
                 R.anim.right_out
             )
+        }
+    }
+
+    private suspend fun registerUser(){
+        try{
+            val params = HashMap<String, String>()
+            params["country"] = country
+            params["username"] = phone
+            params["code"] = verifyCode
+            params["password"] = passwordFirst.text.toString()
+            params["system"] = "SK"
+            params["deviceType"] = "ANDROID"
+
+
+            val userJson = JSON.toJSONString(params)
+
+            val body = RequestBody.create(MimeType.APPLICATION_JSON,userJson)
+            val retrofitUils =
+                RetrofitUtils(this@RegisterSetPassword, "https://apass.sklife.jp/")
+            val it = retrofitUils.create(RegisterApi::class.java)
+                .userRegister(body)
+                .subscribeOn(Schedulers.io())
+                .awaitSingle()
+            if (it.code() in 200..299) {
+                DialogUtils.hideLoading(thisDialog)
+                val toast =
+                    Toast.makeText(applicationContext, "注册成功", Toast.LENGTH_SHORT)
+                toast.setGravity(Gravity.CENTER, 0, 0)
+                toast.show()
+
+                startActivity<RegisterSetNickName>()
+                overridePendingTransition(
+                    R.anim.right_in,
+                    R.anim.left_out
+                )
+            }
+            DialogUtils.hideLoading(thisDialog)
+        }catch (throwable: Throwable){
+            if(throwable is HttpException){
+                println(throwable.message())
+            }
+            DialogUtils.hideLoading(thisDialog)
         }
     }
 
