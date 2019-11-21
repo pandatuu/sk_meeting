@@ -925,12 +925,23 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                     toast.show()
 
                     try {
+
+                        var user=JitsiMeetUserInfo()
+
+                        var nickName =
+                            PreferenceManager.getDefaultSharedPreferences(this@EnteRoomByIdActivity)
+                                .getString("nickName", "")
+
+                        user.displayName=nickName
+
+                        println("---------------------"+nickName)
+
                         //链接视频
                         val options = JitsiMeetConferenceOptions.Builder()
                             .setRoom(roomNum)
                             .setAudioMuted(!switch_audio.isChecked)
                             .setVideoMuted(!switch_video.isChecked)
-                            .setUserInfo(JitsiMeetUserInfo())
+                            .setUserInfo(user)
                             .build()
 
                         val intent =

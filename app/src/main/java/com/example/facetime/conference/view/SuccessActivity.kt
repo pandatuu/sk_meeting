@@ -437,13 +437,24 @@ open class SuccessActivity : AppCompatActivity(),
                     toast.setGravity(Gravity.CENTER, 0, 0)
                     toast.show()
 
+                    var user=JitsiMeetUserInfo()
+
+                    var nickName =
+                        PreferenceManager.getDefaultSharedPreferences(this@SuccessActivity)
+                            .getString("nickName", "")
+
+                    user.displayName=nickName
+
+
+                    println("---------------------"+nickName)
+
                     try {
                         //链接视频
                         val options = JitsiMeetConferenceOptions.Builder()
                             .setRoom(roomNum)
                             .setAudioMuted(true)
                             .setVideoMuted(true)
-                            .setUserInfo(JitsiMeetUserInfo())
+                            .setUserInfo(user)
                             .build()
 
                         val intent = Intent(this@SuccessActivity, JitsiMeetActivitySon::class.java)
