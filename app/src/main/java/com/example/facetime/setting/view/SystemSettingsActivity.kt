@@ -269,9 +269,10 @@ open class SystemSettingsActivity : AppCompatActivity() {
 //                DialogUtils.hideLoading(thisDialog)
                 val sp = PreferenceManager.getDefaultSharedPreferences(this@SystemSettingsActivity).edit()
                 sp.remove("token")
-                sp.remove("userName")
+//                sp.remove("userName")
                 sp.remove("MyRoomNum")
                 sp.remove("MyRoomName")
+                sp.remove("nickName")
                 sp.commit()
 
                 DialogUtils.hideLoading(thisDialog)
