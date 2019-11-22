@@ -113,7 +113,11 @@ class UpdateNickName : AppCompatActivity() {
                 }
                 relativeLayout {
                     backgroundResource = R.drawable.border
+
+                    val string = saveTool.getString("nickName","").toString()
+
                     nickName = editText {
+                        setText(string)
                         hint = "请输入新昵称"
                         singleLine = true
                         padding = dip(5)

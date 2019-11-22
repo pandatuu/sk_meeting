@@ -216,39 +216,40 @@ class RegisterActivity : AppCompatActivity() {
                 }.lparams(matchParent, dip(55)) {
                     topMargin = dip(15)
                 }
-                linearLayout {
-                    orientation = LinearLayout.HORIZONTAL
-                    gravity = Gravity.CENTER_VERTICAL
-                    isChoose = checkBox {}.lparams(wrapContent, wrapContent)
-                    linearLayout {
-                        orientation = LinearLayout.HORIZONTAL
-                        setOnClickListener {
-                            isChoose.isChecked = !isChoose.isChecked
-                        }
-                        textView {
-                            text = "我同意"
-                        }
-                        textView {
-                            text = "隐私协议"
-                            textColor = Color.parseColor("#219ad5")
-                            setOnClickListener {
-                                toast("隐私协议")
-                            }
-                        }
-                        textView {
-                            text = "和"
-                        }
-                        textView {
-                            text = "服务声明"
-                            textColor = Color.parseColor("#219ad5")
-                            setOnClickListener {
-                                toast("服务声明")
-                            }
-                        }
-                    }
-                }.lparams(matchParent, wrapContent) {
-                    topMargin = dip(20)
-                }
+                //隐私协议和声明
+//                linearLayout {
+//                    orientation = LinearLayout.HORIZONTAL
+//                    gravity = Gravity.CENTER_VERTICAL
+//                    isChoose = checkBox {}.lparams(wrapContent, wrapContent)
+//                    linearLayout {
+//                        orientation = LinearLayout.HORIZONTAL
+//                        setOnClickListener {
+//                            isChoose.isChecked = !isChoose.isChecked
+//                        }
+//                        textView {
+//                            text = "我同意"
+//                        }
+//                        textView {
+//                            text = "隐私协议"
+//                            textColor = Color.parseColor("#219ad5")
+//                            setOnClickListener {
+//                                toast("隐私协议")
+//                            }
+//                        }
+//                        textView {
+//                            text = "和"
+//                        }
+//                        textView {
+//                            text = "服务声明"
+//                            textColor = Color.parseColor("#219ad5")
+//                            setOnClickListener {
+//                                toast("服务声明")
+//                            }
+//                        }
+//                    }
+//                }.lparams(matchParent, wrapContent) {
+//                    topMargin = dip(20)
+//                }
                 button {
                     text = "下一步"
                     textSize = 16f
