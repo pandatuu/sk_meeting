@@ -10,9 +10,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
+import click
 import com.bumptech.glide.Glide
 import com.example.facetime.R
 import org.jetbrains.anko.*
+import withTrigger
 
 class UpdateTipsFrag : Fragment() {
 
@@ -79,7 +81,7 @@ class UpdateTipsFrag : Fragment() {
                             textSize = 16f
                             textColor = Color.WHITE
                             backgroundResource = R.drawable.button_shape_grey
-                            setOnClickListener {
+                            this.withTrigger().click  {
                                 buttomCLick.cancelUpdateClick()
                             }
                         }.lparams(dip(120),dip(40)){
@@ -91,7 +93,7 @@ class UpdateTipsFrag : Fragment() {
                             textSize = 16f
                             textColor = Color.WHITE
                             backgroundResource = R.drawable.yellow_background
-                            setOnClickListener {
+                            this.withTrigger().click  {
                                 buttomCLick.defineClick("https://www.baidu.com")
                             }
                         }.lparams(dip(120),dip(40)){

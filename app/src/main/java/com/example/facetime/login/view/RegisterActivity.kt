@@ -73,7 +73,7 @@ class RegisterActivity : AppCompatActivity() {
 
         frameLayout {
             backgroundColor = Color.TRANSPARENT
-            setOnClickListener {
+            this.withTrigger().click  {
                 closeFocusjianpan()
             }
             linearLayout {
@@ -90,7 +90,7 @@ class RegisterActivity : AppCompatActivity() {
                         gravity = Gravity.RIGHT
                         textSize = 16f
                         textColor = Color.parseColor("#7F7F7F")
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             finish()
                             overridePendingTransition(
                                 R.anim.left_in,
@@ -131,7 +131,7 @@ class RegisterActivity : AppCompatActivity() {
                         textSize = 15f
                         textColor = Color.BLACK
                         typeface = Typeface.DEFAULT_BOLD
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             startActivityForResult(
                                 Intent(
                                     applicationContext,
@@ -185,7 +185,7 @@ class RegisterActivity : AppCompatActivity() {
                         textSize = 14f
                         typeface = Typeface.DEFAULT_BOLD
                         textColor = Color.BLACK
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             closeFocusjianpan()
                             if (phoneNum.text.toString() != "") {
                                 val phone = countryCode.text.toString() + phoneNum.text.toString()
@@ -243,7 +243,7 @@ class RegisterActivity : AppCompatActivity() {
                         textView {
                             text = "服务声明"
                             textColor = Color.parseColor("#219ad5")
-                            setOnClickListener {
+                            this.withTrigger().click  {
                                 toast("服务声明")
                             }
                         }

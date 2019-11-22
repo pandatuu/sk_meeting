@@ -16,6 +16,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import click
 import com.alibaba.fastjson.JSON
 import com.example.facetime.R
 import com.example.facetime.login.api.LoginApi
@@ -37,6 +38,7 @@ import kotlinx.coroutines.rx2.awaitSingle
 import okhttp3.RequestBody
 import org.jetbrains.anko.*
 import retrofit2.HttpException
+import withTrigger
 
 class ReadSetPasswordActivity : AppCompatActivity() {
     private var runningDownTimer: Boolean = false
@@ -68,7 +70,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
 
         verticalLayout {
             backgroundColor = Color.parseColor("#f2f2f2")
-            setOnClickListener {
+            this.withTrigger().click  {
                 closeFocusjianpan()
             }
 
@@ -84,7 +86,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
 
                 linearLayout {
                     textView {
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             finish()//返回
                             overridePendingTransition(
                                 R.anim.left_in,
@@ -134,7 +136,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                         textColor = Color.BLACK
                         typeface = Typeface.DEFAULT_BOLD
 
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             startActivityForResult(
                                 Intent(
                                     applicationContext,
@@ -222,7 +224,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                         textSize = 14f
                         typeface = Typeface.DEFAULT_BOLD
                         textColor = Color.BLACK
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             val result = determinePhone()
                             if (result) {
                                 thisDialog = DialogUtils.showLoading(this@ReadSetPasswordActivity)
@@ -290,7 +292,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
                     gravity = Gravity.CENTER
-                    setOnClickListener {
+                    this.withTrigger().click  {
                         next()
                     }
                 }.lparams(width = matchParent, height = dip(50)) {
@@ -336,15 +338,21 @@ class ReadSetPasswordActivity : AppCompatActivity() {
         override fun onTick(l: Long) {
             runningDownTimer = true
             timeButton.text = (l / 1000).toString() + "s"
-            timeButton.setOnClickListener { toast("冷却中...") }
+            timeButton.withTrigger().click  {
+                toast("冷却中...")
+            }
+
+
         }
 
         override fun onFinish() {
             runningDownTimer = false
             timeButton.text = "发送"
-            timeButton.setOnClickListener {
+
+            timeButton.withTrigger().click  {
                 onPcode()
             }
+
         }
     }
 

@@ -19,6 +19,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.*
 import android.app.Fragment
+import click
+import withTrigger
 
 class ShareForJavaFragment : Fragment() {
 
@@ -57,7 +59,9 @@ class ShareForJavaFragment : Fragment() {
             linearLayout {
                 gravity = Gravity.BOTTOM
                 verticalLayout {
-                    setOnClickListener {  }
+                    this.withTrigger().click  {
+
+                    }
                     backgroundColor= Color.WHITE
                     textView {
                         text = "共有"
@@ -79,7 +83,7 @@ class ShareForJavaFragment : Fragment() {
                             imageView {
                                 setImageResource(R.mipmap.line)
 
-                                setOnClickListener {
+                                this.withTrigger().click  {
                                     GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT){
                                         sharetDialogSelect.getSelectedItem(0)
                                     }
@@ -110,7 +114,7 @@ class ShareForJavaFragment : Fragment() {
                             imageView {
                                 setImageResource(R.mipmap.twitter)
 
-                                setOnClickListener {
+                                this.withTrigger().click  {
                                     GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT){
                                         sharetDialogSelect.getSelectedItem(1)
                                     }
@@ -157,7 +161,7 @@ class ShareForJavaFragment : Fragment() {
                         textSize = 15f
                         textColorResource = R.color.gray5c
 
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT){
                                 sharetDialogSelect.getSelectedItem(-1)
                             }

@@ -159,7 +159,7 @@ class StartActivity : AppCompatActivity() {
                         textSize = 15f
                         textColor = Color.BLACK
                         typeface = Typeface.DEFAULT_BOLD
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             startActivityForResult(
                                 Intent(
                                     applicationContext,
@@ -255,7 +255,7 @@ class StartActivity : AppCompatActivity() {
                 }
 
                 linearLayout {
-                    setOnClickListener {
+                    this.withTrigger().click  {
                         isChoose.isChecked = !isChoose.isChecked
                     }
 
@@ -279,7 +279,7 @@ class StartActivity : AppCompatActivity() {
                     textView {
                         text = "服务声明"
                         textColor = Color.parseColor("#219ad5")
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             startActivity<ServiceStatement>()
                             overridePendingTransition(R.anim.right_in, R.anim.left_out)
                         }
@@ -295,7 +295,7 @@ class StartActivity : AppCompatActivity() {
                     textColor = Color.WHITE
                     textSize = 16f
                     gravity = Gravity.CENTER
-                    setOnClickListener {
+                    this.withTrigger().click  {
                         submit()
                     }
                 }.lparams(width = matchParent,height = dip(50)) {
@@ -306,7 +306,7 @@ class StartActivity : AppCompatActivity() {
                     text = "忘记密码"
                     textColor = Color.parseColor("#7F7F7F")
                     gravity = Gravity.RIGHT
-                    setOnClickListener {
+                    this.withTrigger().click  {
                         startActivity<ReadSetPasswordActivity>()
                         this@StartActivity.overridePendingTransition(R.anim.right_in, R.anim.left_out)
                     }

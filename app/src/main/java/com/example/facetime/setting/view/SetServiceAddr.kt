@@ -116,7 +116,8 @@ class SetServiceAddr : AppCompatActivity() {
                     textSize = 16f
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
-                    setOnClickListener {
+                    this.withTrigger().click  {
+
                         closeFocusjianpan()
                         if (address.text.toString() != "") {
 
