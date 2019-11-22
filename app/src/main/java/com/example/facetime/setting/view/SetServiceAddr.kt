@@ -12,6 +12,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.Toast
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.facetime.R
@@ -114,6 +115,15 @@ class SetServiceAddr : AppCompatActivity() {
                     setOnClickListener {
                         closeFocusjianpan()
                         if (address.text.toString() != "") {
+
+                            val toast = Toast.makeText(
+                                applicationContext,
+                                "设置成功",
+                                Toast.LENGTH_SHORT
+                            )
+                            toast.setGravity(Gravity.CENTER, 0, 0)
+                            toast.show()
+
                             val mEditor: SharedPreferences.Editor = saveTool.edit()
                             mEditor.putString("serviceAdd", address.text.toString())
                             mEditor.commit()

@@ -147,6 +147,15 @@ class UpdateNickName : AppCompatActivity() {
                         closeFocusjianpan()
                         if (nickName.text.toString() != "") {
                             if (nickName.text.length < 10) {
+
+                                val toast = Toast.makeText(
+                                    applicationContext,
+                                    "设置成功",
+                                    Toast.LENGTH_SHORT
+                                )
+                                toast.setGravity(Gravity.CENTER, 0, 0)
+                                toast.show()
+
                                 thisDialog = DialogUtils.showLoading(this@UpdateNickName)
                                 mHandler.postDelayed(r, 12000)
                                 GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {

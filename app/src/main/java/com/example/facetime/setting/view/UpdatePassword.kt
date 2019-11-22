@@ -184,6 +184,14 @@ class UpdatePassword : AppCompatActivity() {
                                 if (passwordAgain.text.toString() != passwordFirst.text.toString()) {
                                     toast("两次密码不匹配")
                                 } else {
+
+                                    val toast = Toast.makeText(
+                                        applicationContext,
+                                        "设置成功",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                    toast.setGravity(Gravity.CENTER, 0, 0)
+                                    toast.show()
                                     thisDialog = DialogUtils.showLoading(this@UpdatePassword)
                                     mHandler.postDelayed(r, 12000)
                                     GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
