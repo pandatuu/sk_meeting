@@ -20,6 +20,7 @@ import android.text.TextWatcher
 import android.view.KeyEvent
 import android.widget.*
 import androidx.fragment.app.FragmentTransaction
+import click
 import com.example.facetime.R
 import com.example.facetime.conference.api.RoomApi
 import com.example.facetime.conference.fragment.ChooseRoomIdFragment
@@ -37,6 +38,7 @@ import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
 import org.jitsi.meet.sdk.JitsiMeetUserInfo
 import org.json.JSONArray
 import org.json.JSONObject
+import withTrigger
 import java.net.MalformedURLException
 import java.net.URL
 
@@ -532,8 +534,9 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                             backgroundResource = R.drawable.bottonbg
                             gravity = Gravity.CENTER
 
-                            setOnClickListener {
 
+
+                            this.withTrigger().click {
 
                                 if (editText1.text.isNullOrEmpty()&& flag==1) {
                                     val toast = Toast.makeText(
@@ -556,6 +559,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                                     //gotoVideoInterview(editText1.text.toString())
                                 }
                             }
+
                         }.lparams() {
                             height = dip(50)
                             width = matchParent

@@ -22,6 +22,7 @@ import android.view.KeyEvent
 import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentTransaction
+import click
 import com.example.facetime.R
 import com.example.facetime.conference.api.RoomApi
 import com.example.facetime.conference.fragment.BackgroundFragment
@@ -39,6 +40,7 @@ import kotlinx.coroutines.rx2.awaitSingle
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import org.json.JSONObject
+import withTrigger
 import java.net.URL
 
 
@@ -294,7 +296,7 @@ open class SuccessActivity : AppCompatActivity(),
 
 
 
-                    setOnClickListener {
+                    this.withTrigger().click  {
 
 
 
