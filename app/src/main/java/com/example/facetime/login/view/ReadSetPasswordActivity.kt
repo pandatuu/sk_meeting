@@ -37,6 +37,7 @@ import kotlinx.coroutines.rx2.awaitSingle
 import okhttp3.RequestBody
 import org.jetbrains.anko.*
 import retrofit2.HttpException
+import java.util.regex.Pattern
 
 class ReadSetPasswordActivity : AppCompatActivity() {
     private var runningDownTimer: Boolean = false
@@ -161,6 +162,11 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                                         myCode.requestFocus()
                                         return true
                                     }
+                                    if(event.action ==KeyEvent.ACTION_UP){
+                                        val rela = telephone.parent as RelativeLayout
+                                        rela.backgroundResource = R.drawable.border
+                                        return true
+                                    }
                                 }
                                 return false
                             }
@@ -197,6 +203,11 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                                         //处理事件
                                         clearFocus()
                                         closeFocusjianpan()
+                                        return true
+                                    }
+                                    if(event.action ==KeyEvent.ACTION_UP){
+                                        val rela = myCode.parent as RelativeLayout
+                                        rela.backgroundResource = R.drawable.border
                                         return true
                                     }
                                 }
@@ -247,6 +258,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                     topMargin = dip(10)
                 }
                 linearLayout {
+                    orientation = LinearLayout.VERTICAL
                     backgroundResource = R.drawable.border
 
                     password = editText {
@@ -263,6 +275,14 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                                         clearFocus()
                                         closeFocusjianpan()
                                         return true
+                                    }
+                                    if(event.action ==KeyEvent.ACTION_UP){
+                                        val bool = pwdMatch(password.text.toString())
+                                        if(bool){
+                                            val rela = password.parent as RelativeLayout
+                                            rela.backgroundResource = R.drawable.border
+                                            return true
+                                        }
                                     }
                                 }
                                 return false
@@ -301,6 +321,12 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                 rightMargin = dip(20)
             }
         }
+    }
+
+    private fun pwdMatch(text: String): Boolean{
+        val patter = Pattern.compile("^(?![0-9]+\$)(?![a-z]+\$)(?![A-Z]+\$)(?![,\\.#%'\\+\\*\\-:;^_`]+\$)[,\\.#%'\\+\\*\\-:;^_`0-9A-Za-z]{8,16}\$")
+        val match = patter.matcher(text)
+        return match.matches()
     }
 
     override fun onStart() {
@@ -426,22 +452,38 @@ class ReadSetPasswordActivity : AppCompatActivity() {
 
         if (phone.isNullOrEmpty()) {
             toast("请输入手机号码")
+            val rela = telephone.parent as RelativeLayout
+            rela.backgroundResource = R.drawable.input_error_border
             return
         }
 
         if (code.isNullOrEmpty()) {
             toast("请输入验证码")
+            val rela = myCode.parent as RelativeLayout
+            rela.backgroundResource = R.drawable.input_error_border
             return
         }
         if (mypassword.isNullOrEmpty()) {
             toast("请输入新密码")
+            val rela = password.parent as RelativeLayout
+            rela.backgroundResource = R.drawable.input_error_border
             return
         }
 
         if (!res) {
             toast("请输入正确的手机号码")
+            val rela = telephone.parent as RelativeLayout
+            rela.backgroundResource = R.drawable.input_error_border
             return
         }
+
+        if(!pwdMatch(mypassword)){
+            toast("请输入8-16位的至少数字字母和符号任意两种")
+            val rela = password.parent as RelativeLayout
+            rela.backgroundResource = R.drawable.input_error_border
+            return
+        }
+
         GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
             //更新密码
             updatePassword(phoneNumber.text.toString().substring(1), phone, code, mypassword)
