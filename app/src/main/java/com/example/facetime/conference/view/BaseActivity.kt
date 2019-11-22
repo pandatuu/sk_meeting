@@ -28,6 +28,7 @@ import android.view.inputmethod.EditorInfo.IME_ACTION_GO
 import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentTransaction
+import click
 import com.example.facetime.R
 import com.example.facetime.setting.view.SettingsActivity
 import com.example.facetime.conference.listener.VideoChatControllerListener
@@ -37,6 +38,7 @@ import com.twitter.sdk.android.tweetcomposer.TweetComposer
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.socialize.ShareAction
 import com.umeng.socialize.bean.SHARE_MEDIA
+import withTrigger
 
 
 open class BaseActivity : AppCompatActivity(),
@@ -136,9 +138,10 @@ open class BaseActivity : AppCompatActivity(),
         vertical = frameLayout {
             id = mainId
 
-            setOnClickListener {
+            this.withTrigger().click  {
 
-                closeSoftKeyboard(editText)
+
+            closeSoftKeyboard(editText)
                 editText.clearFocus()
             }
 
@@ -224,9 +227,10 @@ open class BaseActivity : AppCompatActivity(),
                         imageResource = R.mipmap.icon_share_zwxq
                         scaleType = ImageView.ScaleType.CENTER
 
-                        setOnClickListener {
+                        this.withTrigger().click  {
 
-                            addListFragment()
+
+                        addListFragment()
                         }
 
                     }.lparams() {
@@ -241,9 +245,10 @@ open class BaseActivity : AppCompatActivity(),
                         imageResource = R.mipmap.settings
                         scaleType = ImageView.ScaleType.CENTER
 
-                        setOnClickListener {
+                        this.withTrigger().click  {
 
-                            var intent = Intent(cont, SettingsActivity::class.java)
+
+                        var intent = Intent(cont, SettingsActivity::class.java)
                             startActivityForResult(intent, 2)
                             overridePendingTransition(
                                 R.anim.right_in,
@@ -269,8 +274,9 @@ open class BaseActivity : AppCompatActivity(),
 
                 linearLayout() {
 
-                    setOnClickListener {
-                        editText.requestFocus()
+                    this.withTrigger().click  {
+
+                    editText.requestFocus()
                         showSoftKeyboard(editText)
 
                     }
@@ -362,9 +368,10 @@ open class BaseActivity : AppCompatActivity(),
                     gravity = Gravity.CENTER
                     textSize = 20F
 
-                    setOnClickListener {
+                    this.withTrigger().click  {
 
-                        goToFaceTime()
+
+                    goToFaceTime()
 
                     }
                 }.lparams() {

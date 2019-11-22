@@ -20,6 +20,7 @@ import android.text.InputType
 import android.text.TextWatcher
 import android.view.KeyEvent
 import android.widget.*
+import click
 import com.example.facetime.R
 import com.example.facetime.conference.api.RoomApi
 import com.example.facetime.util.RetrofitUtils
@@ -34,6 +35,7 @@ import org.jitsi.meet.sdk.JitsiMeet
 import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
 import org.jitsi.meet.sdk.JitsiMeetUserInfo
 import org.json.JSONObject
+import withTrigger
 import java.net.MalformedURLException
 import java.net.URL
 
@@ -48,7 +50,7 @@ open class EnteRoomByPasswordActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         verticalLayout {
-            setOnClickListener {
+            this.withTrigger().click  {
                 closeSoftKeyboard(editText1)
             }
             backgroundColor = Color.parseColor("#f2f2f2")
@@ -62,7 +64,7 @@ open class EnteRoomByPasswordActivity : AppCompatActivity() {
                 }
                 linearLayout {
                     textView {
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             finish()//返回
                             overridePendingTransition(
                                 R.anim.left_in,
@@ -130,7 +132,7 @@ open class EnteRoomByPasswordActivity : AppCompatActivity() {
                     leftMargin = dip(15)
                 }
                 relativeLayout() {
-                    setOnClickListener {
+                    this.withTrigger().click  {
                         editText1.requestFocus()
                         showSoftKeyboard(editText1)
                     }

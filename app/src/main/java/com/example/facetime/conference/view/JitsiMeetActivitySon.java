@@ -77,6 +77,8 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
     final Handler cwjHandler = new Handler();
     View view;
 
+    Boolean shareClickFlag=true;
+
     public JitsiMeetActivitySon() {
     }
 
@@ -121,13 +123,19 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
         LinearLayout inside = (LinearLayout) layout.getChildAt(0);
 
         LinearLayout image = (LinearLayout) inside.getChildAt(2);
+
+
+
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(shareClickFlag){
+                    shareClickFlag=false;
+                    System.out.println("xxxxxxxxxxxxxxxxxxxxx");
 
-                System.out.println("xxxxxxxxxxxxxxxxxxxxx");
+                    addListFragment();
+                }
 
-                addListFragment();
             }
         });
 
@@ -155,6 +163,9 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
         mTransaction.add(R.id.jitsiFragment, shareFragment);
 
         mTransaction.commit();
+
+        shareClickFlag=true;
+
     }
 
     @SuppressLint("ResourceType")

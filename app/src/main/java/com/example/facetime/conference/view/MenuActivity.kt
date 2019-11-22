@@ -18,10 +18,12 @@ import android.view.View
 import android.widget.*
 import com.example.facetime.R
 import androidx.fragment.app.FragmentTransaction
+import click
 import com.example.facetime.setting.view.SystemSettingsActivity
 import com.example.facetime.setting.view.UpdateTipsFrag
 import com.example.facetime.conference.fragment.BackgroundFragment
 import com.example.facetime.login.view.StartActivity
+import withTrigger
 
 
 open class MenuActivity : AppCompatActivity(),
@@ -84,7 +86,7 @@ open class MenuActivity : AppCompatActivity(),
 
                     imageView() {
                         imageResource = R.mipmap.settings
-                        setOnClickListener {
+                        this.withTrigger().click  {
 
                             var intent = Intent(this@MenuActivity, SystemSettingsActivity::class.java)
                             startActivityForResult(intent, 2)
@@ -137,7 +139,7 @@ open class MenuActivity : AppCompatActivity(),
                         backgroundResource = R.drawable.bottonbg
                         gravity = Gravity.CENTER
                         visibility=View.GONE
-                        setOnClickListener {
+                        this.withTrigger().click  {
 
 
 
@@ -180,7 +182,7 @@ open class MenuActivity : AppCompatActivity(),
                         visibility=View.GONE
 
 
-                        setOnClickListener {
+                        this.withTrigger().click  {
 
                             val intentNow =
                                 Intent(this@MenuActivity, SuccessActivity::class.java)
@@ -225,7 +227,7 @@ open class MenuActivity : AppCompatActivity(),
 
 
 
-                        setOnClickListener {
+                        this.withTrigger().click  {
 
                             var intent = Intent(this@MenuActivity, EnteRoomByIdActivity::class.java)
                             startActivityForResult(intent, 12)

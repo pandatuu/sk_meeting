@@ -15,6 +15,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
+import click
 import com.alibaba.fastjson.JSON
 import com.example.facetime.R
 import com.example.facetime.login.api.LoginApi
@@ -33,6 +34,7 @@ import kotlinx.coroutines.rx2.awaitSingle
 import okhttp3.RequestBody
 import org.jetbrains.anko.*
 import retrofit2.HttpException
+import withTrigger
 
 class UpdatePassword : AppCompatActivity() {
 
@@ -61,7 +63,7 @@ class UpdatePassword : AppCompatActivity() {
 
         frameLayout {
             backgroundColor = Color.TRANSPARENT
-            setOnClickListener {
+            this.withTrigger().click  {
                 closeFocusjianpan()
             }
             linearLayout {
@@ -75,8 +77,10 @@ class UpdatePassword : AppCompatActivity() {
 
                 linearLayout {
                     textView {
-                        setOnClickListener {
-                            finish()//返回
+                        this.withTrigger().click  {
+
+
+                        finish()//返回
                             overridePendingTransition(
                                 R.anim.left_in,
                                 R.anim.right_out
@@ -173,8 +177,9 @@ class UpdatePassword : AppCompatActivity() {
                     textSize = 16f
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
-                    setOnClickListener {
-                        closeFocusjianpan()
+                    this.withTrigger().click  {
+
+                    closeFocusjianpan()
                         if (passwordFirst.text.toString() == "") {
                             toast("请输入密码")
                         } else {

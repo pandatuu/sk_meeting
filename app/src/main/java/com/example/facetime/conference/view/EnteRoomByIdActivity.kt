@@ -20,7 +20,7 @@ import android.text.TextWatcher
 import android.view.KeyEvent
 import android.widget.*
 import androidx.fragment.app.FragmentTransaction
-import click
+
 import com.example.facetime.R
 import com.example.facetime.conference.api.RoomApi
 import com.example.facetime.conference.fragment.ChooseRoomIdFragment
@@ -39,6 +39,7 @@ import org.jitsi.meet.sdk.JitsiMeetUserInfo
 import org.json.JSONArray
 import org.json.JSONObject
 import withTrigger
+import click
 import java.net.MalformedURLException
 import java.net.URL
 
@@ -69,7 +70,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
 
         verticalLayout {
 
-            setOnClickListener {
+            this.withTrigger().click  {
                 closeSoftKeyboard(editText1)
                 closeSelector()
             }
@@ -88,7 +89,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
 
                 linearLayout {
                     textView {
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             finish()//返回
                             overridePendingTransition(
                                 R.anim.left_in,
@@ -144,7 +145,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                     backgroundColor = Color.WHITE
                     orientation = LinearLayout.HORIZONTAL
                     relativeLayout() {
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             textforid.backgroundResource = R.drawable.border_bottom_transparent
                             textforname.backgroundColor=Color.TRANSPARENT
                             editText1.setText("")
@@ -186,7 +187,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                     }
                     relativeLayout() {
 
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             textforname.backgroundResource = R.drawable.border_bottom_transparent
                             textforid.backgroundColor=Color.TRANSPARENT
                             editText1.setText("")
@@ -246,7 +247,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
 
                 relativeLayout() {
 
-                    setOnClickListener {
+                    this.withTrigger().click  {
                         editText1.requestFocus()
                         showSoftKeyboard(editText1)
 
@@ -316,7 +317,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                         backgroundColor = Color.WHITE
                         gravity = Gravity.CENTER
 
-                        setOnClickListener {
+                        this.withTrigger().click  {
 
                             triangle.requestFocus()
                             editText1.clearFocus()

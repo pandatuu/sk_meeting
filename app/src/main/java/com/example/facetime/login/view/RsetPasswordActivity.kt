@@ -11,10 +11,12 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
+import click
 import com.example.facetime.R
 import com.jaeger.library.StatusBarUtil
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
+import withTrigger
 
 class RsetPasswordActivity : AppCompatActivity(){
     lateinit var password:EditText
@@ -47,7 +49,7 @@ class RsetPasswordActivity : AppCompatActivity(){
 
                     linearLayout {
                         textView {
-                            setOnClickListener {
+                            this.withTrigger().click  {
                                 finish()//返回
                                 overridePendingTransition(
                                     R.anim.left_in,

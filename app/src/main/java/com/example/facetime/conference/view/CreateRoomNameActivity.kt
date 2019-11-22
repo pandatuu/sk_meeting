@@ -20,6 +20,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
 import android.widget.*
+import click
 import com.example.facetime.R
 import com.example.facetime.conference.api.RoomApi
 import com.example.facetime.util.RetrofitUtils
@@ -31,6 +32,7 @@ import kotlinx.coroutines.rx2.awaitSingle
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import org.json.JSONObject
+import withTrigger
 
 
 open class CreateRoomNameActivity : AppCompatActivity() {
@@ -50,7 +52,7 @@ open class CreateRoomNameActivity : AppCompatActivity() {
 
         verticalLayout {
 
-            setOnClickListener {
+            this.withTrigger().click  {
                 closeSoftKeyboard(editText)
             }
 
@@ -68,7 +70,7 @@ open class CreateRoomNameActivity : AppCompatActivity() {
 
                 linearLayout {
                     textView {
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             finish()//返回
                             overridePendingTransition(
                                 R.anim.left_in,
@@ -114,7 +116,7 @@ open class CreateRoomNameActivity : AppCompatActivity() {
 
                 linearLayout() {
 
-                    setOnClickListener {
+                    this.withTrigger().click  {
                         editText.requestFocus()
                         showSoftKeyboard(editText)
 
@@ -193,8 +195,7 @@ open class CreateRoomNameActivity : AppCompatActivity() {
                     gravity = Gravity.CENTER
 
 
-                    setOnClickListener {
-
+                    this.withTrigger().click  {
                         if(editText.text.toString()==""){
 
                             val toast = Toast.makeText(

@@ -16,6 +16,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import click
 import com.alibaba.fastjson.JSON
 import com.example.facetime.R
 import com.example.facetime.login.api.LoginApi
@@ -38,6 +39,7 @@ import kotlinx.coroutines.rx2.awaitSingle
 import okhttp3.RequestBody
 import org.jetbrains.anko.*
 import retrofit2.HttpException
+import withTrigger
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -222,7 +224,7 @@ class RegisterActivity : AppCompatActivity() {
                     isChoose = checkBox {}.lparams(wrapContent, wrapContent)
                     linearLayout {
                         orientation = LinearLayout.HORIZONTAL
-                        setOnClickListener {
+                        this. withTrigger().click  {
                             isChoose.isChecked = !isChoose.isChecked
                         }
                         textView {
@@ -231,7 +233,7 @@ class RegisterActivity : AppCompatActivity() {
                         textView {
                             text = "隐私协议"
                             textColor = Color.parseColor("#219ad5")
-                            setOnClickListener {
+                            this. withTrigger().click  {
                                 toast("隐私协议")
                             }
                         }
@@ -254,8 +256,9 @@ class RegisterActivity : AppCompatActivity() {
                     textSize = 16f
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
-                    setOnClickListener {
-                        val phone = countryCode.text.toString() + phoneNum.text.toString()
+                    this. withTrigger().click  {
+
+                    val phone = countryCode.text.toString() + phoneNum.text.toString()
                         isPhoneFormat =
                             isPhoneNumberValid(
                                 phone,
@@ -323,13 +326,19 @@ class RegisterActivity : AppCompatActivity() {
         override fun onTick(l: Long) {
             runningDownTimer = true
             codeText.text = (l / 1000).toString() + "s"
-            codeText.setOnClickListener { toast("冷却中...") }
+
+            codeText. withTrigger().click  {
+                toast("冷却中...")
+
+            }
         }
 
         override fun onFinish() {
             runningDownTimer = false
             codeText.text = "获取"
-            codeText.setOnClickListener {
+
+
+            codeText.withTrigger().click  {
                 onPcode()
             }
         }

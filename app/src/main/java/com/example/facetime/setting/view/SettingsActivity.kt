@@ -21,7 +21,9 @@ import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.*
+import click
 import com.example.facetime.R
+import withTrigger
 
 
 open class SettingsActivity : AppCompatActivity(), JitsiMeetActivityInterface {
@@ -113,7 +115,7 @@ open class SettingsActivity : AppCompatActivity(), JitsiMeetActivityInterface {
 
             linearLayout() {
 
-                setOnClickListener {
+                this.withTrigger().click  {
                     editText.requestFocus()
                     showSoftKeyboard(editText)
 
@@ -244,8 +246,7 @@ open class SettingsActivity : AppCompatActivity(), JitsiMeetActivityInterface {
                 gravity = Gravity.CENTER
                 textSize = 20F
 
-                setOnClickListener {
-
+                this.withTrigger().click  {
                     if(useNew){
                         selectedAdd=editText.text.toString()
                     }
@@ -366,8 +367,7 @@ open class SettingsActivity : AppCompatActivity(), JitsiMeetActivityInterface {
 
             linearLayout {
 
-                setOnClickListener {
-
+                this.withTrigger().click  {
 
                     closeSoftKeyboard(editText)
                     editText.clearFocus()

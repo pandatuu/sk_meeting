@@ -10,12 +10,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import click
 import com.example.facetime.R
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.*
+import withTrigger
 
 class ShareFragment : androidx.fragment.app.Fragment() {
 
@@ -54,7 +56,11 @@ class ShareFragment : androidx.fragment.app.Fragment() {
             linearLayout {
                 gravity = Gravity.BOTTOM
                 verticalLayout {
-                    setOnClickListener {  }
+                    this.withTrigger().click  {
+
+
+
+                    }
                     backgroundColor= Color.WHITE
                     textView {
                         text = "共有"
@@ -76,7 +82,7 @@ class ShareFragment : androidx.fragment.app.Fragment() {
                             imageView {
                                 setImageResource(R.mipmap.line)
 
-                                setOnClickListener {
+                                this.withTrigger().click  {
                                     GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT){
                                         sharetDialogSelect.getSelectedItem(0)
                                     }
@@ -107,8 +113,9 @@ class ShareFragment : androidx.fragment.app.Fragment() {
                             imageView {
                                 setImageResource(R.mipmap.twitter)
 
-                                setOnClickListener {
-                                    GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT){
+                                this.withTrigger().click  {
+
+                                GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT){
                                         sharetDialogSelect.getSelectedItem(1)
                                     }
                                 }
@@ -154,7 +161,7 @@ class ShareFragment : androidx.fragment.app.Fragment() {
                         textSize = 15f
                         textColorResource = R.color.gray5c
 
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT){
                                 sharetDialogSelect.getSelectedItem(-1)
                             }

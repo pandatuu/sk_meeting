@@ -83,7 +83,7 @@ open class SuccessActivity : AppCompatActivity(),
 
                 linearLayout {
                     textView {
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             finish()//返回
                             overridePendingTransition(
                                 R.anim.left_in,

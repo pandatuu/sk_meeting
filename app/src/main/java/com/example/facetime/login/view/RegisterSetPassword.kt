@@ -15,6 +15,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
+import click
 import com.alibaba.fastjson.JSON
 import com.example.facetime.R
 import com.example.facetime.login.api.RegisterApi
@@ -33,6 +34,7 @@ import okhttp3.MediaType
 import okhttp3.RequestBody
 import org.jetbrains.anko.*
 import retrofit2.HttpException
+import withTrigger
 
 class RegisterSetPassword : AppCompatActivity() {
 
@@ -73,8 +75,9 @@ class RegisterSetPassword : AppCompatActivity() {
 
         frameLayout {
             backgroundColor = Color.TRANSPARENT
-            setOnClickListener {
-                closeFocusjianpan()
+            this.withTrigger().click  {
+
+            closeFocusjianpan()
             }
             linearLayout {
                 toolbar1 = toolbar {
@@ -87,8 +90,9 @@ class RegisterSetPassword : AppCompatActivity() {
 
                 linearLayout {
                     textView {
-                        setOnClickListener {
-                            finish()//返回
+                        this.withTrigger().click  {
+
+                        finish()//返回
                             overridePendingTransition(
                                 R.anim.left_in,
                                 R.anim.right_out
@@ -170,8 +174,9 @@ class RegisterSetPassword : AppCompatActivity() {
                     textSize = 16f
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
-                    setOnClickListener {
-                        closeFocusjianpan()
+                    this.withTrigger().click  {
+
+                    closeFocusjianpan()
                         if (passwordFirst.text.toString() == "") {
                             toast("请输入密码")
                         } else {
