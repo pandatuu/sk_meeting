@@ -70,7 +70,8 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-rx2:1.2.1'
 
     // Jitsi Meet2.3.2
-    implementation ('org.jitsi.react:jitsi-meet-sdk:2.2.2') { transitive = true }
+    // implementation ('org.jitsi.react:jitsi-meet-sdk:2.2.2') { transitive = true }
+    implementation ('org.jitsi.react:jitsi-meet-sdk:+') { transitive = true }
 
     implementation 'com.jaeger.statusbarutil:library:1.5.1'
     implementation 'org.jetbrains.anko:anko:0.10.5'

@@ -362,7 +362,7 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
                     }
 
 
-                    if (count < 5) {
+                    if (count == 5) {
                         mainHandler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -378,7 +378,7 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
 
                     }
 
-                    if (count <= 0) {
+                    if (count == 0) {
 
 
                         finishVideo(1);
