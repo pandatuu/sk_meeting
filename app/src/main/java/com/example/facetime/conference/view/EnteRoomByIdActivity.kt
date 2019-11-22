@@ -146,7 +146,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                             textforid.backgroundResource = R.drawable.border_bottom_transparent
                             textforname.backgroundColor=Color.TRANSPARENT
                             editText1.setText("")
-                            editText1.hint="请出入会议室ID"
+                            editText1.hint="请输入会议室ID"
                             flag=1
                             closeSelector()
 
@@ -188,7 +188,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                             textforname.backgroundResource = R.drawable.border_bottom_transparent
                             textforid.backgroundColor=Color.TRANSPARENT
                             editText1.setText("")
-                            editText1.hint="请出入会议室名称"
+                            editText1.hint="请输入会议室名称"
                             flag=2
                             closeSelector()
                         }
