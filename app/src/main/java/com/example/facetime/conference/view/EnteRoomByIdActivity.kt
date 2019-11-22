@@ -913,7 +913,15 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                         JSONObject(result.body()?.toString()).get("endTime").toString().toLong()
                     val startTime =
                         JSONObject(result.body()?.toString()).get("startTime").toString().toLong()
-                    val time = endTime - startTime
+                    var time = endTime - startTime
+
+                    var level =
+                        PreferenceManager.getDefaultSharedPreferences(this@EnteRoomByIdActivity)
+                            .getInt("level", 0)
+                    if(level!=0){
+                        time=0
+                    }
+
 
                     val toast = Toast.makeText(
                         applicationContext,

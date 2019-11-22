@@ -311,88 +311,94 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
 //        Log.e(TAG, "AlertDialog");
 //        dialog.setCanceledOnTouchOutside(false);
 
+        if(count==0){
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+        }else{
 
-
-                //刚搞页延迟
-                Handler mainHandler = new Handler(Looper.getMainLooper());
-
-                LinearLayout layout = (LinearLayout) ((LinearLayout) view).getChildAt(0);
-                LinearLayout inside = (LinearLayout) layout.getChildAt(0);
-
-                TextView text = (TextView) inside.getChildAt(0);
-                while (true) {
-                    try {
-                        Thread.sleep(1000);
-
-                        mainHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
 
 
-                                min = count / 60;
-                                second = count % 60;
+                    //刚搞页延迟
+                    Handler mainHandler = new Handler(Looper.getMainLooper());
+
+                    LinearLayout layout = (LinearLayout) ((LinearLayout) view).getChildAt(0);
+                    LinearLayout inside = (LinearLayout) layout.getChildAt(0);
+
+                    TextView text = (TextView) inside.getChildAt(0);
+                    while (true) {
+                        try {
+                            Thread.sleep(1000);
+
+                            mainHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
 
 
-                                if (min < 10) {
-                                    minStr = "0" + min;
-                                } else {
-                                    minStr = min + "";
+                                    min = count / 60;
+                                    second = count % 60;
+
+
+                                    if (min < 10) {
+                                        minStr = "0" + min;
+                                    } else {
+                                        minStr = min + "";
+                                    }
+
+                                    if (second < 10) {
+                                        secStr = "0" + second;
+                                    } else {
+                                        secStr = second + "";
+                                    }
+                                    showString = "已经视频：" + minStr + ":" + secStr;
+                                    System.out.println("已经视频：" + minStr + ":" + secStr);
+                                    // text.setText("已经视频："+minStr+":"+secStr);
+                                    text.setText(showString);
+
                                 }
+                            }, 0);
 
-                                if (second < 10) {
-                                    secStr = "0" + second;
-                                } else {
-                                    secStr = second + "";
+
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        if (count == 5) {
+                            mainHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast toast = Toast.makeText(
+                                            getApplicationContext(),
+                                            "视频会议即将结束",
+                                            Toast.LENGTH_SHORT
+                                    );
+                                    toast.setGravity(Gravity.CENTER, 0, 0);
+                                    toast.show();
                                 }
-                                showString = "已经视频：" + minStr + ":" + secStr;
-                                System.out.println("已经视频：" + minStr + ":" + secStr);
-                                // text.setText("已经视频："+minStr+":"+secStr);
-                                text.setText(showString);
+                            }, 0);
 
-                            }
-                        }, 0);
+                        }
+
+                        if (count == 0) {
 
 
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                            finishVideo(1);
 
+                            break;
+                        }
+                        count = count - 1;
 
-                    if (count == 5) {
-                        mainHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast toast = Toast.makeText(
-                                        getApplicationContext(),
-                                        "视频会议即将结束",
-                                        Toast.LENGTH_SHORT
-                                );
-                                toast.setGravity(Gravity.CENTER, 0, 0);
-                                toast.show();
-                            }
-                        }, 0);
-
-                    }
-
-                    if (count == 0) {
-
-
-                        finishVideo(1);
-
-                        break;
-                    }
-                    count = count - 1;
-
-                    if (finishFlag) {
-                        break;
+                        if (finishFlag) {
+                            break;
+                        }
                     }
                 }
-            }
-        }).start();
+            }).start();
+
+        }
+
 
 
     }
