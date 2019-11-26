@@ -16,6 +16,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
+import click
 import com.alibaba.fastjson.JSON
 import com.example.facetime.R
 import com.example.facetime.login.api.LoginApi
@@ -34,12 +35,12 @@ import kotlinx.coroutines.rx2.awaitSingle
 import okhttp3.RequestBody
 import org.jetbrains.anko.*
 import retrofit2.HttpException
+import withTrigger
 
 class UpdateNickName : AppCompatActivity() {
 
     lateinit var nickName: EditText
     private lateinit var toolbar1: Toolbar
-    lateinit var saveTool: SharedPreferences
     var thisDialog: MyDialog? = null
     var mHandler = Handler()
     var r: Runnable = Runnable {
@@ -59,12 +60,11 @@ class UpdateNickName : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        saveTool = PreferenceManager.getDefaultSharedPreferences(this@UpdateNickName)
-
         frameLayout {
             backgroundColor = Color.TRANSPARENT
-            setOnClickListener {
-                closeFocusjianpan()
+            this.withTrigger().click  {
+
+            closeFocusjianpan()
             }
             linearLayout {
                 toolbar1 = toolbar {
@@ -77,8 +77,9 @@ class UpdateNickName : AppCompatActivity() {
 
                 linearLayout {
                     textView {
-                        setOnClickListener {
-                            finish()//返回
+                        this.withTrigger().click  {
+
+                        finish()//返回
                             overridePendingTransition(
                                 R.anim.left_in,
                                 R.anim.right_out
@@ -114,7 +115,7 @@ class UpdateNickName : AppCompatActivity() {
                 relativeLayout {
                     backgroundResource = R.drawable.border
 
-                    val string = saveTool.getString("nickName","").toString()
+                    val string = PreferenceManager.getDefaultSharedPreferences(this@UpdateNickName).getString("userName","").toString()
 
                     nickName = editText {
                         setText(string)
@@ -147,10 +148,20 @@ class UpdateNickName : AppCompatActivity() {
                     textSize = 16f
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
-                    setOnClickListener {
-                        closeFocusjianpan()
+                    this.withTrigger().click  {
+
+                    closeFocusjianpan()
                         if (nickName.text.toString() != "") {
                             if (nickName.text.length < 10) {
+
+                                val toast = Toast.makeText(
+                                    applicationContext,
+                                    "设置成功",
+                                    Toast.LENGTH_SHORT
+                                )
+                                toast.setGravity(Gravity.CENTER, 0, 0)
+                                toast.show()
+
                                 thisDialog = DialogUtils.showLoading(this@UpdateNickName)
                                 mHandler.postDelayed(r, 12000)
                                 GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
@@ -208,7 +219,7 @@ class UpdateNickName : AppCompatActivity() {
 //                toast.setGravity(Gravity.CENTER,0,0)
 //                toast.show()
 
-                val mEditor: SharedPreferences.Editor = saveTool.edit()
+                val mEditor: SharedPreferences.Editor = PreferenceManager.getDefaultSharedPreferences(this@UpdateNickName).edit()
                 mEditor.putString("userName", nickName)
                 mEditor.commit()
 

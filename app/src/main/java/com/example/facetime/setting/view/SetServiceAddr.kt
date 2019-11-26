@@ -12,11 +12,14 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.Toast
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
+import click
 import com.example.facetime.R
 import com.jaeger.library.StatusBarUtil
 import org.jetbrains.anko.*
+import withTrigger
 
 class SetServiceAddr : AppCompatActivity() {
 
@@ -31,8 +34,9 @@ class SetServiceAddr : AppCompatActivity() {
 
         frameLayout {
             backgroundColor = Color.TRANSPARENT
-            setOnClickListener {
-                closeFocusjianpan()
+            this.withTrigger().click  {
+
+            closeFocusjianpan()
             }
             linearLayout {
                 toolbar1 = toolbar {
@@ -45,8 +49,9 @@ class SetServiceAddr : AppCompatActivity() {
 
                 linearLayout {
                     textView {
-                        setOnClickListener {
-                            finish()//返回
+                        this.withTrigger().click  {
+
+                        finish()//返回
                             overridePendingTransition(
                                 R.anim.left_in,
                                 R.anim.right_out
@@ -111,9 +116,19 @@ class SetServiceAddr : AppCompatActivity() {
                     textSize = 16f
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
-                    setOnClickListener {
+                    this.withTrigger().click  {
+
                         closeFocusjianpan()
                         if (address.text.toString() != "") {
+
+                            val toast = Toast.makeText(
+                                applicationContext,
+                                "设置成功",
+                                Toast.LENGTH_SHORT
+                            )
+                            toast.setGravity(Gravity.CENTER, 0, 0)
+                            toast.show()
+
                             val mEditor: SharedPreferences.Editor = saveTool.edit()
                             mEditor.putString("serviceAdd", address.text.toString())
                             mEditor.commit()

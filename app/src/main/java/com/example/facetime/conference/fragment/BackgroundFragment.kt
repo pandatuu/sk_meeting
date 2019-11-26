@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import click
 import com.example.facetime.R
 import org.jetbrains.anko.backgroundColorResource
 import org.jetbrains.anko.verticalLayout
+import withTrigger
 
 class BackgroundFragment: Fragment() {
 
@@ -42,7 +44,7 @@ class BackgroundFragment: Fragment() {
             verticalLayout {
                 isClickable = true
                 backgroundColorResource = R.color.black66000000
-                setOnClickListener {
+                this.withTrigger().click  {
                     clickback.clickAll()
                 }
             }

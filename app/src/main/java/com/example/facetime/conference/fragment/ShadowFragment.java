@@ -21,7 +21,10 @@ public class ShadowFragment extends Fragment {
         View view = inflater.inflate(R.layout.shadow, container, false);
         shadow= (ShadowScreen) getActivity();
 
-        view.setOnClickListener(new View.OnClickListener() {
+
+
+
+            view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 shadow.shadowOnclick();

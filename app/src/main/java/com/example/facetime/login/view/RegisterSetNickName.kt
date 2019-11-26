@@ -14,10 +14,13 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
+import click
 import com.example.facetime.R
+import com.example.facetime.conference.view.MenuActivity
 import com.example.facetime.login.view.StartActivity
 import com.jaeger.library.StatusBarUtil
 import org.jetbrains.anko.*
+import withTrigger
 
 class RegisterSetNickName : AppCompatActivity() {
 
@@ -31,7 +34,7 @@ class RegisterSetNickName : AppCompatActivity() {
 
         frameLayout {
             backgroundColor = Color.TRANSPARENT
-            setOnClickListener {
+            this.withTrigger().click  {
                 closeFocusjianpan()
             }
             linearLayout {
@@ -45,7 +48,7 @@ class RegisterSetNickName : AppCompatActivity() {
 
                 linearLayout {
                     textView {
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             finish()//返回
                             overridePendingTransition(
                                 R.anim.left_in,
@@ -111,7 +114,7 @@ class RegisterSetNickName : AppCompatActivity() {
                     textSize = 16f
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
-                    setOnClickListener {
+                    this.withTrigger().click  {
                         closeFocusjianpan()
                         if (nickName.text.toString() != "") {
                             if (nickName.text.length < 10) {
@@ -148,7 +151,7 @@ class RegisterSetNickName : AppCompatActivity() {
         getWindow().getDecorView()
             .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
         toolbar1.setNavigationOnClickListener {
-            finish()//返回
+            startActivity<MenuActivity>()//返回
             overridePendingTransition(
                 R.anim.left_in,
                 R.anim.right_out

@@ -13,6 +13,7 @@ import org.jetbrains.anko.*
 
 import android.preference.PreferenceManager
 import android.widget.*
+import click
 import com.example.facetime.R
 import com.example.facetime.login.api.LoginApi
 import com.example.facetime.conference.view.MenuActivity
@@ -28,6 +29,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx2.awaitSingle
 import retrofit2.HttpException
+import withTrigger
 
 
 open class SystemSettingsActivity : AppCompatActivity() {
@@ -70,7 +72,7 @@ open class SystemSettingsActivity : AppCompatActivity() {
 
                 linearLayout {
                     textView {
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             finish()//返回
                             overridePendingTransition(
                                 R.anim.left_in,
@@ -108,7 +110,8 @@ open class SystemSettingsActivity : AppCompatActivity() {
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
                     gravity = Gravity.CENTER
-                    setOnClickListener {
+
+                    this.withTrigger().click  {
                         if(token != ""){
                             startActivity<UpdateNickName>()
                             overridePendingTransition(
@@ -144,7 +147,8 @@ open class SystemSettingsActivity : AppCompatActivity() {
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
                     gravity = Gravity.CENTER
-                    setOnClickListener {
+                    this.withTrigger().click  {
+
                         if(token != ""){
                             startActivity<UpdatePassword>()
                             overridePendingTransition(
@@ -175,31 +179,31 @@ open class SystemSettingsActivity : AppCompatActivity() {
                     width = matchParent
                 }
 
-                textView {
-                    text = "修改服务器地址"
-                    textSize = 14f
-                    textColor = Color.WHITE
-                    backgroundResource = R.drawable.bottonbg
-                    gravity = Gravity.CENTER
-                    setOnClickListener {
-                        startActivity<SetServiceAddr>()
-                        overridePendingTransition(
-                            R.anim.right_in,
-                            R.anim.left_out
-                        )
-                    }
-                }.lparams() {
-                    height = dip(60)
-                    width = matchParent
-                }
-
-                textView {
-                    backgroundColor= Color.parseColor("#cccccc")
-
-                }.lparams() {
-                    height = dip(px2sp(1))
-                    width = matchParent
-                }
+//                textView {
+//                    text = "修改服务器地址"
+//                    textSize = 14f
+//                    textColor = Color.WHITE
+//                    backgroundResource = R.drawable.bottonbg
+//                    gravity = Gravity.CENTER
+//                    this.withTrigger().click  {
+//                        startActivity<SetServiceAddr>()
+//                        overridePendingTransition(
+//                            R.anim.right_in,
+//                            R.anim.left_out
+//                        )
+//                    }
+//                }.lparams() {
+//                    height = dip(60)
+//                    width = matchParent
+//                }
+//
+//                textView {
+//                    backgroundColor= Color.parseColor("#cccccc")
+//
+//                }.lparams() {
+//                    height = dip(px2sp(1))
+//                    width = matchParent
+//                }
 
                 textView {
                     text = "退出登录"
@@ -207,7 +211,8 @@ open class SystemSettingsActivity : AppCompatActivity() {
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
                     gravity = Gravity.CENTER
-                    setOnClickListener {
+                    this.withTrigger().click  {
+
                         if(token != ""){
                             thisDialog = DialogUtils.showLoading(this@SystemSettingsActivity)
                             mHandler.postDelayed(r, 12000)

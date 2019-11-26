@@ -16,6 +16,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import click
 import com.alibaba.fastjson.JSON
 import com.example.facetime.R
 import com.example.facetime.login.api.LoginApi
@@ -38,6 +39,7 @@ import okhttp3.RequestBody
 import org.jetbrains.anko.*
 import retrofit2.HttpException
 import java.util.regex.Pattern
+import withTrigger
 
 class ReadSetPasswordActivity : AppCompatActivity() {
     private var runningDownTimer: Boolean = false
@@ -69,7 +71,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
 
         verticalLayout {
             backgroundColor = Color.parseColor("#f2f2f2")
-            setOnClickListener {
+            this.withTrigger().click  {
                 closeFocusjianpan()
             }
 
@@ -85,7 +87,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
 
                 linearLayout {
                     textView {
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             finish()//返回
                             overridePendingTransition(
                                 R.anim.left_in,
@@ -135,7 +137,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                         textColor = Color.BLACK
                         typeface = Typeface.DEFAULT_BOLD
 
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             startActivityForResult(
                                 Intent(
                                     applicationContext,
@@ -233,7 +235,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                         textSize = 14f
                         typeface = Typeface.DEFAULT_BOLD
                         textColor = Color.BLACK
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             val result = determinePhone()
                             if (result) {
                                 thisDialog = DialogUtils.showLoading(this@ReadSetPasswordActivity)
@@ -310,7 +312,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
                     gravity = Gravity.CENTER
-                    setOnClickListener {
+                    this.withTrigger().click  {
                         next()
                     }
                 }.lparams(width = matchParent, height = dip(50)) {
@@ -362,15 +364,21 @@ class ReadSetPasswordActivity : AppCompatActivity() {
         override fun onTick(l: Long) {
             runningDownTimer = true
             timeButton.text = (l / 1000).toString() + "s"
-            timeButton.setOnClickListener { toast("冷却中...") }
+            timeButton.withTrigger().click  {
+                toast("冷却中...")
+            }
+
+
         }
 
         override fun onFinish() {
             runningDownTimer = false
             timeButton.text = "发送"
-            timeButton.setOnClickListener {
+
+            timeButton.withTrigger().click  {
                 onPcode()
             }
+
         }
     }
 
@@ -443,8 +451,6 @@ class ReadSetPasswordActivity : AppCompatActivity() {
     }
 
     fun next() {
-        thisDialog = DialogUtils.showLoading(this@ReadSetPasswordActivity)
-        mHandler.postDelayed(r, 12000)
         val res = determinePhone()
         val phone = telephone.text.toString().trim()
         val code = myCode.text.toString().trim()
@@ -452,7 +458,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
 
         if (phone.isNullOrEmpty()) {
             toast("请输入手机号码")
-            val rela = telephone.parent as RelativeLayout
+            val rela = telephone.parent as LinearLayout
             rela.backgroundResource = R.drawable.input_error_border
             return
         }
@@ -472,7 +478,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
 
         if (!res) {
             toast("请输入正确的手机号码")
-            val rela = telephone.parent as RelativeLayout
+            val rela = telephone.parent as LinearLayout
             rela.backgroundResource = R.drawable.input_error_border
             return
         }
@@ -484,6 +490,8 @@ class ReadSetPasswordActivity : AppCompatActivity() {
             return
         }
 
+        thisDialog = DialogUtils.showLoading(this@ReadSetPasswordActivity)
+        mHandler.postDelayed(r, 12000)
         GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
             //更新密码
             updatePassword(phoneNumber.text.toString().substring(1), phone, code, mypassword)

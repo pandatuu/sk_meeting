@@ -12,6 +12,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import click
 import com.alibaba.fastjson.JSON
 import com.example.facetime.R
 import com.example.facetime.login.api.RegisterApi
@@ -31,6 +32,7 @@ import okhttp3.RequestBody
 import org.jetbrains.anko.*
 import retrofit2.HttpException
 import java.util.regex.Pattern
+import withTrigger
 
 class RegisterSetPassword : AppCompatActivity() {
 
@@ -85,8 +87,9 @@ class RegisterSetPassword : AppCompatActivity() {
 
                 linearLayout {
                     textView {
-                        setOnClickListener {
-                            finish()//返回
+                        this.withTrigger().click  {
+
+                        finish()//返回
                             overridePendingTransition(
                                 R.anim.left_in,
                                 R.anim.right_out
@@ -192,31 +195,32 @@ class RegisterSetPassword : AppCompatActivity() {
                     textSize = 16f
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
-                    setOnClickListener {
-                        closeFocusjianpan()
+                    this.withTrigger().click  {
+
+                    closeFocusjianpan()
                         if (passwordFirst.text.toString() == "") {
                             val rela = passwordFirst.parent as RelativeLayout
                             rela.backgroundResource = R.drawable.input_error_border
                             toast("请输入密码")
-                            return@setOnClickListener
+                            return@click
                         }
                         if (!pwdMatch(passwordFirst.text.toString())) {
                             val rela = passwordFirst.parent as RelativeLayout
                             rela.backgroundResource = R.drawable.input_error_border
                             toast("密码格式不正确")
-                            return@setOnClickListener
+                            return@click
                         }
                         if (passwordAgain.text.toString() == "") {
                             val rela = passwordAgain.parent as RelativeLayout
                             rela.backgroundResource = R.drawable.input_error_border
                             toast("请再次输入密码")
-                            return@setOnClickListener
+                            return@click
                         }
                         if (passwordFirst.text.toString() != passwordAgain.text.toString()) {
                             val rela = passwordAgain.parent as RelativeLayout
                             rela.backgroundResource = R.drawable.input_error_border
                             toast("两次密码不匹配")
-                            return@setOnClickListener
+                            return@click
                         }
                         thisDialog = DialogUtils.showLoading(this@RegisterSetPassword)
                         mHandler.postDelayed(r, 12000)

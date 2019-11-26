@@ -20,12 +20,12 @@ import android.text.TextWatcher
 import android.view.KeyEvent
 import android.widget.*
 import androidx.fragment.app.FragmentTransaction
+
 import com.example.facetime.R
 import com.example.facetime.conference.api.RoomApi
 import com.example.facetime.conference.fragment.ChooseRoomIdFragment
 import com.example.facetime.util.RetrofitUtils
 import com.facebook.react.bridge.UiThreadUtil
-import com.umeng.commonsdk.stateless.UMSLEnvelopeBuild.mContext
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -37,6 +37,8 @@ import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
 import org.jitsi.meet.sdk.JitsiMeetUserInfo
 import org.json.JSONArray
 import org.json.JSONObject
+import withTrigger
+import click
 import java.net.MalformedURLException
 import java.net.URL
 
@@ -67,7 +69,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
 
         verticalLayout {
 
-            setOnClickListener {
+            this.withTrigger().click  {
                 closeSoftKeyboard(editText1)
                 closeSelector()
             }
@@ -86,7 +88,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
 
                 linearLayout {
                     textView {
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             finish()//返回
                             overridePendingTransition(
                                 R.anim.left_in,
@@ -142,11 +144,11 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                     backgroundColor = Color.WHITE
                     orientation = LinearLayout.HORIZONTAL
                     relativeLayout() {
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             textforid.backgroundResource = R.drawable.border_bottom_transparent
                             textforname.backgroundColor=Color.TRANSPARENT
                             editText1.setText("")
-                            editText1.hint="请出入会议室ID"
+                            editText1.hint="请输入会议室ID"
                             flag=1
                             closeSelector()
 
@@ -184,11 +186,11 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                     }
                     relativeLayout() {
 
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             textforname.backgroundResource = R.drawable.border_bottom_transparent
                             textforid.backgroundColor=Color.TRANSPARENT
                             editText1.setText("")
-                            editText1.hint="请出入会议室名称"
+                            editText1.hint="请输入会议室名称"
                             flag=2
                             closeSelector()
                         }
@@ -244,7 +246,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
 
                 relativeLayout() {
 
-                    setOnClickListener {
+                    this.withTrigger().click  {
                         editText1.requestFocus()
                         showSoftKeyboard(editText1)
 
@@ -314,7 +316,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                         backgroundColor = Color.WHITE
                         gravity = Gravity.CENTER
 
-                        setOnClickListener {
+                        this.withTrigger().click  {
 
                             triangle.requestFocus()
                             editText1.clearFocus()
@@ -532,8 +534,9 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                             backgroundResource = R.drawable.bottonbg
                             gravity = Gravity.CENTER
 
-                            setOnClickListener {
 
+
+                            this.withTrigger().click {
 
                                 if (editText1.text.isNullOrEmpty()&& flag==1) {
                                     val toast = Toast.makeText(
@@ -556,6 +559,7 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                                     //gotoVideoInterview(editText1.text.toString())
                                 }
                             }
+
                         }.lparams() {
                             height = dip(50)
                             width = matchParent
@@ -913,7 +917,15 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                         JSONObject(result.body()?.toString()).get("endTime").toString().toLong()
                     val startTime =
                         JSONObject(result.body()?.toString()).get("startTime").toString().toLong()
-                    val time = endTime - startTime
+                    var time = endTime - startTime
+
+                    var level =
+                        PreferenceManager.getDefaultSharedPreferences(this@EnteRoomByIdActivity)
+                            .getInt("level", 0)
+                    if(level!=0){
+                        time=0
+                    }
+
 
                     val toast = Toast.makeText(
                         applicationContext,

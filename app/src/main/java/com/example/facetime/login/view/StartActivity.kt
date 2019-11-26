@@ -19,6 +19,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import click
 import com.alibaba.fastjson.JSON
 import com.example.facetime.R
 import com.example.facetime.login.api.LoginApi
@@ -42,6 +43,7 @@ import okhttp3.MediaType
 import okhttp3.RequestBody
 import org.jetbrains.anko.*
 import retrofit2.HttpException
+import withTrigger
 
 
 class StartActivity : AppCompatActivity() {
@@ -70,7 +72,15 @@ class StartActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        runOnUiThread {
+            Thread.sleep(2000)
+            val mPerferences = PreferenceManager.getDefaultSharedPreferences(this@StartActivity)
+            val token = mPerferences.getString("token","")
+            if(token != ""){
+                startActivity<MenuActivity>()
+                finish()
+            }
+        }
         saveTool = PreferenceManager.getDefaultSharedPreferences(this@StartActivity)
         frameLayout {
             backgroundColor = Color.parseColor("#F2F2F2")
@@ -85,8 +95,9 @@ class StartActivity : AppCompatActivity() {
 
                 linearLayout {
                     textView {
-                        setOnClickListener {
-                            finish()//返回
+                        this.withTrigger().click  {
+
+                        finish()//返回
                             overridePendingTransition(
                                 R.anim.left_in,
                                 R.anim.right_out
@@ -105,8 +116,9 @@ class StartActivity : AppCompatActivity() {
                             gravity = Gravity.RIGHT
                             textSize = 16f
                             textColor = Color.parseColor("#7F7F7F")
-                            setOnClickListener {
-                                startActivity<RegisterActivity>()
+                            this.withTrigger().click  {
+
+                            startActivity<RegisterActivity>()
                                 overridePendingTransition(R.anim.right_in, R.anim.left_out)
                             }
                         }.lparams(height = wrapContent, width = matchParent){
@@ -128,8 +140,9 @@ class StartActivity : AppCompatActivity() {
                 height = dip(65)
             }
             verticalLayout {
-                setOnClickListener {
-                    closeFocusjianpan()
+                this.withTrigger().click  {
+
+                closeFocusjianpan()
                 }
 
                 textView {
@@ -154,7 +167,7 @@ class StartActivity : AppCompatActivity() {
                         textSize = 15f
                         textColor = Color.BLACK
                         typeface = Typeface.DEFAULT_BOLD
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             startActivityForResult(
                                 Intent(
                                     applicationContext,
@@ -250,7 +263,7 @@ class StartActivity : AppCompatActivity() {
                 }
 
                 linearLayout {
-                    setOnClickListener {
+                    this.withTrigger().click  {
                         isChoose.isChecked = !isChoose.isChecked
                     }
 
@@ -263,7 +276,7 @@ class StartActivity : AppCompatActivity() {
                     textView {
                         text = "隐私协议"
                         textColor = Color.parseColor("#219ad5")
-                        setOnClickListener {
+                        this. withTrigger().click  {
                             startActivity<UserAgreement>()
                             overridePendingTransition(R.anim.right_in, R.anim.left_out)
                         }
@@ -274,7 +287,7 @@ class StartActivity : AppCompatActivity() {
                     textView {
                         text = "服务声明"
                         textColor = Color.parseColor("#219ad5")
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             startActivity<ServiceStatement>()
                             overridePendingTransition(R.anim.right_in, R.anim.left_out)
                         }
@@ -290,7 +303,7 @@ class StartActivity : AppCompatActivity() {
                     textColor = Color.WHITE
                     textSize = 16f
                     gravity = Gravity.CENTER
-                    setOnClickListener {
+                    this.withTrigger().click  {
                         submit()
                     }
                 }.lparams(width = matchParent,height = dip(50)) {
@@ -301,7 +314,7 @@ class StartActivity : AppCompatActivity() {
                     text = "忘记密码"
                     textColor = Color.parseColor("#7F7F7F")
                     gravity = Gravity.RIGHT
-                    setOnClickListener {
+                    this.withTrigger().click  {
                         startActivity<ReadSetPasswordActivity>()
                         this@StartActivity.overridePendingTransition(R.anim.right_in, R.anim.left_out)
                     }

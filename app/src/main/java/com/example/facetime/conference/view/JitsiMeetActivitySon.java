@@ -3,6 +3,7 @@ package com.example.facetime.conference.view;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,19 +24,16 @@ import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
-import android.app.FragmentTransaction;
 
 import com.example.facetime.R;
 import com.example.facetime.conference.fragment.BackgroundForJavaFragment;
-import com.example.facetime.conference.fragment.BackgroundFragment;
 import com.example.facetime.conference.fragment.ShareForJavaFragment;
-import com.example.facetime.conference.fragment.ShareFragment;
 import com.example.facetime.conference.listener.VideoChatControllerListener;
+import com.example.facetime.util.BaseUiListener;
 import com.example.facetime.util.CommonActivity;
 import com.facebook.react.modules.core.PermissionListener;
-import com.twitter.sdk.android.tweetcomposer.TweetComposer;
-import com.umeng.commonsdk.UMConfigure;
-import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.tencent.connect.share.QQShare;
+import com.tencent.tauth.Tencent;
 
 import org.jetbrains.annotations.NotNull;
 import org.jitsi.meet.sdk.JitsiMeetActivityDelegate;
@@ -47,10 +45,6 @@ import org.jitsi.meet.sdk.JitsiMeetView;
 import org.jitsi.meet.sdk.JitsiMeetViewListener;
 import org.jitsi.meet.sdk.R.id;
 import org.jitsi.meet.sdk.R.layout;
-import com.umeng.socialize.ShareAction;
-import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.shareboard.SnsPlatform;
-import com.umeng.socialize.utils.ShareBoardlistener;
 
 import java.util.Map;
 
@@ -58,8 +52,6 @@ import javax.annotation.Nullable;
 
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
-
-import static java.sql.DriverManager.println;
 
 
 public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetActivityInterface, JitsiMeetViewListener, VideoChatControllerListener, ShareForJavaFragment.SharetDialogSelect, BackgroundForJavaFragment.ClickBack {
@@ -76,6 +68,8 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
 
     final Handler cwjHandler = new Handler();
     View view;
+
+    Boolean shareClickFlag=true;
 
     public JitsiMeetActivitySon() {
     }
@@ -121,13 +115,19 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
         LinearLayout inside = (LinearLayout) layout.getChildAt(0);
 
         LinearLayout image = (LinearLayout) inside.getChildAt(2);
+
+
+
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(shareClickFlag){
+                    shareClickFlag=false;
+                    System.out.println("xxxxxxxxxxxxxxxxxxxxx");
 
-                System.out.println("xxxxxxxxxxxxxxxxxxxxx");
+                    addListFragment();
+                }
 
-                addListFragment();
             }
         });
 
@@ -155,6 +155,9 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
         mTransaction.add(R.id.jitsiFragment, shareFragment);
 
         mTransaction.commit();
+
+        shareClickFlag=true;
+
     }
 
     @SuppressLint("ResourceType")
@@ -311,88 +314,94 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
 //        Log.e(TAG, "AlertDialog");
 //        dialog.setCanceledOnTouchOutside(false);
 
+        if(count==0){
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+        }else{
 
-
-                //刚搞页延迟
-                Handler mainHandler = new Handler(Looper.getMainLooper());
-
-                LinearLayout layout = (LinearLayout) ((LinearLayout) view).getChildAt(0);
-                LinearLayout inside = (LinearLayout) layout.getChildAt(0);
-
-                TextView text = (TextView) inside.getChildAt(0);
-                while (true) {
-                    try {
-                        Thread.sleep(1000);
-
-                        mainHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
 
 
-                                min = count / 60;
-                                second = count % 60;
+                    //刚搞页延迟
+                    Handler mainHandler = new Handler(Looper.getMainLooper());
+
+                    LinearLayout layout = (LinearLayout) ((LinearLayout) view).getChildAt(0);
+                    LinearLayout inside = (LinearLayout) layout.getChildAt(0);
+
+                    TextView text = (TextView) inside.getChildAt(0);
+                    while (true) {
+                        try {
+                            Thread.sleep(1000);
+
+                            mainHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
 
 
-                                if (min < 10) {
-                                    minStr = "0" + min;
-                                } else {
-                                    minStr = min + "";
+                                    min = count / 60;
+                                    second = count % 60;
+
+
+                                    if (min < 10) {
+                                        minStr = "0" + min;
+                                    } else {
+                                        minStr = min + "";
+                                    }
+
+                                    if (second < 10) {
+                                        secStr = "0" + second;
+                                    } else {
+                                        secStr = second + "";
+                                    }
+                                    showString = "已经视频：" + minStr + ":" + secStr;
+                                    System.out.println("已经视频：" + minStr + ":" + secStr);
+                                    // text.setText("已经视频："+minStr+":"+secStr);
+                                    text.setText(showString);
+
                                 }
+                            }, 0);
 
-                                if (second < 10) {
-                                    secStr = "0" + second;
-                                } else {
-                                    secStr = second + "";
+
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        if (count == 5) {
+                            mainHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast toast = Toast.makeText(
+                                            getApplicationContext(),
+                                            "视频会议即将结束",
+                                            Toast.LENGTH_SHORT
+                                    );
+                                    toast.setGravity(Gravity.CENTER, 0, 0);
+                                    toast.show();
                                 }
-                                showString = "已经视频：" + minStr + ":" + secStr;
-                                System.out.println("已经视频：" + minStr + ":" + secStr);
-                                // text.setText("已经视频："+minStr+":"+secStr);
-                                text.setText(showString);
+                            }, 0);
 
-                            }
-                        }, 0);
+                        }
+
+                        if (count == 0) {
 
 
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                            finishVideo(1);
 
+                            break;
+                        }
+                        count = count - 1;
 
-                    if (count < 5) {
-                        mainHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast toast = Toast.makeText(
-                                        getApplicationContext(),
-                                        "视频会议即将结束",
-                                        Toast.LENGTH_SHORT
-                                );
-                                toast.setGravity(Gravity.CENTER, 0, 0);
-                                toast.show();
-                            }
-                        }, 0);
-
-                    }
-
-                    if (count <= 0) {
-
-
-                        finishVideo(1);
-
-                        break;
-                    }
-                    count = count - 1;
-
-                    if (finishFlag) {
-                        break;
+                        if (finishFlag) {
+                            break;
+                        }
                     }
                 }
-            }
-        }).start();
+            }).start();
+
+        }
+
 
 
     }
@@ -451,10 +460,7 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
     @Override
     public Object getSelectedItem(int index, @NotNull Continuation<? super Unit> continuation) {
 
-        UMConfigure.init(
-                this, "5cdcc324570df3ffc60009c3"
-                , "umeng", UMConfigure.DEVICE_TYPE_PHONE, ""
-        );
+
         SharedPreferences saveTool = PreferenceManager.getDefaultSharedPreferences(this);
         String addr = saveTool.getString("serviceAdd",getString(R.string.videoUrl));
         String id = saveTool.getString("MyRoomNum","");
@@ -477,25 +483,33 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
                     };
                     ActivityCompat.requestPermissions(this, mPermissionList, 123);
                 }
-                new ShareAction(this)
-                        .setPlatform(SHARE_MEDIA.LINE)//传入平台
-                        .withText("视频地址："+addr+id)
-                        .setShareboardclickCallback(new ShareBoardlistener() {
 
-                            @Override
-                            public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
-                                System.out.println("11111111111111111111111111111111111111111 ");
-                            }
-                        }).share();
+                Tencent mTencent  = Tencent.createInstance("",this.context);
+                Bundle params = new Bundle();
+                params.putString(QQShare.SHARE_TO_QQ_TARGET_URL,"111");
+                mTencent.shareToQQ(this, params, new BaseUiListener());
+//                new ShareAction(this)
+//                        .setPlatform(SHARE_MEDIA.LINE)//传入平台
+//                        .withText("视频地址："+addr+id)
+//                        .setShareboardclickCallback(new ShareBoardlistener() {
+//
+//                            @Override
+//                            public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
+//                                System.out.println("11111111111111111111111111111111111111111 ");
+//                            }
+//                        }).share();
+
 
                 break;
             }
 
 
             case 1: {
-                TweetComposer.Builder builder =new  TweetComposer.Builder(this);
-                builder.text("视频地址："+addr+id)
-                        .show();
+
+                break;
+            }
+            case 2: {
+
 
                 break;
             }

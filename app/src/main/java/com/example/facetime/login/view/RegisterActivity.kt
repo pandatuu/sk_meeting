@@ -16,6 +16,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import click
 import com.alibaba.fastjson.JSON
 import com.example.facetime.R
 import com.example.facetime.login.api.LoginApi
@@ -38,10 +39,11 @@ import kotlinx.coroutines.rx2.awaitSingle
 import okhttp3.RequestBody
 import org.jetbrains.anko.*
 import retrofit2.HttpException
+import withTrigger
 
 class RegisterActivity : AppCompatActivity() {
 
-    private lateinit var isChoose: CheckBox
+//    private lateinit var isChoose: CheckBox
     private lateinit var countryCode: TextView
     private lateinit var phoneNum: EditText
     private lateinit var vcodeNum: EditText
@@ -71,7 +73,7 @@ class RegisterActivity : AppCompatActivity() {
 
         frameLayout {
             backgroundColor = Color.TRANSPARENT
-            setOnClickListener {
+            this.withTrigger().click  {
                 closeFocusjianpan()
             }
             linearLayout {
@@ -88,7 +90,7 @@ class RegisterActivity : AppCompatActivity() {
                         gravity = Gravity.RIGHT
                         textSize = 16f
                         textColor = Color.parseColor("#7F7F7F")
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             finish()
                             overridePendingTransition(
                                 R.anim.left_in,
@@ -129,7 +131,7 @@ class RegisterActivity : AppCompatActivity() {
                         textSize = 15f
                         textColor = Color.BLACK
                         typeface = Typeface.DEFAULT_BOLD
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             startActivityForResult(
                                 Intent(
                                     applicationContext,
@@ -183,7 +185,7 @@ class RegisterActivity : AppCompatActivity() {
                         textSize = 14f
                         typeface = Typeface.DEFAULT_BOLD
                         textColor = Color.BLACK
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             closeFocusjianpan()
                             if (phoneNum.text.toString() != "") {
                                 val phone = countryCode.text.toString() + phoneNum.text.toString()
@@ -255,33 +257,42 @@ class RegisterActivity : AppCompatActivity() {
                     textSize = 16f
                     textColor = Color.WHITE
                     backgroundResource = R.drawable.bottonbg
-                    setOnClickListener {
-                        val phone = countryCode.text.toString() + phoneNum.text.toString()
+                    this. withTrigger().click  {
+
+                    val phone = countryCode.text.toString() + phoneNum.text.toString()
                         isPhoneFormat =
                             isPhoneNumberValid(
                                 phone,
                                 countryCode.text.toString().substring(1)
                             )
 
-                        if (phoneNum.text.toString() == "" || !isPhoneFormat) {
-                            toast("手机号为空或格式不对")
-                        } else {
-                            if (vcodeNum.text.toString() == "") {
+                        if (phoneNum.text.toString() == "") {
+                            toast("手机号为空")
+                        }
+                        if(!isPhoneFormat && phoneNum.text.length>11){
+                            toast("格式不对")
+                        }
+                        if (vcodeNum.text.toString() == "") {
                                 toast("验证码为空")
-                            } else {
-                                if (isChoose.isChecked) {
-                                    thisDialog = DialogUtils.showLoading(this@RegisterActivity)
-                                    mHandler.postDelayed(r, 12000)
-                                    GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
-                                        validateVerificationCode(phoneNum.text.toString(), vcodeNum.text.toString())
-                                    }
-                                } else {
-                                    toast("请勾选协议")
-                                }
-                            }
+                        }
+//                                if (isChoose.isChecked) {
+//                                    thisDialog = DialogUtils.showLoading(this@RegisterActivity)
+//                                    mHandler.postDelayed(r, 12000)
+//                                    GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+//                                        validateVerificationCode(phoneNum.text.toString(), vcodeNum.text.toString())
+//                                    }
+//                                } else {
+//                                    toast("请勾选协议")
+//                                }
+                        thisDialog = DialogUtils.showLoading(this@RegisterActivity)
+                        mHandler.postDelayed(r, 12000)
+                        GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+                            validateVerificationCode(phoneNum.text.toString(), vcodeNum.text.toString())
                         }
                     }
-                }.lparams(matchParent, dip(50))
+                }.lparams(matchParent, dip(50)){
+                    topMargin = dip(20)
+                }
             }.lparams(matchParent, dip(500)) {
                 setMargins(dip(15), dip(150), dip(15), 0)
             }
@@ -324,13 +335,19 @@ class RegisterActivity : AppCompatActivity() {
         override fun onTick(l: Long) {
             runningDownTimer = true
             codeText.text = (l / 1000).toString() + "s"
-            codeText.setOnClickListener { toast("冷却中...") }
+
+            codeText. withTrigger().click  {
+                toast("冷却中...")
+
+            }
         }
 
         override fun onFinish() {
             runningDownTimer = false
             codeText.text = "获取"
-            codeText.setOnClickListener {
+
+
+            codeText.withTrigger().click  {
                 onPcode()
             }
         }
@@ -456,6 +473,35 @@ class RegisterActivity : AppCompatActivity() {
 
             DialogUtils.hideLoading(thisDialog)
             return false
+        }
+    }
+    private fun clickVcode(){
+        closeFocusjianpan()
+        if (phoneNum.text.toString() != "") {
+            val phone = countryCode.text.toString() + phoneNum.text.toString()
+            isPhoneFormat =
+                isPhoneNumberValid(
+                    phone,
+                    countryCode.text.toString().substring(1)
+                )
+            if (isPhoneFormat) {
+                thisDialog = DialogUtils.showLoading(this@RegisterActivity)
+                mHandler.postDelayed(r, 12000)
+                GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+                    val sendBool = sendVerificationCode(
+                        phoneNum.text.toString().trim(),
+                        countryCode.text.toString().substring(1)
+                    )
+                    if (sendBool){
+                        DialogUtils.hideLoading(thisDialog)
+                        onPcode()
+                    }
+                }
+            } else {
+                toast("手机号格式错误")
+            }
+        } else {
+            toast("请输入手机号")
         }
     }
 

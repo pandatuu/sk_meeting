@@ -20,11 +20,11 @@ import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.*
+import click
 import com.example.facetime.R
 import com.example.facetime.conference.api.RoomApi
 import com.example.facetime.util.RetrofitUtils
 import com.facebook.react.bridge.UiThreadUtil
-import com.umeng.socialize.utils.DeviceConfigInternal.context
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -32,6 +32,7 @@ import kotlinx.coroutines.rx2.awaitSingle
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import org.json.JSONObject
+import withTrigger
 
 
 open class CreatePasswordActivity : AppCompatActivity() {
@@ -52,7 +53,7 @@ open class CreatePasswordActivity : AppCompatActivity() {
         verticalLayout {
 
 
-            setOnClickListener {
+            this.withTrigger().click  {
                 closeSoftKeyboard(editText1)
             }
 
@@ -71,7 +72,7 @@ open class CreatePasswordActivity : AppCompatActivity() {
 
                 linearLayout {
                     textView {
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             finish()//返回
                             overridePendingTransition(
                                 R.anim.left_in,
@@ -118,7 +119,7 @@ open class CreatePasswordActivity : AppCompatActivity() {
 
                 linearLayout() {
 
-                    setOnClickListener {
+                    this.withTrigger().click  {
                         editText1.requestFocus()
                         showSoftKeyboard(editText1)
 
@@ -203,8 +204,7 @@ open class CreatePasswordActivity : AppCompatActivity() {
                     backgroundResource = R.drawable.bottonbg
                     gravity = Gravity.CENTER
 
-                    setOnClickListener {
-
+                    this.withTrigger().click  {
 
                         creatRoom()
 

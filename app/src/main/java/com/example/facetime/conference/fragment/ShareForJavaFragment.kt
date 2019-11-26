@@ -19,6 +19,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.*
 import android.app.Fragment
+import click
+import withTrigger
 
 class ShareForJavaFragment : Fragment() {
 
@@ -57,7 +59,9 @@ class ShareForJavaFragment : Fragment() {
             linearLayout {
                 gravity = Gravity.BOTTOM
                 verticalLayout {
-                    setOnClickListener {  }
+                    this.withTrigger().click  {
+
+                    }
                     backgroundColor= Color.WHITE
                     textView {
                         text = "共有"
@@ -79,7 +83,7 @@ class ShareForJavaFragment : Fragment() {
                             imageView {
                                 setImageResource(R.mipmap.line)
 
-                                setOnClickListener {
+                                this.withTrigger().click  {
                                     GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT){
                                         sharetDialogSelect.getSelectedItem(0)
                                     }
@@ -90,7 +94,7 @@ class ShareForJavaFragment : Fragment() {
                             }
 
                             textView {
-                                text="Line"
+                                text="QQ"
                                 textSize=14f
                                 textColorResource= R.color.black20
                             }.lparams {
@@ -110,7 +114,7 @@ class ShareForJavaFragment : Fragment() {
                             imageView {
                                 setImageResource(R.mipmap.twitter)
 
-                                setOnClickListener {
+                                this.withTrigger().click  {
                                     GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT){
                                         sharetDialogSelect.getSelectedItem(1)
                                     }
@@ -122,7 +126,7 @@ class ShareForJavaFragment : Fragment() {
 
 
                             textView {
-                                text="Twitter"
+                                text="微信"
                                 textSize=14f
                                 textColorResource= R.color.black20
                             }.lparams {
@@ -135,7 +139,37 @@ class ShareForJavaFragment : Fragment() {
                             width=dip(0)
                             weight=1f
                         }
+                        verticalLayout {
+                            gravity=Gravity.CENTER_HORIZONTAL
 
+                            imageView {
+                                setImageResource(R.mipmap.twitter)
+
+                                setOnClickListener {
+                                    GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT){
+                                        sharetDialogSelect.getSelectedItem(2)
+                                    }
+                                }
+                            }.lparams {
+                                height=dip(60)
+                                width=dip(60)
+                            }
+
+
+                            textView {
+                                text="钉钉"
+                                textSize=14f
+                                textColorResource= R.color.black20
+                            }.lparams {
+                                topMargin=dip(10)
+
+                            }
+
+                        }.lparams {
+                            height= matchParent
+                            width=dip(0)
+                            weight=1f
+                        }
                     }.lparams {
                         width= matchParent
                         height=dip(110)
@@ -157,7 +191,7 @@ class ShareForJavaFragment : Fragment() {
                         textSize = 15f
                         textColorResource = R.color.gray5c
 
-                        setOnClickListener {
+                        this.withTrigger().click  {
                             GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT){
                                 sharetDialogSelect.getSelectedItem(-1)
                             }

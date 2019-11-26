@@ -10,11 +10,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
+import click
 import com.example.facetime.R
 import com.example.facetime.conference.view.EnteRoomByIdActivity
 import org.jetbrains.anko.*
 import org.json.JSONArray
 import org.json.JSONObject
+import withTrigger
 
 class ChooseRoomIdFragment : Fragment() {
 
@@ -95,7 +97,9 @@ class ChooseRoomIdFragment : Fragment() {
                 linearLayout() {
 
 
-                    setOnClickListener {
+                    this.withTrigger().click  {
+
+
 
                         if(flag==1){
                             (activity as EnteRoomByIdActivity).selectRoomToEditText(t)

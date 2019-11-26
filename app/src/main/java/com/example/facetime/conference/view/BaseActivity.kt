@@ -28,6 +28,7 @@ import android.view.inputmethod.EditorInfo.IME_ACTION_GO
 import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentTransaction
+import click
 import com.example.facetime.R
 import com.example.facetime.setting.view.SettingsActivity
 import com.example.facetime.conference.listener.VideoChatControllerListener
@@ -37,6 +38,7 @@ import com.twitter.sdk.android.tweetcomposer.TweetComposer
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.socialize.ShareAction
 import com.umeng.socialize.bean.SHARE_MEDIA
+import withTrigger
 
 
 open class BaseActivity : AppCompatActivity(),
@@ -46,46 +48,46 @@ open class BaseActivity : AppCompatActivity(),
     }
 
     override suspend fun getSelectedItem(index: Int) {
-        UMConfigure.init(
-            this, "5cdcc324570df3ffc60009c3"
-            , "umeng", UMConfigure.DEVICE_TYPE_PHONE, ""
-        )
-        when (index) {
-            0 -> {
-                if (Build.VERSION.SDK_INT >= 23) {
-                    val mPermissionList = arrayOf(
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.CALL_PHONE,
-                        Manifest.permission.READ_LOGS,
-                        Manifest.permission.READ_PHONE_STATE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.SET_DEBUG_APP,
-                        Manifest.permission.SYSTEM_ALERT_WINDOW,
-                        Manifest.permission.GET_ACCOUNTS,
-                        Manifest.permission.WRITE_APN_SETTINGS
-                    )
-                    ActivityCompat.requestPermissions(this, mPermissionList, 123)
-                }
-                ShareAction(this)
-                    .setPlatform(SHARE_MEDIA.LINE)//传入平台
-                    .withText("this is chat App,welcome to try")
-                    .setShareboardclickCallback { _, _ -> println("11111111111111111111111111111111111111111 ") }
-                    .share()
-
-                //调用创建分享信息接口
-            }
-            1 -> {
-                val builder = TweetComposer.Builder(this)
-                builder.text("this is chat App,welcome to try")
-                    .show()
-
-                //调用创建分享信息接口
-            }
-            else -> {
-                closeAlertDialog()
-            }
-        }
+//        UMConfigure.init(
+//            this, "5cdcc324570df3ffc60009c3"
+//            , "umeng", UMConfigure.DEVICE_TYPE_PHONE, ""
+//        )
+//        when (index) {
+//            0 -> {
+//                if (Build.VERSION.SDK_INT >= 23) {
+//                    val mPermissionList = arrayOf(
+//                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                        Manifest.permission.ACCESS_FINE_LOCATION,
+//                        Manifest.permission.CALL_PHONE,
+//                        Manifest.permission.READ_LOGS,
+//                        Manifest.permission.READ_PHONE_STATE,
+//                        Manifest.permission.READ_EXTERNAL_STORAGE,
+//                        Manifest.permission.SET_DEBUG_APP,
+//                        Manifest.permission.SYSTEM_ALERT_WINDOW,
+//                        Manifest.permission.GET_ACCOUNTS,
+//                        Manifest.permission.WRITE_APN_SETTINGS
+//                    )
+//                    ActivityCompat.requestPermissions(this, mPermissionList, 123)
+//                }
+//                ShareAction(this)
+//                    .setPlatform(SHARE_MEDIA.LINE)//传入平台
+//                    .withText("this is chat App,welcome to try")
+//                    .setShareboardclickCallback { _, _ -> println("11111111111111111111111111111111111111111 ") }
+//                    .share()
+//
+//                //调用创建分享信息接口
+//            }
+//            1 -> {
+//                val builder = TweetComposer.Builder(this)
+//                builder.text("this is chat App,welcome to try")
+//                    .show()
+//
+//                //调用创建分享信息接口
+//            }
+//            else -> {
+//                closeAlertDialog()
+//            }
+//        }
     }
 
 
@@ -136,9 +138,10 @@ open class BaseActivity : AppCompatActivity(),
         vertical = frameLayout {
             id = mainId
 
-            setOnClickListener {
+            this.withTrigger().click  {
 
-                closeSoftKeyboard(editText)
+
+            closeSoftKeyboard(editText)
                 editText.clearFocus()
             }
 
@@ -224,9 +227,10 @@ open class BaseActivity : AppCompatActivity(),
                         imageResource = R.mipmap.icon_share_zwxq
                         scaleType = ImageView.ScaleType.CENTER
 
-                        setOnClickListener {
+                        this.withTrigger().click  {
 
-                            addListFragment()
+
+                        addListFragment()
                         }
 
                     }.lparams() {
@@ -241,9 +245,10 @@ open class BaseActivity : AppCompatActivity(),
                         imageResource = R.mipmap.settings
                         scaleType = ImageView.ScaleType.CENTER
 
-                        setOnClickListener {
+                        this.withTrigger().click  {
 
-                            var intent = Intent(cont, SettingsActivity::class.java)
+
+                        var intent = Intent(cont, SettingsActivity::class.java)
                             startActivityForResult(intent, 2)
                             overridePendingTransition(
                                 R.anim.right_in,
@@ -269,8 +274,9 @@ open class BaseActivity : AppCompatActivity(),
 
                 linearLayout() {
 
-                    setOnClickListener {
-                        editText.requestFocus()
+                    this.withTrigger().click  {
+
+                    editText.requestFocus()
                         showSoftKeyboard(editText)
 
                     }
@@ -362,9 +368,10 @@ open class BaseActivity : AppCompatActivity(),
                     gravity = Gravity.CENTER
                     textSize = 20F
 
-                    setOnClickListener {
+                    this.withTrigger().click  {
 
-                        goToFaceTime()
+
+                    goToFaceTime()
 
                     }
                 }.lparams() {
