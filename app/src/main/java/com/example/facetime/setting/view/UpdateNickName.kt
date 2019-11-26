@@ -115,7 +115,7 @@ class UpdateNickName : AppCompatActivity() {
                 relativeLayout {
                     backgroundResource = R.drawable.border
 
-                    val string = PreferenceManager.getDefaultSharedPreferences(this@UpdateNickName).getString("userName","").toString()
+                    val string = PreferenceManager.getDefaultSharedPreferences(this@UpdateNickName).getString("nickName","").toString()
 
                     nickName = editText {
                         setText(string)
@@ -220,7 +220,7 @@ class UpdateNickName : AppCompatActivity() {
 //                toast.show()
 
                 val mEditor: SharedPreferences.Editor = PreferenceManager.getDefaultSharedPreferences(this@UpdateNickName).edit()
-                mEditor.putString("userName", nickName)
+                mEditor.putString("nickName", nickName)
                 mEditor.commit()
 
                 DialogUtils.hideLoading(thisDialog)

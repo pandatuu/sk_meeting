@@ -278,10 +278,11 @@ open class SystemSettingsActivity : AppCompatActivity() {
                 sp.remove("MyRoomNum")
                 sp.remove("MyRoomName")
                 sp.remove("nickName")
+                sp.remove("level")
                 sp.commit()
 
                 DialogUtils.hideLoading(thisDialog)
-                startActivity<MenuActivity>()
+                startActivity<StartActivity>()
                 overridePendingTransition(
                     R.anim.fade_in_out,
                     R.anim.fade_in_out
