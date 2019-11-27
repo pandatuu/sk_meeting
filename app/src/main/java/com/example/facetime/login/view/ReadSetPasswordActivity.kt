@@ -298,8 +298,7 @@ class ReadSetPasswordActivity : AppCompatActivity() {
                                 setHintTextColor(Color.GRAY)
                             }
                         }
-                    }.lparams(width = dip(0), height = matchParent) {
-                        weight = 1f
+                    }.lparams(matchParent, matchParent) {
                         leftMargin = dip(10)
                     }
                 }.lparams(height = dip(50), width = matchParent) {
