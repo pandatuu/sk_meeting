@@ -928,14 +928,14 @@ open class EnteRoomByIdActivity : AppCompatActivity() {
                     }
 
 
-                    val toast = Toast.makeText(
-                        applicationContext,
-                        "会议将会有时间限制!",
-                        Toast.LENGTH_SHORT
-                    )
-
-                    toast.setGravity(Gravity.CENTER, 0, 0)
-                    toast.show()
+//                    val toast = Toast.makeText(
+//                        applicationContext,
+//                        "会议将会有时间限制!",
+//                        Toast.LENGTH_SHORT
+//                    )
+//
+//                    toast.setGravity(Gravity.CENTER, 0, 0)
+//                    toast.show()
 
                     try {
 
