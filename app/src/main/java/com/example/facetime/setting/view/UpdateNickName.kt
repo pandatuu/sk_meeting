@@ -41,7 +41,6 @@ class UpdateNickName : AppCompatActivity() {
 
     lateinit var nickName: EditText
     private lateinit var toolbar1: Toolbar
-    lateinit var saveTool: SharedPreferences
     var thisDialog: MyDialog? = null
     var mHandler = Handler()
     var r: Runnable = Runnable {
@@ -60,8 +59,6 @@ class UpdateNickName : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        saveTool = PreferenceManager.getDefaultSharedPreferences(this@UpdateNickName)
 
         frameLayout {
             backgroundColor = Color.TRANSPARENT
@@ -117,7 +114,11 @@ class UpdateNickName : AppCompatActivity() {
                 }
                 relativeLayout {
                     backgroundResource = R.drawable.border
+
+                    val string = PreferenceManager.getDefaultSharedPreferences(this@UpdateNickName).getString("nickName","").toString()
+
                     nickName = editText {
+                        setText(string)
                         hint = "请输入新昵称"
                         singleLine = true
                         padding = dip(5)
@@ -218,8 +219,8 @@ class UpdateNickName : AppCompatActivity() {
 //                toast.setGravity(Gravity.CENTER,0,0)
 //                toast.show()
 
-                val mEditor: SharedPreferences.Editor = saveTool.edit()
-                mEditor.putString("userName", nickName)
+                val mEditor: SharedPreferences.Editor = PreferenceManager.getDefaultSharedPreferences(this@UpdateNickName).edit()
+                mEditor.putString("nickName", nickName)
                 mEditor.commit()
 
                 DialogUtils.hideLoading(thisDialog)

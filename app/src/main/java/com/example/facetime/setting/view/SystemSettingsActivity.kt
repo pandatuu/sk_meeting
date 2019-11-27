@@ -179,31 +179,31 @@ open class SystemSettingsActivity : AppCompatActivity() {
                     width = matchParent
                 }
 
-                textView {
-                    text = "修改服务器地址"
-                    textSize = 14f
-                    textColor = Color.WHITE
-                    backgroundResource = R.drawable.bottonbg
-                    gravity = Gravity.CENTER
-                    this.withTrigger().click  {
-                        startActivity<SetServiceAddr>()
-                        overridePendingTransition(
-                            R.anim.right_in,
-                            R.anim.left_out
-                        )
-                    }
-                }.lparams() {
-                    height = dip(60)
-                    width = matchParent
-                }
-
-                textView {
-                    backgroundColor= Color.parseColor("#cccccc")
-
-                }.lparams() {
-                    height = dip(px2sp(1))
-                    width = matchParent
-                }
+//                textView {
+//                    text = "修改服务器地址"
+//                    textSize = 14f
+//                    textColor = Color.WHITE
+//                    backgroundResource = R.drawable.bottonbg
+//                    gravity = Gravity.CENTER
+//                    this.withTrigger().click  {
+//                        startActivity<SetServiceAddr>()
+//                        overridePendingTransition(
+//                            R.anim.right_in,
+//                            R.anim.left_out
+//                        )
+//                    }
+//                }.lparams() {
+//                    height = dip(60)
+//                    width = matchParent
+//                }
+//
+//                textView {
+//                    backgroundColor= Color.parseColor("#cccccc")
+//
+//                }.lparams() {
+//                    height = dip(px2sp(1))
+//                    width = matchParent
+//                }
 
                 textView {
                     text = "退出登录"
@@ -278,10 +278,11 @@ open class SystemSettingsActivity : AppCompatActivity() {
                 sp.remove("MyRoomNum")
                 sp.remove("MyRoomName")
                 sp.remove("nickName")
+                sp.remove("level")
                 sp.commit()
 
                 DialogUtils.hideLoading(thisDialog)
-                startActivity<MenuActivity>()
+                startActivity<StartActivity>()
                 overridePendingTransition(
                     R.anim.fade_in_out,
                     R.anim.fade_in_out

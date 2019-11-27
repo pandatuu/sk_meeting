@@ -10,10 +10,7 @@ import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.Toast
-import android.widget.Toolbar
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import click
 import com.alibaba.fastjson.JSON
@@ -34,6 +31,7 @@ import okhttp3.MediaType
 import okhttp3.RequestBody
 import org.jetbrains.anko.*
 import retrofit2.HttpException
+import java.util.regex.Pattern
 import withTrigger
 
 class RegisterSetPassword : AppCompatActivity() {
@@ -74,10 +72,9 @@ class RegisterSetPassword : AppCompatActivity() {
         }
 
         frameLayout {
-            backgroundColor = Color.TRANSPARENT
-            this.withTrigger().click  {
-
-            closeFocusjianpan()
+            backgroundColor = Color.WHITE
+            setOnClickListener {
+                closeFocusjianpan()
             }
             linearLayout {
                 toolbar1 = toolbar {
@@ -125,6 +122,7 @@ class RegisterSetPassword : AppCompatActivity() {
                 }.lparams(wrapContent, wrapContent) {
                     gravity = Gravity.CENTER_HORIZONTAL
                 }
+                //8-16位  字母数字符号，至少任意两种
                 relativeLayout {
                     backgroundResource = R.drawable.border
                     passwordFirst = editText {
@@ -136,6 +134,22 @@ class RegisterSetPassword : AppCompatActivity() {
                         backgroundColor = Color.TRANSPARENT
                         inputType =
                             InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+
+                        setOnKeyListener(object: View.OnKeyListener{
+                            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                                if(event!=null){
+                                    if(event.action ==KeyEvent.ACTION_UP){
+                                        val bool = pwdMatch(passwordFirst.text.toString())
+                                        if(bool){
+                                            val rela = passwordFirst.parent as RelativeLayout
+                                            rela.backgroundResource = R.drawable.border
+                                            return true
+                                        }
+                                    }
+                                }
+                                return false
+                            }
+                        })
                     }.lparams(matchParent, matchParent)
                 }.lparams(matchParent, dip(55)) {
                     topMargin = dip(15)
@@ -160,6 +174,13 @@ class RegisterSetPassword : AppCompatActivity() {
                                         closeFocusjianpan()
                                         return true
                                     }
+                                    if(event.action ==KeyEvent.ACTION_UP){
+                                        if (passwordAgain.text.toString() == passwordFirst.text.toString()) {
+                                            val rela = passwordAgain.parent as RelativeLayout
+                                            rela.backgroundResource = R.drawable.border
+                                            return true
+                                        }
+                                    }
                                 }
                                 return false
                             }
@@ -178,21 +199,33 @@ class RegisterSetPassword : AppCompatActivity() {
 
                     closeFocusjianpan()
                         if (passwordFirst.text.toString() == "") {
+                            val rela = passwordFirst.parent as RelativeLayout
+                            rela.backgroundResource = R.drawable.input_error_border
                             toast("请输入密码")
-                        } else {
-                            if (passwordAgain.text.toString() == "") {
-                                toast("请再次输入密码")
-                            } else {
-                                if (passwordAgain.text.toString() != passwordFirst.text.toString()) {
-                                    toast("两次密码不匹配")
-                                } else {
-                                    thisDialog = DialogUtils.showLoading(this@RegisterSetPassword)
-                                    mHandler.postDelayed(r, 12000)
-                                    GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
-                                        registerUser()
-                                    }
-                                }
-                            }
+                            return@click
+                        }
+                        if (!pwdMatch(passwordFirst.text.toString())) {
+                            val rela = passwordFirst.parent as RelativeLayout
+                            rela.backgroundResource = R.drawable.input_error_border
+                            toast("密码格式不正确")
+                            return@click
+                        }
+                        if (passwordAgain.text.toString() == "") {
+                            val rela = passwordAgain.parent as RelativeLayout
+                            rela.backgroundResource = R.drawable.input_error_border
+                            toast("请再次输入密码")
+                            return@click
+                        }
+                        if (passwordFirst.text.toString() != passwordAgain.text.toString()) {
+                            val rela = passwordAgain.parent as RelativeLayout
+                            rela.backgroundResource = R.drawable.input_error_border
+                            toast("两次密码不匹配")
+                            return@click
+                        }
+                        thisDialog = DialogUtils.showLoading(this@RegisterSetPassword)
+                        mHandler.postDelayed(r, 12000)
+                        GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+                            registerUser()
                         }
                     }
                 }.lparams(matchParent, dip(50)) {
@@ -202,6 +235,12 @@ class RegisterSetPassword : AppCompatActivity() {
                 setMargins(dip(15), dip(150), dip(15), 0)
             }
         }
+    }
+
+    private fun pwdMatch(text: String): Boolean{
+        val patter = Pattern.compile("^(?![0-9]+\$)(?![a-z]+\$)(?![A-Z]+\$)(?![,\\.#%'\\+\\*\\-:;^_`]+\$)[,\\.#%'\\+\\*\\-:;^_`0-9A-Za-z]{8,16}\$")
+        val match = patter.matcher(text)
+        return match.matches()
     }
 
     override fun onStart() {

@@ -29,10 +29,6 @@ import com.example.facetime.conference.fragment.BackgroundFragment
 import com.example.facetime.conference.fragment.ShareFragment
 import com.example.facetime.util.RetrofitUtils
 import com.facebook.react.bridge.UiThreadUtil
-import com.twitter.sdk.android.tweetcomposer.TweetComposer
-import com.umeng.commonsdk.UMConfigure
-import com.umeng.socialize.ShareAction
-import com.umeng.socialize.bean.SHARE_MEDIA
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -533,46 +529,46 @@ open class SuccessActivity : AppCompatActivity(),
     }
 
     override suspend fun getSelectedItem(index: Int) {
-        UMConfigure.init(
-            this, "5cdcc324570df3ffc60009c3"
-            , "umeng", UMConfigure.DEVICE_TYPE_PHONE, ""
-        )
-        when (index) {
-            0 -> {
-                if (Build.VERSION.SDK_INT >= 23) {
-                    val mPermissionList = arrayOf(
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.CALL_PHONE,
-                        Manifest.permission.READ_LOGS,
-                        Manifest.permission.READ_PHONE_STATE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.SET_DEBUG_APP,
-                        Manifest.permission.SYSTEM_ALERT_WINDOW,
-                        Manifest.permission.GET_ACCOUNTS,
-                        Manifest.permission.WRITE_APN_SETTINGS
-                    )
-                    ActivityCompat.requestPermissions(this, mPermissionList, 123)
-                }
-                ShareAction(this)
-                    .setPlatform(SHARE_MEDIA.LINE)//传入平台
-                    .withText("this is chat App,welcome to try")
-                    .setShareboardclickCallback { _, _ -> println("11111111111111111111111111111111111111111 ") }
-                    .share()
-
-                //调用创建分享信息接口
-            }
-            1 -> {
-                val builder = TweetComposer.Builder(this)
-                builder.text("this is chat App,welcome to try")
-                    .show()
-
-                //调用创建分享信息接口
-            }
-            else -> {
-                closeAlertDialog()
-            }
-        }
+//        UMConfigure.init(
+//            this, "5cdcc324570df3ffc60009c3"
+//            , "umeng", UMConfigure.DEVICE_TYPE_PHONE, ""
+//        )
+//        when (index) {
+//            0 -> {
+//                if (Build.VERSION.SDK_INT >= 23) {
+//                    val mPermissionList = arrayOf(
+//                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                        Manifest.permission.ACCESS_FINE_LOCATION,
+//                        Manifest.permission.CALL_PHONE,
+//                        Manifest.permission.READ_LOGS,
+//                        Manifest.permission.READ_PHONE_STATE,
+//                        Manifest.permission.READ_EXTERNAL_STORAGE,
+//                        Manifest.permission.SET_DEBUG_APP,
+//                        Manifest.permission.SYSTEM_ALERT_WINDOW,
+//                        Manifest.permission.GET_ACCOUNTS,
+//                        Manifest.permission.WRITE_APN_SETTINGS
+//                    )
+//                    ActivityCompat.requestPermissions(this, mPermissionList, 123)
+//                }
+//                ShareAction(this)
+//                    .setPlatform(SHARE_MEDIA.LINE)//传入平台
+//                    .withText("this is chat App,welcome to try")
+//                    .setShareboardclickCallback { _, _ -> println("11111111111111111111111111111111111111111 ") }
+//                    .share()
+//
+//                //调用创建分享信息接口
+//            }
+//            1 -> {
+//                val builder = TweetComposer.Builder(this)
+//                builder.text("this is chat App,welcome to try")
+//                    .show()
+//
+//                //调用创建分享信息接口
+//            }
+//            else -> {
+//                closeAlertDialog()
+//            }
+//        }
     }
     private fun addListFragment() {
         val mTransaction = supportFragmentManager.beginTransaction()

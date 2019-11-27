@@ -25,7 +25,6 @@ import com.example.facetime.R
 import com.example.facetime.conference.api.RoomApi
 import com.example.facetime.util.RetrofitUtils
 import com.facebook.react.bridge.UiThreadUtil
-import com.umeng.socialize.utils.DeviceConfigInternal.context
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

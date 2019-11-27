@@ -1,24 +1,13 @@
 package com.example.facetime.util
 
 
-import android.Manifest
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
-import android.os.Build
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
-import androidx.core.app.ActivityCompat
-import androidx.fragment.app.FragmentTransaction
 import com.example.facetime.R
-import com.example.facetime.conference.fragment.BackgroundFragment
-import com.example.facetime.conference.fragment.ShareFragment
-import com.twitter.sdk.android.tweetcomposer.TweetComposer
-import com.umeng.commonsdk.UMConfigure
-import com.umeng.socialize.ShareAction
-import com.umeng.socialize.bean.SHARE_MEDIA
-
 import org.jetbrains.anko.*
 
 
