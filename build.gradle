@@ -19,7 +19,7 @@ allprojects {
     repositories {
         maven {
             //url "https://github.com/jitsi/jitsi-maven-repository/raw/master/releases"
-            url "D:/jitsi_repository_copy/"
+            url "file:/home/zjh/jitsi_repository/"
             // url "file:/home/zjh/jitsi_repository/"
 
         }

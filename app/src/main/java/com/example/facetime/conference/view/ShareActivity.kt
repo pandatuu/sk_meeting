@@ -36,9 +36,13 @@ class ShareActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         UMConfigure.setLogEnabled(true)
+
         UMConfigure.init(
-            this, "5cdcc324570df3ffc60009c3"
-            , "umeng", UMConfigure.DEVICE_TYPE_PHONE, ""
+            this,
+            "5dddec6d0cafb2c6c4000751",
+            "Umeng",
+            UMConfigure.DEVICE_TYPE_PHONE,
+            ""
         )
 
         linearLayout {
