@@ -2,10 +2,13 @@ package com.example.facetime.conference.view;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,20 +25,30 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
-import android.app.FragmentTransaction;
 
 import com.example.facetime.R;
 import com.example.facetime.conference.fragment.BackgroundForJavaFragment;
-import com.example.facetime.conference.fragment.BackgroundFragment;
 import com.example.facetime.conference.fragment.ShareForJavaFragment;
-import com.example.facetime.conference.fragment.ShareFragment;
 import com.example.facetime.conference.listener.VideoChatControllerListener;
+import com.example.facetime.util.BaseUiListener;
 import com.example.facetime.util.CommonActivity;
+import com.example.facetime.wxapi.WXEntryActivity;
 import com.facebook.react.modules.core.PermissionListener;
-import com.twitter.sdk.android.tweetcomposer.TweetComposer;
-import com.umeng.commonsdk.UMConfigure;
+import com.tencent.connect.share.QQShare;
+import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.opensdk.modelmsg.WXTextObject;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.tencent.tauth.Tencent;
+import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMWeb;
 
 import org.jetbrains.annotations.NotNull;
 import org.jitsi.meet.sdk.JitsiMeetActivityDelegate;
@@ -47,11 +60,8 @@ import org.jitsi.meet.sdk.JitsiMeetView;
 import org.jitsi.meet.sdk.JitsiMeetViewListener;
 import org.jitsi.meet.sdk.R.id;
 import org.jitsi.meet.sdk.R.layout;
-import com.umeng.socialize.ShareAction;
-import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.shareboard.SnsPlatform;
-import com.umeng.socialize.utils.ShareBoardlistener;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import javax.annotation.Nullable;
@@ -59,10 +69,8 @@ import javax.annotation.Nullable;
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
 
-import static java.sql.DriverManager.println;
 
-
-public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetActivityInterface, JitsiMeetViewListener, VideoChatControllerListener, ShareForJavaFragment.SharetDialogSelect, BackgroundForJavaFragment.ClickBack {
+public class JitsiMeetActivitySon extends FragmentActivity implements ActivityCompat.OnRequestPermissionsResultCallback, JitsiMeetActivityInterface, JitsiMeetViewListener, VideoChatControllerListener, ShareForJavaFragment.SharetDialogSelect, BackgroundForJavaFragment.ClickBack {
     protected static final String TAG = JitsiMeetActivitySon.class.getSimpleName();
     public static final String ACTION_JITSI_MEET_CONFERENCE = "org.jitsi.meet.CONFERENCE";
     public static final String JITSI_MEET_CONFERENCE_OPTIONS = "JitsiMeetConferenceOptions";
@@ -77,7 +85,7 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
     final Handler cwjHandler = new Handler();
     View view;
 
-    Boolean shareClickFlag=true;
+    Boolean shareClickFlag = true;
 
     public JitsiMeetActivitySon() {
     }
@@ -125,12 +133,11 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
         LinearLayout image = (LinearLayout) inside.getChildAt(2);
 
 
-
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(shareClickFlag){
-                    shareClickFlag=false;
+                if (shareClickFlag) {
+                    shareClickFlag = false;
                     System.out.println("xxxxxxxxxxxxxxxxxxxxx");
 
                     addListFragment();
@@ -144,10 +151,40 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
 
     @SuppressLint("ResourceType")
     private void addListFragment() {
+        int WRITE = ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        );
+        int READ = ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+        );
+        if (READ == PackageManager.PERMISSION_GRANTED && WRITE == PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "hava this permission", Toast.LENGTH_SHORT)
+                    .show();
+            share();
+        } else {
+            Toast.makeText(this, "no this permission", Toast.LENGTH_SHORT).show();
+            if (Build.VERSION.SDK_INT >= 23) {
+                String[] mPermissionList = {
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.CALL_PHONE,
+                        Manifest.permission.READ_LOGS,
+                        Manifest.permission.READ_PHONE_STATE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.SET_DEBUG_APP,
+                        Manifest.permission.SYSTEM_ALERT_WINDOW,
+                        Manifest.permission.GET_ACCOUNTS,
+                        Manifest.permission.WRITE_APN_SETTINGS
+                };
+                ActivityCompat.requestPermissions(this, mPermissionList, 123);
+            }
+        }
+    }
 
-        LinearLayout layout = (LinearLayout) ((LinearLayout) view).getChildAt(0);
-
-
+    @SuppressLint("ResourceType")
+    private void share() {
         FragmentTransaction mTransaction = getFragmentManager().beginTransaction();
         mTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         if (backgroundFragment == null) {
@@ -164,9 +201,9 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
 
         mTransaction.commit();
 
-        shareClickFlag=true;
-
+        shareClickFlag = true;
     }
+
 
     @SuppressLint("ResourceType")
     private void closeAlertDialog() {
@@ -189,6 +226,11 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
         mTransaction.commit();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @androidx.annotation.Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+    }
 
     public void finishVideo(int type) {
         leaveType = type;
@@ -296,6 +338,10 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
 
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         JitsiMeetActivityDelegate.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 123) {
+            share();
+        }
     }
 
     int count = 60;
@@ -322,9 +368,9 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
 //        Log.e(TAG, "AlertDialog");
 //        dialog.setCanceledOnTouchOutside(false);
 
-        if(count==0){
+        if (count == 0) {
 
-        }else{
+        } else {
 
             new Thread(new Runnable() {
                 @Override
@@ -411,7 +457,6 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
         }
 
 
-
     }
 
     public void onConferenceTerminated(Map<String, Object> data) {
@@ -468,60 +513,106 @@ public class JitsiMeetActivitySon extends FragmentActivity implements JitsiMeetA
     @Override
     public Object getSelectedItem(int index, @NotNull Continuation<? super Unit> continuation) {
 
-        UMConfigure.init(
-                this, "5cdcc324570df3ffc60009c3"
-                , "umeng", UMConfigure.DEVICE_TYPE_PHONE, ""
-        );
+        Activity activity=this;
         SharedPreferences saveTool = PreferenceManager.getDefaultSharedPreferences(this);
-        String addr = saveTool.getString("serviceAdd",getString(R.string.videoUrl));
-        String id = saveTool.getString("MyRoomNum","");
+        String addr = saveTool.getString("serviceAdd", getString(R.string.videoUrl));
+        String id = saveTool.getString("MyRoomNum", "");
         switch (index) {
-
-
             case 0: {
-                if (Build.VERSION.SDK_INT >= 23) {
-                    String[] mPermissionList = {
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.CALL_PHONE,
-                            Manifest.permission.READ_LOGS,
-                            Manifest.permission.READ_PHONE_STATE,
-                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.SET_DEBUG_APP,
-                            Manifest.permission.SYSTEM_ALERT_WINDOW,
-                            Manifest.permission.GET_ACCOUNTS,
-                            Manifest.permission.WRITE_APN_SETTINGS
-                    };
-                    ActivityCompat.requestPermissions(this, mPermissionList, 123);
-                }
+                //Toast.makeText(this, "qq!!!!", Toast.LENGTH_LONG).show();
+                //APP ID1110022340  APP KEYY1q9LJRhykp44N4j
+                PlatformConfig.setQQZone("1110022340", "Y1q9LJRhykp44N4j");
+
                 new ShareAction(this)
-                        .setPlatform(SHARE_MEDIA.LINE)//传入平台
-                        .withText("视频地址："+addr+id)
-                        .setShareboardclickCallback(new ShareBoardlistener() {
+                        .setPlatform(SHARE_MEDIA.QQ)//传入平台
+                        .withText("this is chat App,welcome to try")
+                        .withMedia(new UMWeb("https://www.baidu.com"))
+                        .setCallback(new  UMShareListener() {
+                            @Override
+                            public void onStart(SHARE_MEDIA share_media) {
+                                Toast.makeText(activity, "qq222222!!!!", Toast.LENGTH_LONG).show();
+                            }
 
                             @Override
-                            public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
-                                System.out.println("11111111111111111111111111111111111111111 ");
+                            public void onResult(SHARE_MEDIA share_media) {
+                                Toast.makeText(activity, "qq222222!!!!", Toast.LENGTH_LONG).show();
                             }
-                        }).share();
+
+                            @Override
+                            public void onError(SHARE_MEDIA share_media, Throwable throwable) {
+                                Toast.makeText(activity, "qq222222!!!!", Toast.LENGTH_LONG).show();
+                            }
+
+                            @Override
+                            public void onCancel(SHARE_MEDIA share_media) {
+                                Toast.makeText(activity, "qq222222!!!!", Toast.LENGTH_LONG).show();
+                            }
+                        })
+                .share();
 
                 break;
             }
-
-
             case 1: {
-                TweetComposer.Builder builder =new  TweetComposer.Builder(this);
-                builder.text("视频地址："+addr+id)
-                        .show();
+                String APP_ID = "wxa734d668789e6b82";
+                IWXAPI api = WXAPIFactory.createWXAPI(this, APP_ID, true);
 
+                api.registerApp(APP_ID);
+                //初始化一个 WXTextObject 对象，填写分享的文本内容
+                WXTextObject textObj = new WXTextObject();
+                textObj.text = "111111111111";
+
+                //用 WXTextObject 对象初始化一个 WXMediaMessage 对象
+                WXMediaMessage msg = new WXMediaMessage();
+                msg.mediaObject = textObj;
+                msg.description = "11111111111";
+
+                SendMessageToWX.Req req = new SendMessageToWX.Req();
+                req.transaction = String.valueOf(System.currentTimeMillis());  //transaction字段用与唯一标示一个请求
+                req.message = msg;
+
+//                WXEntryActivity wx = new WXEntryActivity();
+//                api.handleIntent(getIntent(), wx);
+                //调用api接口，发送数据到微信
+                api.sendReq(req);
+
+                break;
+            }
+            case 2: {
+                Toast.makeText(this, "dingding", Toast.LENGTH_LONG).show();
+                UMShareListener shareListener = new UMShareListener() {
+                    @Override
+                    public void onStart(SHARE_MEDIA share_media) {
+                        System.out.println("dingding成功");
+                    }
+
+                    @Override
+                    public void onResult(SHARE_MEDIA share_media) {
+                        System.out.println("dingding成功");
+                    }
+
+                    @Override
+                    public void onError(SHARE_MEDIA share_media, Throwable throwable) {
+                        Toast.makeText(context, "dingding失败----"+throwable.getMessage(), Toast.LENGTH_LONG).show();
+                        System.out.println("dingding失败----"+throwable.getMessage());
+                    }
+
+                    @Override
+                    public void onCancel(SHARE_MEDIA share_media) {
+                        System.out.println("dingding取消");
+                    }
+                };
+                PlatformConfig.setDing("dingoamq8ymfaatukyfhgl");
+                new ShareAction(this)
+                        .setPlatform(SHARE_MEDIA.DINGTALK)//传入平台
+                        .withText("this is chat App,welcome to try")
+                        .setCallback(shareListener)
+                        .share();
                 break;
             }
             default:
                 closeAlertDialog();
                 break;
         }
-
         return null;
-
     }
 }

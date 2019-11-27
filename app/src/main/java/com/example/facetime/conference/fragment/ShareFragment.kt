@@ -93,7 +93,7 @@ class ShareFragment : androidx.fragment.app.Fragment() {
                             }
 
                             textView {
-                                text="Line"
+                                text="QQ"
                                 textSize=14f
                                 textColorResource= R.color.black20
                             }.lparams {
@@ -126,7 +126,7 @@ class ShareFragment : androidx.fragment.app.Fragment() {
 
 
                             textView {
-                                text="Twitter"
+                                text="微信"
                                 textSize=14f
                                 textColorResource= R.color.black20
                             }.lparams {
@@ -139,7 +139,37 @@ class ShareFragment : androidx.fragment.app.Fragment() {
                             width=dip(0)
                             weight=1f
                         }
+                        verticalLayout {
+                            gravity=Gravity.CENTER_HORIZONTAL
 
+                            imageView {
+                                setImageResource(R.mipmap.twitter)
+
+                                setOnClickListener {
+                                    GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT){
+                                        sharetDialogSelect.getSelectedItem(2)
+                                    }
+                                }
+                            }.lparams {
+                                height=dip(60)
+                                width=dip(60)
+                            }
+
+
+                            textView {
+                                text="钉钉"
+                                textSize=14f
+                                textColorResource= R.color.black20
+                            }.lparams {
+                                topMargin=dip(10)
+
+                            }
+
+                        }.lparams {
+                            height= matchParent
+                            width=dip(0)
+                            weight=1f
+                        }
                     }.lparams {
                         width= matchParent
                         height=dip(110)

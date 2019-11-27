@@ -72,7 +72,15 @@ class StartActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        runOnUiThread {
+            Thread.sleep(2000)
+            val mPerferences = PreferenceManager.getDefaultSharedPreferences(this@StartActivity)
+            val token = mPerferences.getString("token","")
+            if(token != ""){
+                startActivity<MenuActivity>()
+                finish()
+            }
+        }
         saveTool = PreferenceManager.getDefaultSharedPreferences(this@StartActivity)
         frameLayout {
             backgroundColor = Color.parseColor("#F2F2F2")
@@ -488,11 +496,11 @@ class StartActivity : AppCompatActivity() {
 
             val myRoomId = user.body()!!["myRoomId"].asString
             val myRoomName = user.body()!!["myRoomName"].asString
-            val level = user.body()!!["level"].asString
+            val level = user.body()!!["level"].asInt
             val nickName = user.body()!!["nickName"].asString
 
             val mEditor1: SharedPreferences.Editor = saveTool.edit()
-            mEditor1.putString("level", level)
+            mEditor1.putInt("level", level)
             mEditor1.putString("MyRoomNum", myRoomId)
             mEditor1.putString("MyRoomName", myRoomName)
             mEditor1.putString("nickName", nickName)

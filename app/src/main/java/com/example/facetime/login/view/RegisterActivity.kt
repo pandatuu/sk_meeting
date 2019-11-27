@@ -43,7 +43,7 @@ import withTrigger
 
 class RegisterActivity : AppCompatActivity() {
 
-    private lateinit var isChoose: CheckBox
+//    private lateinit var isChoose: CheckBox
     private lateinit var countryCode: TextView
     private lateinit var phoneNum: EditText
     private lateinit var vcodeNum: EditText
@@ -218,39 +218,40 @@ class RegisterActivity : AppCompatActivity() {
                 }.lparams(matchParent, dip(55)) {
                     topMargin = dip(15)
                 }
-                linearLayout {
-                    orientation = LinearLayout.HORIZONTAL
-                    gravity = Gravity.CENTER_VERTICAL
-                    isChoose = checkBox {}.lparams(wrapContent, wrapContent)
-                    linearLayout {
-                        orientation = LinearLayout.HORIZONTAL
-                        this. withTrigger().click  {
-                            isChoose.isChecked = !isChoose.isChecked
-                        }
-                        textView {
-                            text = "我同意"
-                        }
-                        textView {
-                            text = "隐私协议"
-                            textColor = Color.parseColor("#219ad5")
-                            this. withTrigger().click  {
-                                toast("隐私协议")
-                            }
-                        }
-                        textView {
-                            text = "和"
-                        }
-                        textView {
-                            text = "服务声明"
-                            textColor = Color.parseColor("#219ad5")
-                            this.withTrigger().click  {
-                                toast("服务声明")
-                            }
-                        }
-                    }
-                }.lparams(matchParent, wrapContent) {
-                    topMargin = dip(20)
-                }
+                //隐私协议和声明
+//                linearLayout {
+//                    orientation = LinearLayout.HORIZONTAL
+//                    gravity = Gravity.CENTER_VERTICAL
+//                    isChoose = checkBox {}.lparams(wrapContent, wrapContent)
+//                    linearLayout {
+//                        orientation = LinearLayout.HORIZONTAL
+//                        setOnClickListener {
+//                            isChoose.isChecked = !isChoose.isChecked
+//                        }
+//                        textView {
+//                            text = "我同意"
+//                        }
+//                        textView {
+//                            text = "隐私协议"
+//                            textColor = Color.parseColor("#219ad5")
+//                            setOnClickListener {
+//                                toast("隐私协议")
+//                            }
+//                        }
+//                        textView {
+//                            text = "和"
+//                        }
+//                        textView {
+//                            text = "服务声明"
+//                            textColor = Color.parseColor("#219ad5")
+//                            setOnClickListener {
+//                                toast("服务声明")
+//                            }
+//                        }
+//                    }
+//                }.lparams(matchParent, wrapContent) {
+//                    topMargin = dip(20)
+//                }
                 button {
                     text = "下一步"
                     textSize = 16f
@@ -265,25 +266,33 @@ class RegisterActivity : AppCompatActivity() {
                                 countryCode.text.toString().substring(1)
                             )
 
-                        if (phoneNum.text.toString() == "" || !isPhoneFormat) {
-                            toast("手机号为空或格式不对")
-                        } else {
-                            if (vcodeNum.text.toString() == "") {
+                        if (phoneNum.text.toString() == "") {
+                            toast("手机号为空")
+                        }
+                        if(!isPhoneFormat && phoneNum.text.length>11){
+                            toast("格式不对")
+                        }
+                        if (vcodeNum.text.toString() == "") {
                                 toast("验证码为空")
-                            } else {
-                                if (isChoose.isChecked) {
-                                    thisDialog = DialogUtils.showLoading(this@RegisterActivity)
-                                    mHandler.postDelayed(r, 12000)
-                                    GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
-                                        validateVerificationCode(phoneNum.text.toString(), vcodeNum.text.toString())
-                                    }
-                                } else {
-                                    toast("请勾选协议")
-                                }
-                            }
+                        }
+//                                if (isChoose.isChecked) {
+//                                    thisDialog = DialogUtils.showLoading(this@RegisterActivity)
+//                                    mHandler.postDelayed(r, 12000)
+//                                    GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+//                                        validateVerificationCode(phoneNum.text.toString(), vcodeNum.text.toString())
+//                                    }
+//                                } else {
+//                                    toast("请勾选协议")
+//                                }
+                        thisDialog = DialogUtils.showLoading(this@RegisterActivity)
+                        mHandler.postDelayed(r, 12000)
+                        GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+                            validateVerificationCode(phoneNum.text.toString(), vcodeNum.text.toString())
                         }
                     }
-                }.lparams(matchParent, dip(50))
+                }.lparams(matchParent, dip(50)){
+                    topMargin = dip(20)
+                }
             }.lparams(matchParent, dip(500)) {
                 setMargins(dip(15), dip(150), dip(15), 0)
             }
@@ -464,6 +473,35 @@ class RegisterActivity : AppCompatActivity() {
 
             DialogUtils.hideLoading(thisDialog)
             return false
+        }
+    }
+    private fun clickVcode(){
+        closeFocusjianpan()
+        if (phoneNum.text.toString() != "") {
+            val phone = countryCode.text.toString() + phoneNum.text.toString()
+            isPhoneFormat =
+                isPhoneNumberValid(
+                    phone,
+                    countryCode.text.toString().substring(1)
+                )
+            if (isPhoneFormat) {
+                thisDialog = DialogUtils.showLoading(this@RegisterActivity)
+                mHandler.postDelayed(r, 12000)
+                GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+                    val sendBool = sendVerificationCode(
+                        phoneNum.text.toString().trim(),
+                        countryCode.text.toString().substring(1)
+                    )
+                    if (sendBool){
+                        DialogUtils.hideLoading(thisDialog)
+                        onPcode()
+                    }
+                }
+            } else {
+                toast("手机号格式错误")
+            }
+        } else {
+            toast("请输入手机号")
         }
     }
 

@@ -54,10 +54,6 @@ open class MenuActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        runOnUiThread {
-            Thread.sleep(2000)
-
-        }
         val mainId = 1
         fram = frameLayout {
             id = mainId
@@ -140,29 +136,11 @@ open class MenuActivity : AppCompatActivity(),
                         gravity = Gravity.CENTER
                         visibility=View.GONE
                         this.withTrigger().click  {
-
-
-
-
-                            val sp = PreferenceManager.getDefaultSharedPreferences(context)
-                            val token = sp.getString("token", "")
-                            println("本机token为：$token")
-
-                            if (token.isNullOrEmpty()) {
-                                startActivity<StartActivity>()
-                                overridePendingTransition(
-                                    R.anim.right_in,
-                                    R.anim.left_out
-                                )
-                            } else {
-                                startActivity<CreateRoomNameActivity>()
-                                overridePendingTransition(
-                                    R.anim.right_in,
-                                    R.anim.left_out
-                                )
-                            }
-
-
+                            startActivity<CreateRoomNameActivity>()
+                            overridePendingTransition(
+                                R.anim.right_in,
+                                R.anim.left_out
+                            )
                         }
 
 
